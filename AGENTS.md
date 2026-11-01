@@ -1,0 +1,25 @@
+<!-- LOVABLE:BEGIN -->
+> [!IMPORTANT]
+> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
+> published git history — force pushing, or rebasing/amending/squashing commits
+> that are already pushed — as it rewrites history on Lovable's side and the
+> user will likely lose their project history.
+>
+> Commits you push to the connected branch sync back to Lovable and show up in
+> the editor, so keep the branch in a working state.
+<!-- LOVABLE:END -->
+
+## Architecture rules
+- Standalone Solidity delivery packages keep source, tests, independently compiled flattened contracts and explicit verification limits together; never update the live ABI or deployment from a package-only request.
+- FAGENT uses a root-scoped language provider and explicit Chinese/English dictionary with interpolated values; pass language into command generators so SSR and contract parameters never depend on mutable global locale state.
+- FAGENT navigation uses independent leaf routes: mint at `/`, market at `/market`, commands at `/commands`, vault at `/vault`, and rules at `/rules`; shared CardNavigation and CardExperience preserve consistent styling while each URL remains directly accessible with its own metadata.
+- FAGENT reads the deployed BNB Chain Vault through read-only server functions and TanStack Query; never call unrelated game services or initialize Cloud auth for public chain data.
+- Generate the contract ABI from the selected Solidity source; one shared deployment configuration supplies all readers and Agent commands to avoid address/signature drift.
+- Transactions remain user-confirmed Binance Agent Wallet commands; the website never signs, submits transactions, or fabricates successful on-chain actions.
+- Market math lives in the shared market utility: label fee-derived cumulative volume as an estimate and cap lowest-price purchase selections with the deployed MAX_BUY to avoid misleading totals or oversized transactions.
+- Reuse FagentLogo and AgentCardArt with project-owned asset pointers; this preserves the approved identity after remixing.
+- Keep colors and card treatments in semantic tokens in src/styles.css; this preserves the established theme across all card views.
+- Keep drizzle/schema.ts blank; never replay copied CATCH migrations. Only explicitly requested schema or security changes may create new migrations.
+- Retired CATCH places/spawns tables remain inaccessible to anon/authenticated roles; preserve records and service access so hardening does not change FAGENT chain reads.
+- Preserve generated Cloud integration files but leave them unused by the standalone preview; platform-managed configuration must not be hand-edited.
+- Agent commands come in two formats: general (full, verified-source) and Binance Wallet (short, explicit signature, no ABI lookup) in src/lib/fagent/binance.ts; Binance's built-in AI cannot resolve the proxy ABI.

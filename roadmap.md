@@ -1,0 +1,19 @@
+# Standalone FAGENT
+- [x] Deliver standalone merge-tiered v2 package: preserve equal batch allocation, capped price ladder, 78 local tests passing across final suite runs, independently compiled flattened files and inspected 41-file ZIP. Mainnet fork not rerun; live website and deployment unchanged.
+- [x] Package the proposed reserve-distribution edition as ten design and accounting files; verify all 389 tiers and inspect the ZIP, without changing the live website or contract.
+- [x] Close public access to unused CATCH places/spawns without deleting records; live permissions verified, basic security rescan clear, 16 tests pass, all five FAGENT pages and current-vault command copying verified. Deep code analysis is not covered by this rescan.
+- [x] Replace header wallet entry with persistent Chinese/English switching; translate all pages, dialogs, errors and Agent commands; verify both languages, five mobile pages and unchanged transaction parameters; 21 tests pass.
+- [x] Match reference market statistics and missing order controls using real chain data; verify fee-estimated volume, recent-range trades, escrow, batch purchase, listing and bid commands across desktop/mobile; 17 tests pass. Actual sell execution awaits user-confirmed orders and is not submitted by the website.
+- [x] Connect verified deployed Vault reads, supply, batch timer, real market orders/history and ledger; remove simulated actions.
+- [x] Generate ABI from selected Solidity; wire real-address Agent commands and wallet-address/card checks without wallet login.
+- [x] Verify live reads, command flow, empty/error states, desktop/mobile and contract rule tests; real money transactions are not submitted by this website.
+- [x] Split top navigation into independent mint, market, commands and vault pages; preserve rules copy and design.
+- [x] Verify direct visits, refresh, navigation and preview actions across desktop and mobile.
+- [x] Record the selected contract and compare updated rule copy against its behavior.
+- [x] Update only the rules page and verify it, leaving other pages and preview logic unchanged.
+- [x] Remove old site pages, map services, contracts and images; use FAGENT at `/` and rules at `/rules`.
+- [x] Transfer the approved logo and card artwork into this project's asset storage.
+- [x] Replace copied database migrations with an empty migration set; leave hosted records untouched.
+- [x] Remove unused map dependencies and Cloud-auth initialization from the preview.
+- [x] Verify mint preview, market sides, command copying, ledger, rules navigation and mobile display; 7 model tests passed.
+- [x] Cancel obsolete game-secret updates because the retained pages no longer use them; stored secret values were not changed.

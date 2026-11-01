@@ -1,0 +1,260 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * FAGENT — "Black Gold" design system
+ * Near-black card surface, one gold signal colour, restrained glass
+ * panels and soft ambient light. Chinese-first typography: headings use a
+ * heavy sans that also renders CJK properly, never negative tracking,
+ * never all-caps for Chinese. Latin labels stay small and wide-tracked.
+ * Never hardcode colors in components — always use the tokens below.
+ */
+
+@theme inline {
+  --font-display: "Bebas Neue", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Barlow", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-latin: "Barlow", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Bebas Neue", "Noto Sans SC", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+  --radius-2xl: calc(var(--radius) + 14px);
+  --radius-3xl: calc(var(--radius) + 20px);
+  --radius-4xl: calc(var(--radius) + 28px);
+
+  --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-signal: var(--signal);
+  --color-signal-deep: var(--signal-deep);
+  --color-alert: var(--alert);
+  --color-sky-deep: var(--sky-deep);
+  --color-sky-soft: var(--sky-soft);
+  --color-grass: var(--signal);
+  --color-grass-deep: var(--signal-deep);
+  --color-gold: var(--gold);
+  --color-rare: var(--rare);
+  --color-epic: var(--epic);
+  --color-common: var(--common);
+  --color-ink: var(--ink);
+  --color-bnb: var(--bnb);
+  --color-map-sea: var(--map-sea);
+  --color-map-land: var(--map-land);
+
+  --shadow-pop: 0 30px 60px -30px oklch(0 0 0 / 0.85);
+  --shadow-glossy: 0 0 0 1px color-mix(in oklab, var(--primary) 35%, transparent);
+  --shadow-card: 0 20px 44px -32px oklch(0 0 0 / 0.9);
+  --ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --radius: 0.375rem;
+
+  /* instrument black */
+  --background: oklch(0.12 0 0);
+  --background-deep: oklch(0.09 0 0);
+  --foreground: oklch(0.985 0 0);
+
+  --card: oklch(0.18 0.002 88);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.185 0.004 250);
+  --popover-foreground: oklch(0.985 0 0);
+
+  /* Shared warm gold accent; one shared matte warm gold. */
+  --brand-gold: oklch(0.80433195 0.13466252 83.92509);
+  --primary: var(--brand-gold);
+  --primary-foreground: oklch(0.145 0.002 250);
+
+  --secondary: oklch(0.24 0.003 88);
+  --secondary-foreground: oklch(0.96 0 0);
+
+  --muted: oklch(0.25 0.005 250);
+  --muted-foreground: oklch(0.74 0.008 88);
+
+  /* Brand accents share the lettering hue instead of a second yellow. */
+  --accent: var(--brand-gold);
+  --accent-foreground: oklch(0.985 0 0);
+
+  --destructive: oklch(0.62 0.21 25);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: color-mix(in oklab, var(--brand-gold) 45%, transparent);
+
+  --signal: var(--brand-gold);
+  --signal-deep: color-mix(in oklab, var(--brand-gold) 78%, var(--background));
+  --alert: oklch(0.78 0.17 62);
+  --gold: var(--brand-gold);
+  --sky-deep: var(--brand-gold);
+  --sky-soft: color-mix(in oklab, var(--brand-gold) 65%, var(--foreground));
+  --rare: oklch(0.7 0.15 245);
+  --epic: oklch(0.7 0.18 312);
+  --common: oklch(0.72 0.02 250);
+  --ink: oklch(0.11 0.002 250);
+  --bnb: var(--brand-gold);
+
+  --map-sea: oklch(0.17 0.004 250);
+  --map-land: oklch(0.27 0.012 220);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Chinese never gets negative tracking; weight and size carry the hierarchy */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-synthesis: none;
+    letter-spacing: 0;
+    line-height: 1.15;
+  }
+
+  h3,
+  h4 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+
+  p,
+  li {
+    line-height: 1.85;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+/* ---------- utilities ---------- */
+/* FAGENT card collection styles. */
+:root {
+  --ac-art-shadow: 0 32px 70px -28px color-mix(in oklab, var(--primary) 20%, var(--background-deep));
+  --ac-tool-surface: color-mix(in oklab, var(--card) 55%, var(--background));
+}
+.ac-page { background: var(--background-deep); min-height: 100svh; letter-spacing: 0; }
+.ac-container { width: min(1180px, calc(100% - 80px)); margin-inline: auto; }
+.ac-header { border-bottom: 1px solid var(--border); background: var(--background-deep); }
+.ac-brand-icon { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--primary); color: var(--primary); transform: rotate(-8deg); }
+.ac-intro { position: relative; display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 70px; padding-block: 46px 42px; }
+.ac-intro-copy { min-width: 0; }
+.ac-title { font-family: var(--font-poster); font-weight: 400; font-size: 104px; line-height: .87 !important; }
+html[lang^="zh"] .ac-title { line-height: .87 !important; }
+.ac-title-dot { color: var(--primary); }
+.ac-collectible { width: 278px; max-width: 100%; justify-self: center; }
+.ac-edition, .ac-art-caption { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 10px var(--font-mono); color: var(--muted-foreground); }
+.ac-edition { margin-bottom: 16px; }
+.ac-art-caption { margin-top: 18px; font-size: 9px; }
+.ac-card-art { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 8px; border: 1px solid color-mix(in oklab, var(--primary) 50%, var(--border)); background: var(--background); box-shadow: var(--ac-art-shadow); animation: ac-card-arrive 1.2s var(--ease-cine) both; }
+.ac-card-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ac-art-top { position: absolute; inset: 6% 8% auto; display: flex; justify-content: space-between; font: 9px var(--font-mono); color: var(--primary); }
+.ac-art-bottom { position: absolute; inset: auto 9% 6%; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--primary); }
+.ac-art-bottom span { font: 7px var(--font-mono); }
+.ac-art-bottom strong { font: 30px var(--font-poster); }
+.ac-side-code { position: absolute; right: -16px; top: 40%; writing-mode: vertical-rl; font: 9px var(--font-mono); color: var(--muted-foreground); }
+.ac-audit-bar { background: color-mix(in oklab, #22c55e 18%, var(--background)); border-bottom: 1px solid color-mix(in oklab, #22c55e 45%, transparent); color: #4ade80; }
+.ac-stats { display: grid; grid-template-columns: 1.25fr 1.1fr .8fr .8fr 1fr; border-block: 1px solid var(--border); }
+.ac-stats > div { padding-block: 26px; padding-left: 28px; border-left: 1px solid var(--border); }
+.ac-stats > div:first-child { border: 0; padding-left: 0; }
+.ac-tabs { display: flex; align-items: center; gap: 28px; border-bottom: 1px solid var(--border); }
+.ac-tab { position: relative; height: 52px; border-radius: 0; padding: 0; color: var(--muted-foreground); }
+.ac-tab:hover { background: transparent; color: var(--primary); }
+.ac-tab-active { color: var(--primary); }
+.ac-tab-active::after { content: ""; position: absolute; bottom: -1px; height: 2px; background: var(--primary); width: 100%; }
+.ac-mint-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 70px; }
+.ac-mint-tool { border: 1px solid var(--border); border-radius: 6px; background: var(--ac-tool-surface); padding: 24px; }
+.ac-progress { width: 100%; height: 4px; appearance: none; display: block; border: 0; background: var(--secondary); }
+.ac-progress::-webkit-progress-bar { background: var(--secondary); }
+.ac-progress::-webkit-progress-value { background: var(--primary); }
+.ac-progress::-moz-progress-bar { background: var(--primary); }
+.ac-market-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.ac-market-card { border: 1px solid var(--border); background: var(--background); border-radius: 6px; overflow: hidden; transition: border-color .3s, transform .3s; }
+.ac-market-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+.ac-market-card .ac-card-art { border: 0; border-radius: 0; box-shadow: none; margin: 12px 12px 0; }
+.ac-card-art--compact .ac-art-top { font-size: 7px; }
+.ac-card-art--compact .ac-art-bottom strong { font-size: 23px; }
+.ac-card-art--compact .ac-art-bottom span { font-size: 5px; }
+.ac-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-block: 60px; }
+.ac-flow { border-top: 1px solid var(--border); padding-block: 36px 46px; }
+@keyframes ac-card-arrive { from { opacity: 0; transform: translateY(15px) rotate(4deg); } to { opacity: 1; transform: none; } }
+@media (max-width: 1023px) {
+  .ac-container { width: calc(100% - 48px); }
+  .ac-intro { gap: 28px; }
+  .ac-title { font-size: 88px; }
+  .ac-mint-grid { gap: 30px; }
+  .ac-market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .ac-container { width: calc(100% - 36px); }
+  .ac-header .font-poster { font-size: 24px; }
+  .ac-brand-icon { width: 30px; height: 30px; }
+  .ac-header [data-slot="button"] { padding-inline: 10px; font-size: 12px; }
+  .ac-header [data-slot="button"] svg:last-child { display: none; }
+  .ac-intro { grid-template-columns: 1fr; padding-block: 32px; gap: 34px; }
+  .ac-title { font-size: 86px; }
+  .ac-title br { display: none; }
+  .ac-title span.text-primary { display: block; }
+  .ac-title-dot { display: none; }
+  .ac-collectible { width: 192px; }
+  .ac-side-code { display: none; }
+  .ac-stats { grid-template-columns: 1fr 1fr; }
+  .ac-stats > div { padding: 22px 14px; }
+  .ac-stats > div:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .ac-stats > div:nth-child(n+3) { border-top: 1px solid var(--border); }
+  .ac-tabs { gap: 0; justify-content: space-between; }
+  .ac-tab { font-size: 12px; gap: 4px; }
+  .ac-mint-grid { grid-template-columns: 1fr; gap: 28px; }
+  .ac-mint-tool { padding: 20px; }
+  .ac-market-grid { gap: 12px; }
+  .ac-market-card > .p-4 { padding: 12px; }
+  .ac-market-card .ac-card-art { margin: 8px 8px 0; }
+  .ac-card-art--compact .ac-art-top { font-size: 5px; }
+  .ac-card-art--compact .ac-art-bottom span { font-size: 4px; }
+  .ac-card-art--compact .ac-art-bottom strong { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { .ac-card-art { animation: none; } .ac-market-card:hover { transform: none; } }

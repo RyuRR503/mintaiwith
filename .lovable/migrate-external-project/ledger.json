@@ -1,0 +1,12 @@
+{
+  "source": "flap-agent-card-vault.zip",
+  "scope": "Independent Agent Card frontend based on supplied contracts; not a replacement of CATCH",
+  "capabilities": [
+    {"capability":"contract source","source":"uploaded Solidity archive","outcome":"mechanics preserved in separate frontend; six contract-rule tests pass","status":"verified","next_action":null},
+    {"capability":"schema, records and auth identities","source":"archive inspector","outcome":"absent; chain-only contracts","status":"not_applicable","next_action":null},
+    {"capability":"mint, dividends, redemption and card marketplace","source":"AgentCardVault.sol","outcome":"preview interfaces implemented; mint, purchase and dividend UI readback verified without real transactions","status":"preview_verified","next_action":"verify actual transactions after deployment addresses supplied"},
+    {"capability":"deployed vault and token","source":"archive has no deployment configuration","outcome":"do not fabricate addresses or live balances","status":"blocked","next_action":"user supplies deployed new vault and token addresses for live integration"},
+    {"capability":"providers, uploads, public endpoints, schedules and secrets","source":"Solidity-only archive","outcome":"no app services to migrate; existing CATCH services untouched","status":"not_applicable","next_action":null},
+    {"capability":"cutover","source":"user requests independent new page","outcome":"separate /agent-cards page; desktop/mobile verified, no browser errors, no publication or Cloud wake","status":"verified","next_action":null}
+  ]
+}
