@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 export { describe, it };
 export function expect(actual: any) {
   return {
+    toHaveLength: (n: number) => assert.equal(actual.length, n),
     toBe: (v: unknown) => assert.equal(actual, v),
     toEqual: (v: unknown) => assert.deepEqual(actual, v),
     toContain: (v: string) => assert.ok(String(actual).includes(v), `expected to contain ${v}`),
