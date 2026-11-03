@@ -76,7 +76,7 @@ function GenesisPage() {
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="gx-container flex items-center justify-between gap-5 py-3">
-          <FagentLogo />
+          <FagentLogo className="text-xl" />
           <CardNavigation compact className="hidden gap-7 md:flex" />
           <LanguageSwitch />
         </div>

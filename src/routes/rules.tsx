@@ -72,7 +72,7 @@ function CardRulesPage() {
   const { t } = useLanguage();
   return <div className="ac-page">
     <header className="ac-header"><div className="ac-container flex h-20 items-center justify-between gap-4">
-      <Link to="/" aria-label={t("7AGENT 首页")}><FagentLogo /></Link>
+      <Link to="/" aria-label={t("7AGENT 首页")}><FagentLogo className="text-lg" /></Link>
       <CardNavigation className="hidden items-center gap-5 lg:gap-7 md:flex" />
       <LanguageSwitch />
     </div></header>

@@ -28,7 +28,7 @@ export function CardExperience({ page = "mint" }: { page?: CardPage }) {
     <div className="ac-page">
       <header className="ac-header">
         <div className="ac-container flex h-20 items-center justify-between gap-4">
-          <Link to="/" aria-label={t("7AGENT 首页")} className="min-w-0 shrink"><FagentLogo /></Link>
+          <Link to="/" aria-label={t("7AGENT 首页")} className="min-w-0 shrink"><FagentLogo className="text-lg" /></Link>
           <CardNavigation className="hidden items-center gap-5 lg:gap-7 md:flex" />
           <LanguageSwitch />
         </div>
@@ -47,7 +47,7 @@ export function CardExperience({ page = "mint" }: { page?: CardPage }) {
         {page === "mint" && <><section className="ac-intro">
           <div className="ac-intro-copy">
             <p className="mb-5 flex items-center gap-2 font-mono text-xs text-primary"><span className="h-px w-7 bg-primary" /> {t("FAIR MINT · 公平铸造 · 币安 Agent 钱包专属")}</p>
-            <h1 className="py-2"><FagentLogo square={false} className="h-auto w-44 sm:w-52" /></h1>
+            <h1 className="py-2"><FagentLogo className="text-4xl sm:text-5xl" /></h1>
             <h2 className="mt-5 text-xl font-bold sm:text-2xl">{t("一张卡，接住 .AI 时代的每一笔税收。")}</h2>
             <div className="mt-4 max-w-md space-y-3 text-sm leading-7 text-muted-foreground"><p><span className="block">{t("交易在发生，税收在累积。")}</span><span className="block text-foreground">{t("而这张卡，替你记下属于你的那一份。")}</span></p><p>{t("持有，就参与每一次分配；销毁，就兑换卡上记下的代币。")}</p></div>
             <div className="mt-7 flex flex-wrap items-center gap-3"><Button className="h-11 px-6" onClick={() => { document.getElementById("card-workspace")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>{t("开始铸造")}<ArrowUpRight /></Button><Button asChild variant="ghost" className="h-11 text-muted-foreground"><Link to="/rules">{t("合约规则")}<ChevronRight /></Link></Button></div>
@@ -84,7 +84,7 @@ export function CardExperience({ page = "mint" }: { page?: CardPage }) {
         </section>
 
         <section className="ac-flow"><div className="mb-8 flex items-center justify-between"><h2 className="text-xl">{t("从交易税，到卡牌权益。")}</h2><span className="hidden font-mono text-[10px] text-muted-foreground sm:block">THE CARD CYCLE</span></div><div className="grid gap-8 md:grid-cols-3">{[{ n: "01", title: t("铸造 · 买入"), text: t("0.002 BNB 铸造一张卡，80% 通过 Flap 买入项目代币，按批次记账。") }, { n: "02", title: t("持有 · 分税"), text: t("每张有效卡牌等权。批次售满或本批满 7 天后经同步等操作分配；已分到卡上的 BNB 可单独领取。") }, { n: "03", title: t("交易 · 兑换"), text: t("卡牌自由挂单交易。本批售满或本批满 7 天后，可销毁兑换对应代币及未领分红。") }].map(item => <div key={item.n} className="border-t border-border pt-5"><span className="font-mono text-xs text-primary">{item.n} /</span><h3 className="mb-3 mt-4 text-base">{item.title}</h3><p className="text-xs leading-6 text-muted-foreground">{item.text}</p></div>)}</div></section>
-        <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-7 text-xs text-muted-foreground"><FagentLogo square={false} className="h-auto w-32" /><span>{t("BNB Chain · 无固定收益承诺 · 数字资产存在风险")}</span><Button asChild variant="ghost" size="sm"><Link to="/rules">{t("合约规则")}<ArrowUpRight /></Link></Button></footer>
+        <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-7 text-xs text-muted-foreground"><FagentLogo className="text-base" /><span>{t("BNB Chain · 无固定收益承诺 · 数字资产存在风险")}</span><Button asChild variant="ghost" size="sm"><Link to="/rules">{t("合约规则")}<ArrowUpRight /></Link></Button></footer>
       </main>
 
       <CommandDialog text={command} onClose={() => setCommand(null)} />
