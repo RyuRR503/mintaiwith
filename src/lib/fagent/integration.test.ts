@@ -2,16 +2,16 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { encodeFunctionData, decodeFunctionData } from "viem";
 import { vaultAbi } from "./vault-abi";
-import { FAGENT, liveSupply, redemptionReady } from "./config";
+import { 7AGENT, liveSupply, redemptionReady } from "./config";
 import { mintCommand, bidCommand, batchBuyCommand } from "./commands";
 import { estimatedMarketVolume, formatBnb, purchaseSelection, saleCardIds } from "./market";
 
 test("the selected deployed vault is distinct from its token and factory", () => {
-  assert.equal(FAGENT.vault, "0xbc2d8b6f4c4e2803c5e842e6e8250b79ee442b78");
-  assert.equal(FAGENT.token, "0x457badee84b6be7539458eac993983058c7f7777");
-  assert.equal(FAGENT.factory, "0x150209007c2c6176796DB254d792f976b6FBF931");
-  assert.notEqual(FAGENT.factory, FAGENT.vault);
-  assert.notEqual(FAGENT.token, FAGENT.vault);
+  assert.equal(7AGENT.vault, "0xbc2d8b6f4c4e2803c5e842e6e8250b79ee442b78");
+  assert.equal(7AGENT.token, "0x457badee84b6be7539458eac993983058c7f7777");
+  assert.equal(7AGENT.factory, "0x150209007c2c6176796DB254d792f976b6FBF931");
+  assert.notEqual(7AGENT.factory, 7AGENT.vault);
+  assert.notEqual(7AGENT.token, 7AGENT.vault);
 });
 test("live supply counts materialized NFTs separately from activated team rights", () => {
   assert.deepEqual(liveSupply(19, 0, 770000), { minted: 19, remaining: 769981, batch: 1, batchPaid: 19, activatedTeam: 1 });

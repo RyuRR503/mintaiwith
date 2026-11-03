@@ -1,4 +1,4 @@
-export const FAGENT = {
+export const 7AGENT = {
   chainId: 56,
   token: "0x457badee84b6be7539458eac993983058c7f7777",
   vault: "0xbc2d8b6f4c4e2803c5e842e6e8250b79ee442b78",

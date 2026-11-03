@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mintCommand, bidCommand, batchBuyCommand } from "./commands";
 import { normalizeLanguage } from "./i18n";
-import { FAGENT } from "./config";
+import { 7AGENT } from "./config";
 
 test("stored language accepts Chinese and English and safely defaults to Chinese", () => {
   assert.equal(normalizeLanguage("en"), "en");
@@ -13,8 +13,8 @@ test("stored language accepts Chinese and English and safely defaults to Chinese
 test("English mint preserves 2 cards, 0.004 BNB and the deployed vault", () => {
   const command = mintCommand(2, "en");
   assert.equal(command.match(/value=(\d+) wei/)?.[1], "4000000000000000");
-  assert.ok(command.includes(FAGENT.vault));
-  assert.ok(command.includes(FAGENT.token));
+  assert.ok(command.includes(7AGENT.vault));
+  assert.ok(command.includes(7AGENT.token));
   assert.throws(() => mintCommand(8, "en"));
 });
 test("English batch-one bid escrows exactly 0.01 BNB for five cards", () => {
