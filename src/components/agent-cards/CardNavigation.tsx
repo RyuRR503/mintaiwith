@@ -8,6 +8,7 @@ const pages = [
   { to: "/commands", label: "Agent 指令" },
   { to: "/vault", label: "金库账本" },
   { to: "/rules", label: "规则" },
+  { to: "/genesis", label: "开池版" },
 ] as const;
 
 export function CardNavigation({ className, compact = false }: { className?: string; compact?: boolean }) {

@@ -258,3 +258,19 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
   .ac-card-art--compact .ac-art-bottom strong { font-size: 17px; }
 }
 @media (prefers-reduced-motion: reduce) { .ac-card-art { animation: none; } .ac-market-card:hover { transform: none; } }
+
+/* Genesis (code-art) motion */
+.gx-rise { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
+.gx-rise.gx-in { opacity: 1; transform: none; }
+.gx-shimmer { background: linear-gradient(100deg, var(--primary) 20%, var(--foreground) 50%, var(--primary) 80%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gx-shine 4s linear infinite; }
+@keyframes gx-shine { to { background-position: -200% 0; } }
+.gx-card { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--primary) 45%, transparent); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.gx-card:hover { transform: perspective(900px) rotateY(-6deg) rotateX(4deg) scale(1.02); }
+.gx-marquee { animation: gx-marq 40s linear infinite; }
+@keyframes gx-marq { to { transform: translateX(-50%); } }
+.gx-swap { animation: gx-swap .55s cubic-bezier(.2,.7,.2,1); }
+@keyframes gx-swap { from { opacity: 0; transform: translateX(24px); filter: blur(6px); } }
+.gx-pop { animation: gx-pop .4s cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes gx-pop { from { opacity: 0; transform: scale(.6) translateY(10px); } }
+.gx-flow { font-family: var(--font-mono); font-size: .8rem; transition: all .5s; }
+@media (prefers-reduced-motion: reduce) { .gx-rise { opacity: 1; transform: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } }
