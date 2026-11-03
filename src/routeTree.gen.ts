@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommandsRouteImport } from './routes/commands'
-import { Route as GenesisRouteImport } from './routes/genesis'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as VaultRouteImport } from './routes/vault'
@@ -24,11 +23,6 @@ const IndexRoute = IndexRouteImport.update({
 const CommandsRoute = CommandsRouteImport.update({
   id: '/commands',
   path: '/commands',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GenesisRoute = GenesisRouteImport.update({
-  id: '/genesis',
-  path: '/genesis',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -50,7 +44,6 @@ const VaultRoute = VaultRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
-  '/genesis': typeof GenesisRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/vault': typeof VaultRoute
@@ -58,7 +51,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
-  '/genesis': typeof GenesisRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/vault': typeof VaultRoute
@@ -67,30 +59,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
-  '/genesis': typeof GenesisRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/vault': typeof VaultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/commands' | '/genesis' | '/market' | '/rules' | '/vault'
+  fullPaths: '/' | '/commands' | '/market' | '/rules' | '/vault'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/commands' | '/genesis' | '/market' | '/rules' | '/vault'
-  id:
-    | '__root__'
-    | '/'
-    | '/commands'
-    | '/genesis'
-    | '/market'
-    | '/rules'
-    | '/vault'
+  to: '/' | '/commands' | '/market' | '/rules' | '/vault'
+  id: '__root__' | '/' | '/commands' | '/market' | '/rules' | '/vault'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CommandsRoute: typeof CommandsRoute
-  GenesisRoute: typeof GenesisRoute
   MarketRoute: typeof MarketRoute
   RulesRoute: typeof RulesRoute
   VaultRoute: typeof VaultRoute
@@ -110,13 +93,6 @@ declare module '@tanstack/react-router' {
       path: '/commands'
       fullPath: '/commands'
       preLoaderRoute: typeof CommandsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/genesis': {
-      id: '/genesis'
-      path: '/genesis'
-      fullPath: '/genesis'
-      preLoaderRoute: typeof GenesisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -146,7 +122,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CommandsRoute: CommandsRoute,
-  GenesisRoute: GenesisRoute,
   MarketRoute: MarketRoute,
   RulesRoute: RulesRoute,
   VaultRoute: VaultRoute,
