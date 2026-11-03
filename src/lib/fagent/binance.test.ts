@@ -1,5 +1,5 @@
-import { describe, expect, it } from "./test-expect";
-import { binanceMint, binanceCard, getBinanceCommands, SIGNATURES } from "./binance";
+import { describe, expect, it } from "./test-expect.ts";
+import { binanceMint, binanceCard, getBinanceCommands, SIGNATURES } from "./binance.ts";
 import { getAgentCommands } from "./commands";
 import { vaultAbi } from "./vault-abi";
 

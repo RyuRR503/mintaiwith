@@ -1,5 +1,5 @@
-import { describe, expect, it } from "./test-expect";
-import { POOL_EDITION, mintQuote, vested, taxFlow, isPoolDeployed } from "./pool-edition";
+import { describe, expect, it } from "./test-expect.ts";
+import { POOL_EDITION, mintQuote, vested, taxFlow, isPoolDeployed } from "./pool-edition.ts";
 
 describe("pool edition rules", () => {
   it("presale card costs 0.00245 BNB and grants 8,440 tokens", () => {
