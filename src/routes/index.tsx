@@ -53,6 +53,7 @@ function GenesisPage() {
   const flow = taxFlow(volume);
   const kind = id <= P.presaleCards ? "presale" : id % 20 === 0 ? "team" : "open";
   const selectedPhase = phases[active] ?? phases[0];
+  if (!selectedPhase) return null;
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
