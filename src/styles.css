@@ -269,6 +269,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-intro .gx-title-row, .gx-intro .gx-exhibit, .gx-intro .gx-exhibit-caption { position: relative; z-index: 1; }
 .gx-title-row { display: grid; grid-template-columns: 1.6fr 1fr; align-items: end; gap: 48px; padding-bottom: 26px; }
 .gx-heading { font-size: 112px; line-height: .9; letter-spacing: 0; font-weight: 400; }
+.gx-heading-seven { color: var(--brand-violet); text-shadow: 0 0 28px color-mix(in oklab, var(--brand-violet) 55%, transparent); }
 .gx-manifesto { padding-bottom: 5px; }
 .gx-kicker { font: 10px var(--font-mono); color: var(--primary); letter-spacing: 0; }
 .gx-exhibit { display: grid; grid-template-columns: minmax(0, 1fr) 240px; border-block: 1px solid var(--border); }
