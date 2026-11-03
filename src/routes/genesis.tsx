@@ -93,7 +93,7 @@ function GenesisPage() {
           </div>
           <div className="mt-5">
             <label className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>卡号</span><span>{fmt(id)} / {fmt(P.totalCards)}</span></label>
-            <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0])} aria-label="卡号" />
+            <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 0)} aria-label="卡号" />
           </div>
         </div>
       </section>
@@ -140,7 +140,7 @@ function GenesisPage() {
             {(["presale", "open"] as const).map(p => <button key={p} onClick={() => setPhase(p)} className={`rounded-full px-5 py-2 text-sm transition-colors ${phase === p ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>{p === "presale" ? "预售" : "开池后"}</button>)}
           </div>
           <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">张数</span><span className="font-display text-5xl">{q.count}</span></div>
-          <Slider className="mt-3" min={1} max={P.maxPerAddress} step={1} value={[count]} onValueChange={v => setCount(v[0])} aria-label="张数" />
+          <Slider className="mt-3" min={1} max={P.maxPerAddress} step={1} value={[count]} onValueChange={v => setCount(v[0] ?? 0)} aria-label="张数" />
           <div className="mt-6 flex gap-2">{Array.from({ length: q.count }, (_, i) => <div key={i} className="gx-pop h-14 flex-1 overflow-hidden rounded-md border border-primary/30" style={{ animationDelay: `${i * 40}ms` }}><GenerativeCard id={id + i} interactive={false} className="h-full w-full" /></div>)}</div>
           <dl className="mt-6 grid grid-cols-2 gap-4 font-mono text-sm">
             <div><dt className="text-muted-foreground">支付</dt><dd className="text-2xl text-foreground">{q.bnb} BNB</dd></div>
@@ -160,7 +160,7 @@ function GenesisPage() {
             {Array.from({ length: 40 }, (_, i) => { const on = i / 40 < day / P.vestDays; return <div key={i} className={`flex-1 rounded-t-sm transition-all duration-500 ${on ? "bg-primary" : "bg-muted"}`} style={{ height: `${20 + (i / 40) * 80}%`, transitionDelay: `${i * 8}ms` }} />; })}
           </div>
           <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">第 {day.toFixed(1)} 天</span><span className="font-display text-5xl text-primary">{fmt(vested(grant, day))}</span></div>
-          <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0])} aria-label="天数" />
+          <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label="天数" />
         </div>
 
         <div data-reveal className="gx-rise rounded-3xl border border-border bg-card p-8 lg:col-span-2">
@@ -168,7 +168,7 @@ function GenesisPage() {
             <div><p className="font-mono text-xs tracking-[0.3em] text-primary">TAX FLOW</p><h3 className="mt-2 text-3xl font-bold">交易税去哪了</h3></div>
             <div className="text-right"><p className="text-muted-foreground">假设交易量</p><p className="font-display text-5xl">{fmt(volume)} BNB</p></div>
           </div>
-          <Slider className="mt-4" min={10} max={5000} step={10} value={[volume]} onValueChange={v => setVolume(v[0])} aria-label="交易量" />
+          <Slider className="mt-4" min={10} max={5000} step={10} value={[volume]} onValueChange={v => setVolume(v[0] ?? 0)} aria-label="交易量" />
           <div className="mt-8 flex h-16 overflow-hidden rounded-xl">
             <div className="gx-flow flex items-center justify-center bg-primary text-primary-foreground" style={{ width: "50%" }}>分红 {flow.dividend.toFixed(2)}</div>
             <div className="gx-flow flex items-center justify-center bg-primary/60 text-primary-foreground" style={{ width: "30%" }}>地板 {flow.floor.toFixed(2)}</div>
