@@ -358,7 +358,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-exhibit > :last-child { transition-delay: .18s; }
 .gx-shimmer { background: linear-gradient(100deg, var(--primary) 20%, var(--foreground) 50%, var(--primary) 80%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gx-shine 4s linear infinite; }
 @keyframes gx-shine { to { background-position: -200% 0; } }
-.gx-card { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--gold) 45%, transparent); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.gx-card { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--primary) 45%, transparent); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .gx-card:hover { transform: perspective(900px) rotateY(-6deg) rotateX(4deg) scale(1.02); }
 .gx-marquee { animation: gx-marq 40s linear infinite; }
 @keyframes gx-marq { to { transform: translateX(-50%); } }
@@ -396,5 +396,5 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes hc-foil { to { background-position: 300% 0; } }
 @keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
-/* the card's own 7 is gold — violet belongs to the site logo, not the artwork */
+/* the card's own 7 matches the site violet — one signal colour across the whole UI */
 .hc-card .gx-wordmark-seven { color: var(--primary); text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent); }
