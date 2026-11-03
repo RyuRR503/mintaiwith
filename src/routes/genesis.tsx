@@ -120,9 +120,9 @@ function GenesisPage() {
           </ol>
           <div key={active} className="gx-swap grid gap-8 rounded-3xl border border-border bg-card p-8 md:grid-cols-[1fr_220px] md:items-center">
             <div>
-              <p className="font-display text-[7rem] leading-none text-primary/20">{phases[active].k}</p>
-              <h3 className="-mt-8 text-3xl font-bold">{phases[active].title}</h3>
-              <p className="mt-4 max-w-lg text-lg text-muted-foreground">{phases[active].body}</p>
+              <p className="font-display text-[7rem] leading-none text-primary/20">{phases[active]!.k}</p>
+              <h3 className="-mt-8 text-3xl font-bold">{phases[active]!.title}</h3>
+              <p className="mt-4 max-w-lg text-lg text-muted-foreground">{phases[active]!.body}</p>
             </div>
             <div className="aspect-square overflow-hidden rounded-2xl border border-primary/30">
               <GenerativeCard id={active * 131071 + 19} kind={active === 0 ? "presale" : "open"} className="h-full w-full" />
