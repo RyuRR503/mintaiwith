@@ -7,6 +7,7 @@ import { FagentLogo } from "@/components/agent-cards/FagentLogo";
 import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
+import { HoloCard } from "@/components/agent-cards/HoloCard";
 import { POOL_EDITION as P, mintQuote, vested, taxFlow, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
@@ -96,10 +97,8 @@ function GenesisPage() {
           </div>
         </div>
         <div className="gx-exhibit">
-          <div data-reveal className="gx-rise gx-art-stage">
-            <GenerativeCard id={id} kind={kind} className="absolute inset-0 h-full w-full cursor-crosshair" />
-            <div className="gx-art-edition pointer-events-none"><span>7AGENT / #{String(id).padStart(6, "0")}</span><span>{kind === "presale" ? "PRESALE" : kind === "team" ? "TEAM" : "OPEN"}</span></div>
-            <div className="gx-art-serial pointer-events-none">{String(id).padStart(6, "0")}<ArrowUpRight aria-hidden="true" /></div>
+          <div data-reveal className="gx-rise gx-art-stage hc-stage">
+            <HoloCard id={id} kind={kind} />
           </div>
           <aside data-reveal className="gx-rise gx-exhibit-rail">
             <div>

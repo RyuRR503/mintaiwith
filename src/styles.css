@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * 7AGENT — "Butterfly Violet" design system (deep violet base, violet primary, lime accent)
+ * 7AGENT — "Black Gold" design system; only the logo 7 uses butterfly violet
  * Near-black card surface, one gold signal colour, restrained glass
  * panels and soft ambient light. Chinese-first typography: headings use a
  * heavy sans that also renders CJK properly, never negative tracking,
@@ -75,30 +75,30 @@
   --radius: 0.375rem;
 
   /* instrument black */
-  --background: oklch(0.2 0.07 285);
-  --background-deep: oklch(0.16 0.06 285);
+  --background: oklch(0.12 0 0);
+  --background-deep: oklch(0.09 0 0);
   --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.25 0.08 285);
+  --card: oklch(0.18 0.002 88);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.24 0.08 285);
+  --popover: oklch(0.185 0.004 250);
   --popover-foreground: oklch(0.985 0 0);
 
   /* Shared warm gold accent; one shared matte warm gold. */
-  --brand-gold: oklch(0.62 0.22 285); /* butterfly violet #6B4EFF */
-  --brand-lime: oklch(0.93 0.21 125);
+  --brand-gold: oklch(0.80433195 0.13466252 83.92509);
+  --brand-violet: oklch(0.62 0.24 285); /* butterfly violet, logo 7 only */
   --primary: var(--brand-gold);
-  --primary-foreground: oklch(0.99 0 0);
+  --primary-foreground: oklch(0.145 0.002 250);
 
-  --secondary: oklch(0.29 0.08 285);
+  --secondary: oklch(0.24 0.003 88);
   --secondary-foreground: oklch(0.96 0 0);
 
-  --muted: oklch(0.3 0.07 285);
-  --muted-foreground: oklch(0.8 0.04 285);
+  --muted: oklch(0.25 0.005 250);
+  --muted-foreground: oklch(0.74 0.008 88);
 
   /* Brand accents share the lettering hue instead of a second yellow. */
-  --accent: var(--brand-lime);
-  --accent-foreground: oklch(0.2 0.07 285);
+  --accent: var(--brand-gold);
+  --accent-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.62 0.21 25);
   --destructive-foreground: oklch(0.985 0 0);
@@ -116,10 +116,10 @@
   --rare: oklch(0.7 0.15 245);
   --epic: oklch(0.7 0.18 312);
   --common: oklch(0.72 0.02 250);
-  --ink: oklch(0.16 0.06 285);
+  --ink: oklch(0.11 0.002 250);
   --bnb: var(--brand-gold);
 
-  --map-sea: oklch(0.18 0.06 285);
+  --map-sea: oklch(0.17 0.004 250);
   --map-land: oklch(0.27 0.012 220);
 }
 
@@ -263,7 +263,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 /* Genesis (code-art) motion */
 .gx-container { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
 .gx-wordmark { display: inline-flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; line-height: 1; color: var(--foreground); white-space: nowrap; }
-.gx-wordmark-seven { color: oklch(0.7 0.22 285); font-size: 1.25em; margin-right: .06em; text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent); }
+.gx-wordmark-seven { color: var(--brand-violet); font-size: 1.25em; margin-right: .06em; text-shadow: 0 0 18px color-mix(in oklab, var(--brand-violet) 60%, transparent); }
 .gx-intro { position: relative; padding-block: 30px 0; }
 .gx-rain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .5; pointer-events: auto; }
 .gx-intro .gx-title-row, .gx-intro .gx-exhibit, .gx-intro .gx-exhibit-caption { position: relative; z-index: 1; }
@@ -368,3 +368,31 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes gx-pop { from { opacity: 0; transform: scale(.6) translateY(10px); } }
 .gx-flow { font-family: var(--font-mono); font-size: .8rem; transition: all .5s; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
+
+/* Collectible holo card (hero exhibit) */
+.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: radial-gradient(60% 70% at 50% 45%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%); overflow: hidden; }
+.hc-scene { position: relative; perspective: 1100px; width: min(300px, 72vw); }
+.hc-shadow { position: absolute; inset: 12% 8% -6%; border-radius: 24px; background: color-mix(in oklab, var(--primary) 40%, transparent); filter: blur(42px); opacity: .45; animation: hc-pulse 5s ease-in-out infinite; }
+.hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 20px; padding: 6px;
+  background: linear-gradient(140deg, color-mix(in oklab, var(--primary) 90%, var(--foreground)), color-mix(in oklab, var(--primary) 35%, var(--background)) 40%, var(--primary) 70%, color-mix(in oklab, var(--primary) 30%, var(--background)));
+  transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 6s ease-in-out infinite; }
+.hc-card[data-active="true"] { transition: transform .08s linear; animation-play-state: paused; }
+.hc-inner { position: relative; height: 100%; border-radius: 15px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
+.hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; transform: translateZ(30px); }
+.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--primary); border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); padding: .15rem .45rem; border-radius: 999px; }
+.hc-art { position: relative; flex: 1; margin: 0 .6rem; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent); }
+.hc-art-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 40px var(--background-deep); pointer-events: none; }
+.hc-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .2em; color: var(--muted-foreground); }
+.hc-serial { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--foreground); }
+.hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--primary); }
+.hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; }
+.hc-foil { mix-blend-mode: color-dodge; opacity: .22; transition: opacity .4s;
+  background: repeating-linear-gradient(115deg, transparent 0 8%, color-mix(in oklab, var(--primary) 70%, transparent) 12%, transparent 18%, color-mix(in oklab, var(--brand-violet) 60%, transparent) 24%, transparent 30%);
+  background-size: 300% 300%; background-position: var(--mx) var(--my); animation: hc-foil 9s linear infinite; }
+.hc-card[data-active="true"] .hc-foil { opacity: .55; animation: none; }
+.hc-glare { background: radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--foreground) 35%, transparent), transparent 45%); mix-blend-mode: overlay; opacity: 0; transition: opacity .4s; }
+.hc-card[data-active="true"] .hc-glare { opacity: 1; }
+@keyframes hc-float { 0%,100% { transform: rotateX(4deg) rotateY(-8deg) translateY(0); } 50% { transform: rotateX(-3deg) rotateY(8deg) translateY(-10px); } }
+@keyframes hc-foil { to { background-position: 300% 0; } }
+@keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
