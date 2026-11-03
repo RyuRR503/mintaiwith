@@ -57,13 +57,6 @@ export const POOL_MOCK = {
   floorFundBnb: 0,
   dividendBnb: 0,
   burnedTokens: 0,
-  recent: [
-    { addr: "0x8a3f…41c2", n: 10, ago: "12 秒前" },
-    { addr: "0x1d07…9be0", n: 3, ago: "41 秒前" },
-    { addr: "0xc5e2…07af", n: 5, ago: "1 分钟前" },
-    { addr: "0x44b9…e81d", n: 1, ago: "2 分钟前" },
-    { addr: "0x9f10…3a76", n: 10, ago: "3 分钟前" },
-  ],
 } as const;
 
 export function poolStatus(minted: number) {
