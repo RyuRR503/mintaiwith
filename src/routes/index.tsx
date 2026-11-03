@@ -136,9 +136,6 @@ function GenesisPage() {
             <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>预售进度</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
-          <ul className="mt-6 flex gap-6 overflow-x-auto font-mono text-xs text-muted-foreground">
-            {M.recent.map(r => <li key={r.addr} className="shrink-0"><span className="text-foreground">{r.addr}</span> 铸造 <span className="text-primary">{r.n} 张</span> · {r.ago}</li>)}
-          </ul>
         </div>
       </section>
 
