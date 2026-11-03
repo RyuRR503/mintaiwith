@@ -22,3 +22,4 @@
 - [x] Refine homepage typography, compact card proportions, static metrics, lifecycle spacing and mobile navigation; verify three viewport widths, phase switches, random cards and six rule tests.
 - [x] Cancel obsolete game-secret updates because the retained pages no longer use them; stored secret values were not changed.
 - [x] Rename visible branding FAGENT → 7AGENT (code identifiers unchanged), replace image logo with gold text wordmark, add golden digital-rain hero animation; 26 rule tests pass, tsgo clean, homepage verified in browser.
+- [x] Recolor: black background kept, all buttons and active accents switched to butterfly violet, collectible card frame/foil/art/serial kept gold; 33 rule tests pass, build OK, card and button colors measured in the live preview.

@@ -21,7 +21,7 @@ export function DigitalRain({ className }: { className?: string }) {
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const gold = token("--primary", "#d4a94a");
+    const gold = token("--gold", "#d4a94a");
     const bg = token("--background-deep", token("--background", "#0a0a0a"));
 
     let cols = 0, drops: number[] = [], speeds: number[] = [], cell = 18;

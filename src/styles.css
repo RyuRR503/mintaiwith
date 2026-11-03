@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * 7AGENT — "Black Gold" design system; only the logo 7 uses butterfly violet
+ * 7AGENT — black stage, butterfly-violet controls, gold collectible cards
  * Near-black card surface, one gold signal colour, restrained glass
  * panels and soft ambient light. Chinese-first typography: headings use a
  * heavy sans that also renders CJK properly, never negative tracking,
@@ -86,9 +86,9 @@
 
   /* Shared warm gold accent; one shared matte warm gold. */
   --brand-gold: oklch(0.80433195 0.13466252 83.92509);
-  --brand-violet: oklch(0.62 0.24 285); /* butterfly violet, logo 7 only */
-  --primary: var(--brand-gold);
-  --primary-foreground: oklch(0.145 0.002 250);
+  --brand-violet: oklch(0.62 0.24 285); /* butterfly violet: logo 7 + every button and active accent */
+  --primary: var(--brand-violet);
+  --primary-foreground: oklch(0.97 0.02 285);
 
   --secondary: oklch(0.24 0.003 88);
   --secondary-foreground: oklch(0.96 0 0);
@@ -96,16 +96,16 @@
   --muted: oklch(0.25 0.005 250);
   --muted-foreground: oklch(0.74 0.008 88);
 
-  /* Brand accents share the lettering hue instead of a second yellow. */
-  --accent: var(--brand-gold);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Hover fills read as a dim violet wash, never a second yellow. */
+  --accent: color-mix(in oklab, var(--brand-violet) 26%, var(--background));
+  --accent-foreground: oklch(0.97 0.02 285);
 
   --destructive: oklch(0.62 0.21 25);
   --destructive-foreground: oklch(0.985 0 0);
 
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-  --ring: color-mix(in oklab, var(--brand-gold) 45%, transparent);
+  --ring: color-mix(in oklab, var(--brand-violet) 55%, transparent);
 
   --signal: var(--brand-gold);
   --signal-deep: color-mix(in oklab, var(--brand-gold) 78%, var(--background));
@@ -175,7 +175,7 @@
 /* ---------- utilities ---------- */
 /* 7AGENT card collection styles. */
 :root {
-  --ac-art-shadow: 0 32px 70px -28px color-mix(in oklab, var(--primary) 20%, var(--background-deep));
+  --ac-art-shadow: 0 32px 70px -28px color-mix(in oklab, var(--gold) 20%, var(--background-deep));
   --ac-tool-surface: color-mix(in oklab, var(--card) 55%, var(--background));
 }
 .ac-page { background: var(--background-deep); min-height: 100svh; letter-spacing: 0; }
@@ -191,10 +191,10 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .ac-edition, .ac-art-caption { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 10px var(--font-mono); color: var(--muted-foreground); }
 .ac-edition { margin-bottom: 16px; }
 .ac-art-caption { margin-top: 18px; font-size: 9px; }
-.ac-card-art { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 8px; border: 1px solid color-mix(in oklab, var(--primary) 50%, var(--border)); background: var(--background); box-shadow: var(--ac-art-shadow); animation: ac-card-arrive 1.2s var(--ease-cine) both; }
+.ac-card-art { position: relative; aspect-ratio: 2 / 3; overflow: hidden; border-radius: 8px; border: 1px solid color-mix(in oklab, var(--gold) 50%, var(--border)); background: var(--background); box-shadow: var(--ac-art-shadow); animation: ac-card-arrive 1.2s var(--ease-cine) both; }
 .ac-card-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.ac-art-top { position: absolute; inset: 6% 8% auto; display: flex; justify-content: space-between; font: 9px var(--font-mono); color: var(--primary); }
-.ac-art-bottom { position: absolute; inset: auto 9% 6%; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--primary); }
+.ac-art-top { position: absolute; inset: 6% 8% auto; display: flex; justify-content: space-between; font: 9px var(--font-mono); color: var(--gold); }
+.ac-art-bottom { position: absolute; inset: auto 9% 6%; display: flex; flex-direction: column; align-items: center; gap: 7px; color: var(--gold); }
 .ac-art-bottom span { font: 7px var(--font-mono); }
 .ac-art-bottom strong { font: 30px var(--font-poster); }
 .ac-side-code { position: absolute; right: -16px; top: 40%; writing-mode: vertical-rl; font: 9px var(--font-mono); color: var(--muted-foreground); }
@@ -358,7 +358,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-exhibit > :last-child { transition-delay: .18s; }
 .gx-shimmer { background: linear-gradient(100deg, var(--primary) 20%, var(--foreground) 50%, var(--primary) 80%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gx-shine 4s linear infinite; }
 @keyframes gx-shine { to { background-position: -200% 0; } }
-.gx-card { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--primary) 45%, transparent); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.gx-card { box-shadow: 0 30px 80px -30px color-mix(in oklab, var(--gold) 45%, transparent); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
 .gx-card:hover { transform: perspective(900px) rotateY(-6deg) rotateX(4deg) scale(1.02); }
 .gx-marquee { animation: gx-marq 40s linear infinite; }
 @keyframes gx-marq { to { transform: translateX(-50%); } }
@@ -370,24 +370,24 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
 
 /* Collectible holo card (hero exhibit) */
-.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: radial-gradient(60% 70% at 50% 45%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%); overflow: hidden; }
+.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: radial-gradient(60% 70% at 50% 45%, color-mix(in oklab, var(--gold) 14%, transparent), transparent 70%); overflow: hidden; }
 .hc-scene { position: relative; perspective: 1100px; width: min(300px, 72vw); }
-.hc-shadow { position: absolute; inset: 12% 8% -6%; border-radius: 24px; background: color-mix(in oklab, var(--primary) 40%, transparent); filter: blur(42px); opacity: .45; animation: hc-pulse 5s ease-in-out infinite; }
+.hc-shadow { position: absolute; inset: 12% 8% -6%; border-radius: 24px; background: color-mix(in oklab, var(--gold) 40%, transparent); filter: blur(42px); opacity: .45; animation: hc-pulse 5s ease-in-out infinite; }
 .hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 20px; padding: 6px;
-  background: linear-gradient(140deg, color-mix(in oklab, var(--primary) 90%, var(--foreground)), color-mix(in oklab, var(--primary) 35%, var(--background)) 40%, var(--primary) 70%, color-mix(in oklab, var(--primary) 30%, var(--background)));
+  background: linear-gradient(140deg, color-mix(in oklab, var(--gold) 90%, var(--foreground)), color-mix(in oklab, var(--gold) 35%, var(--background)) 40%, var(--gold) 70%, color-mix(in oklab, var(--gold) 30%, var(--background)));
   transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 6s ease-in-out infinite; }
 .hc-card[data-active="true"] { transition: transform .08s linear; animation-play-state: paused; }
-.hc-inner { position: relative; height: 100%; border-radius: 15px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
+.hc-inner { position: relative; height: 100%; border-radius: 15px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent); }
 .hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; transform: translateZ(30px); }
-.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--primary); border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); padding: .15rem .45rem; border-radius: 999px; }
-.hc-art { position: relative; flex: 1; margin: 0 .6rem; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent); }
+.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--gold); border: 1px solid color-mix(in oklab, var(--gold) 50%, transparent); padding: .15rem .45rem; border-radius: 999px; }
+.hc-art { position: relative; flex: 1; margin: 0 .6rem; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--gold) 25%, transparent); }
 .hc-art-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 40px var(--background-deep); pointer-events: none; }
 .hc-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .2em; color: var(--muted-foreground); }
 .hc-serial { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--foreground); }
-.hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--primary); }
+.hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--gold); }
 .hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; }
 .hc-foil { mix-blend-mode: color-dodge; opacity: .22; transition: opacity .4s;
-  background: repeating-linear-gradient(115deg, transparent 0 8%, color-mix(in oklab, var(--primary) 70%, transparent) 12%, transparent 18%, color-mix(in oklab, var(--brand-violet) 60%, transparent) 24%, transparent 30%);
+  background: repeating-linear-gradient(115deg, transparent 0 8%, color-mix(in oklab, var(--gold) 70%, transparent) 12%, transparent 18%, color-mix(in oklab, var(--foreground) 45%, transparent) 24%, transparent 30%);
   background-size: 300% 300%; background-position: var(--mx) var(--my); animation: hc-foil 9s linear infinite; }
 .hc-card[data-active="true"] .hc-foil { opacity: .55; animation: none; }
 .hc-glare { background: radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--foreground) 35%, transparent), transparent 45%); mix-blend-mode: overlay; opacity: 0; transition: opacity .4s; }
@@ -396,3 +396,5 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes hc-foil { to { background-position: 300% 0; } }
 @keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
+/* the card's own 7 is gold — violet belongs to the site logo, not the artwork */
+.hc-card .gx-wordmark-seven { color: var(--gold); text-shadow: 0 0 18px color-mix(in oklab, var(--gold) 55%, transparent); }
