@@ -1,6 +1,8 @@
-import logo from "@/assets/fagent-logo-approved.png.asset.json";
-import squareLogo from "@/assets/fagent-square-500-v2.png.asset.json";
-
-export function FagentLogo({ className = "size-12", square = true }: { className?: string; square?: boolean }) {
-  return <img src={square ? squareLogo.url : logo.url} alt="FAGENT" width={square ? 500 : 885} height={square ? 500 : 125} className={`${className} max-w-full object-contain`} />;
+/** 7AGENT wordmark. `square` is kept for call-site compatibility; both variants render the same wordmark. */
+export function FagentLogo({ className = "", square = true }: { className?: string; square?: boolean }) {
+  return (
+    <span className={`gx-wordmark ${square ? "" : "gx-wordmark-wide"} ${className}`} aria-label="7AGENT" role="img">
+      <span className="gx-wordmark-seven">7</span>AGENT
+    </span>
+  );
 }

@@ -9,9 +9,9 @@ import { useLanguage } from "@/components/agent-cards/LanguageProvider";
 
 export const Route = createFileRoute("/rules")({
   head: () => ({ meta: [
-    { title: "FAGENT — 卡牌规则" },
-    { name: "description", content: "FAGENT 的发行数量、铸造价格、税收分配、交易与兑换规则。" },
-    { property: "og:title", content: "FAGENT — 卡牌规则" },
+    { title: "7AGENT — 卡牌规则" },
+    { name: "description", content: "7AGENT 的发行数量、铸造价格、税收分配、交易与兑换规则。" },
+    { property: "og:title", content: "7AGENT — 卡牌规则" },
     { property: "og:description", content: "77 万张卡牌的铸造、持有、交易与兑换规则。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -72,14 +72,14 @@ function CardRulesPage() {
   const { t } = useLanguage();
   return <div className="ac-page">
     <header className="ac-header"><div className="ac-container flex h-20 items-center justify-between gap-4">
-      <Link to="/" aria-label={t("FAGENT 首页")}><FagentLogo /></Link>
+      <Link to="/" aria-label={t("7AGENT 首页")}><FagentLogo className="text-lg" /></Link>
       <CardNavigation className="hidden items-center gap-5 lg:gap-7 md:flex" />
       <LanguageSwitch />
     </div></header>
     <main className="ac-container py-10 sm:py-14">
       <div className="mb-8 md:hidden"><CardNavigation className="ac-tabs" compact /></div>
       <Button asChild variant="ghost" className="mb-8 px-0 text-muted-foreground"><Link to="/"><ArrowLeft />{t("返回卡牌")}</Link></Button>
-      <p className="mb-3 font-mono text-xs text-primary">FAGENT / RULES</p>
+      <p className="mb-3 font-mono text-xs text-primary">7AGENT / RULES</p>
       <h1 className="text-4xl font-bold">{t("卡牌规则")}</h1>
       <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">{t("依据本项目选定的卡牌金库合约。铸造进度、市场挂单与金库账本读取 BNB Chain；交易由币安 Agent 钱包确认后执行。")}</p>
       <div className="mt-10 max-w-3xl">{sections.map((section, i) => <section key={section.title} className="grid grid-cols-[32px_1fr] gap-4 border-t border-border py-7 sm:gap-8"><span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span><div className="min-w-0"><h2 className="mb-3 text-xl">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></div></section>)}</div>

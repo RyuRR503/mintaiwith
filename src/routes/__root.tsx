@@ -9,14 +9,14 @@ import { LanguageMetadata } from "@/components/agent-cards/LanguageMetadata";
 
 function NotFoundComponent() {
   const { t } = useLanguage();
-  return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><p className="font-mono text-xs text-primary">FAGENT / 404</p><h1 className="mt-4 text-4xl">{t("页面不存在")}</h1><Button asChild className="mt-6"><Link to="/">{t("返回首页")}</Link></Button></div></div>;
+  return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><p className="font-mono text-xs text-primary">7AGENT / 404</p><h1 className="mt-4 text-4xl">{t("页面不存在")}</h1><Button asChild className="mt-6"><Link to="/">{t("返回首页")}</Link></Button></div></div>;
 }
 
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   const { t } = useLanguage();
   const router = useRouter();
   useEffect(() => { reportLovableError(error, { boundary: "tanstack_root_error_component" }); }, [error]);
-  return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><h1 className="text-xl">{t("这一页没能加载")}</h1><p className="mt-3 text-sm text-muted-foreground">{t("可以重试，或者回到 FAGENT 首页。")}</p><div className="mt-6 flex justify-center gap-3"><Button onClick={() => { void router.invalidate(); reset(); }}>{t("重试")}</Button><Button asChild variant="outline"><Link to="/">{t("返回首页")}</Link></Button></div></div></div>;
+  return <div className="flex min-h-screen items-center justify-center bg-background px-4"><div className="max-w-md text-center"><h1 className="text-xl">{t("这一页没能加载")}</h1><p className="mt-3 text-sm text-muted-foreground">{t("可以重试，或者回到 7AGENT 首页。")}</p><div className="mt-6 flex justify-center gap-3"><Button onClick={() => { void router.invalidate(); reset(); }}>{t("重试")}</Button><Button asChild variant="outline"><Link to="/">{t("返回首页")}</Link></Button></div></div></div>;
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -24,7 +24,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "author", content: "FAGENT" },
+      { name: "author", content: "7AGENT" },
       { name: "theme-color", content: "#060606" },
       { name: "color-scheme", content: "dark" },
     ],

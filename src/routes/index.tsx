@@ -7,13 +7,14 @@ import { FagentLogo } from "@/components/agent-cards/FagentLogo";
 import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
+import { DigitalRain } from "@/components/agent-cards/DigitalRain";
 import { POOL_EDITION as P, mintQuote, vested, taxFlow, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "FAGENT Genesis — 开池版卡牌" },
-    { name: "description", content: "FAGENT 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
-    { property: "og:title", content: "FAGENT Genesis — 开池版卡牌" },
+    { title: "7AGENT Genesis — 开池版卡牌" },
+    { name: "description", content: "7AGENT 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
+    { property: "og:title", content: "7AGENT Genesis — 开池版卡牌" },
     { property: "og:description", content: "777,777 张卡，每张一幅由编号生成的代码艺术。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -75,7 +76,7 @@ function GenesisPage() {
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="gx-container flex items-center justify-between gap-5 py-3">
-          <FagentLogo />
+          <FagentLogo className="text-xl" />
           <CardNavigation compact className="hidden gap-7 md:flex" />
           <LanguageSwitch />
         </div>
@@ -85,10 +86,11 @@ function GenesisPage() {
 
       {/* Hero */}
       <section className="gx-container gx-intro">
+        <DigitalRain className="gx-rain" />
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
-            <h1 className="gx-heading mt-3">FAGENT<span className="text-primary">.</span></h1>
+            <h1 className="gx-heading mt-3">7AGENT<span className="text-primary">.</span></h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
             <p className="text-2xl font-semibold leading-relaxed">一张卡，接住 AI 时代的<br className="hidden md:block" />每一笔税收</p>
@@ -98,7 +100,7 @@ function GenesisPage() {
         <div className="gx-exhibit">
           <div data-reveal className="gx-rise gx-art-stage">
             <GenerativeCard id={id} kind={kind} className="absolute inset-0 h-full w-full cursor-crosshair" />
-            <div className="gx-art-edition pointer-events-none"><span>FAGENT / #{String(id).padStart(6, "0")}</span><span>{kind === "presale" ? "PRESALE" : kind === "team" ? "TEAM" : "OPEN"}</span></div>
+            <div className="gx-art-edition pointer-events-none"><span>7AGENT / #{String(id).padStart(6, "0")}</span><span>{kind === "presale" ? "PRESALE" : kind === "team" ? "TEAM" : "OPEN"}</span></div>
             <div className="gx-art-serial pointer-events-none">{String(id).padStart(6, "0")}<ArrowUpRight aria-hidden="true" /></div>
           </div>
           <aside data-reveal className="gx-rise gx-exhibit-rail">
