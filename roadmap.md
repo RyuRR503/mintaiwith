@@ -16,4 +16,5 @@
 - [x] Replace copied database migrations with an empty migration set; leave hosted records untouched.
 - [x] Remove unused map dependencies and Cloud-auth initialization from the preview.
 - [x] Verify mint preview, market sides, command copying, ledger, rules navigation and mobile display; 7 model tests passed.
+- [x] Build /genesis code-art UI for undeployed Flap Pool edition (address blank, display-only)
 - [x] Cancel obsolete game-secret updates because the retained pages no longer use them; stored secret values were not changed.
