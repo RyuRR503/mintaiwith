@@ -18,4 +18,5 @@
 - [x] Verify mint preview, market sides, command copying, ledger, rules navigation and mobile display; 7 model tests passed.
 - [x] Build code-art UI for undeployed Flap Pool edition (address blank, display-only).
 - [x] Replace the old homepage with the new pool-edition page, remove the separate navigation entry, and verify the homepage interaction.
+- [x] Refine homepage typography, compact card proportions, static metrics, lifecycle spacing and mobile navigation; verify three viewport widths, phase switches, random cards and six rule tests.
 - [x] Cancel obsolete game-secret updates because the retained pages no longer use them; stored secret values were not changed.
