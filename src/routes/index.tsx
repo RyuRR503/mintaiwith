@@ -7,7 +7,6 @@ import { FagentLogo } from "@/components/agent-cards/FagentLogo";
 import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
-import { DigitalRain } from "@/components/agent-cards/DigitalRain";
 import { POOL_EDITION as P, mintQuote, vested, taxFlow, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
@@ -86,7 +85,6 @@ function GenesisPage() {
 
       {/* Hero */}
       <section className="gx-container gx-intro">
-        <DigitalRain className="gx-rain" />
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
