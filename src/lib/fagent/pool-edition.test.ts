@@ -26,7 +26,7 @@ describe("pool edition rules", () => {
   });
 });
 
-import { poolStatus as __ps } from "./pool-edition";
+import { poolStatus as __ps } from "./pool-edition.ts";
 describe("poolStatus", () => {
   it("stays in presale until 20,000 mints", () => {
     expect(__ps(19_999).phase).toBe("presale");

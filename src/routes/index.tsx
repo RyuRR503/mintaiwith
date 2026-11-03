@@ -8,7 +8,7 @@ import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
 import { HoloCard } from "@/components/agent-cards/HoloCard";
-import { POOL_EDITION as P, mintQuote, vested, isPoolDeployed } from "@/lib/fagent/pool-edition";
+import { POOL_EDITION as P, POOL_MOCK as M, poolStatus, mintQuote, vested, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -67,6 +67,7 @@ function GenesisPage() {
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
   const kind = id <= P.presaleCards ? "presale" : "open";
+  const st = poolStatus(M.minted);
   const selectedPhase = phases[active] ?? phases[0];
   if (!selectedPhase) return null;
 
@@ -118,14 +119,27 @@ function GenesisPage() {
       </section>
 
       <section className="border-y border-border/60">
-        <dl className="gx-container gx-metrics">
-          {[
-            { label: "公开铸造", value: fmt(P.paidCards), note: `总量 ${fmt(P.totalCards)} 张` },
-            { label: "线性释放", value: `${P.vestDays} 天`, note: `预售卡每张 ${fmt(P.cardGrant)} 枚` },
-            { label: "每地址上限", value: "10 张", note: `代币总量 ${fmt(P.totalTokens)}` },
-            { label: "初始池子", value: `${P.poolBnb} BNB`, note: "LP 销毁" },
-          ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{item.label}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
-        </dl>
+        <div className="gx-container py-8">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <p className="flex items-center gap-2 font-mono text-xs text-primary"><span className="gx-live-dot" />LIVE / {st.phase === "presale" ? "预售进行中" : "开池后铸造"}</p>
+            <span className="rounded border border-border px-2 py-1 font-mono text-[11px] text-muted-foreground">演示数据 · 合约部署后自动换成链上实时数据</span>
+          </div>
+          <dl className="gx-metrics">
+            {[
+              { label: "已铸造", value: fmt(M.minted), note: `总量 ${fmt(P.totalCards)} 张` },
+              { label: "已募集", value: `${fmt(M.presaleRaisedBnb, 2)} BNB`, note: `预售目标 49 BNB` },
+              { label: "铸造地址", value: fmt(M.minters), note: `每地址最多 ${P.maxPerAddress} 张` },
+              { label: "预售剩余", value: fmt(st.presaleLeft), note: `卖满 ${fmt(P.presaleCards)} 张即可开池` },
+            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{item.label}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
+          </dl>
+          <div className="mt-6">
+            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>预售进度</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
+            <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
+          </div>
+          <ul className="mt-6 flex gap-6 overflow-x-auto font-mono text-xs text-muted-foreground">
+            {M.recent.map(r => <li key={r.addr} className="shrink-0"><span className="text-foreground">{r.addr}</span> 铸造 <span className="text-primary">{r.n} 张</span> · {r.ago}</li>)}
+          </ul>
+        </div>
       </section>
 
       {/* Lifecycle */}
@@ -189,7 +203,7 @@ function GenesisPage() {
       </section>
 
       <footer className="border-t border-border/60 px-6 py-8 text-center font-mono text-xs text-muted-foreground">
-        开池版合约尚未部署 · 以上为合约规则演示，不代表实时数据
+        开池版合约尚未部署 · 铸造数据为演示数据，不代表链上实时数据
       </footer>
     </main>
   );
