@@ -29,7 +29,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
     };
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
-    const gold = token("--gold", "#d4a94a");
+    const gold = token("--primary", "#8b5cf6");
     const bg = token("--background-deep", token("--background", "#0a0a0a"));
     const fg = token("--foreground", "#f5f0e6");
     const rand = rng(id + 7);
