@@ -25,3 +25,12 @@ describe("pool edition rules", () => {
     expect(isPoolDeployed()).toBe(false);
   });
 });
+
+import { poolStatus as __ps } from "./pool-edition";
+describe("poolStatus", () => {
+  it("stays in presale until 20,000 mints", () => {
+    expect(__ps(19_999).phase).toBe("presale");
+    expect(__ps(20_000).phase).toBe("open");
+    expect(__ps(10_000).presalePct).toBe(50);
+  });
+});

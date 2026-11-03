@@ -48,3 +48,30 @@ export function taxFlow(volumeBnb: number) {
   const s = POOL_EDITION.taxSplit;
   return { tax, dividend: tax * s.dividend, floor: tax * s.floor, ops: tax * s.ops };
 }
+
+/** Demo snapshot shown until the pool edition is deployed. Replace with chain reads after deployment. */
+export const POOL_MOCK = {
+  minted: 13_482,
+  minters: 2_917,
+  presaleRaisedBnb: 13_482 * 0.00245,
+  floorFundBnb: 0,
+  dividendBnb: 0,
+  burnedTokens: 0,
+  recent: [
+    { addr: "0x8a3f…41c2", n: 10, ago: "12 秒前" },
+    { addr: "0x1d07…9be0", n: 3, ago: "41 秒前" },
+    { addr: "0xc5e2…07af", n: 5, ago: "1 分钟前" },
+    { addr: "0x44b9…e81d", n: 1, ago: "2 分钟前" },
+    { addr: "0x9f10…3a76", n: 10, ago: "3 分钟前" },
+  ],
+} as const;
+
+export function poolStatus(minted: number) {
+  const presaleLeft = Math.max(0, POOL_EDITION.presaleCards - minted);
+  return {
+    phase: presaleLeft > 0 ? "presale" as const : "open" as const,
+    presalePct: Math.min(100, (minted / POOL_EDITION.presaleCards) * 100),
+    totalPct: (minted / POOL_EDITION.totalCards) * 100,
+    presaleLeft,
+  };
+}
