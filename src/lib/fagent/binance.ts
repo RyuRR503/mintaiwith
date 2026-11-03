@@ -1,7 +1,7 @@
 import { parseEther } from "viem";
 import { useEffect, useState } from "react";
 import type { Language } from "./i18n";
-import { 7AGENT } from "./config";
+import { FAGENT } from "./config";
 
 /** Short, explicit commands for the Binance Wallet built-in AI: full signature, one param per line, no ABI lookup. */
 export type CommandStyle = "general" | "binance";
@@ -33,8 +33,8 @@ function weiText(wei: bigint, lang: Language) {
 export function binanceCommand(sig: string, params: [string, string][], value: string, lang: Language, note = "") {
   const en = lang === "en";
   const lines = en
-    ? [`You are my Binance Agent Wallet assistant. Network: BNB Chain (chainId=${7AGENT.chainId}).`, `Card Vault: ${7AGENT.vault}`, "Call this Vault function directly (do not look up the ABI on-chain; the signature is given):", sig, ...params.map(([k, v]) => `- param ${k}: ${v}`), `- value: ${value}`]
-    : [`你是我的币安 Agent 钱包助手。网络：BNB Chain (chainId=${7AGENT.chainId})。`, `卡牌金库 Vault：${7AGENT.vault}`, "请直接调用金库合约的函数（不要去链上查 ABI，函数签名已给出）：", sig, ...params.map(([k, v]) => `- 参数 ${k}：${v}`), `- value：${value}`];
+    ? [`You are my Binance Agent Wallet assistant. Network: BNB Chain (chainId=${FAGENT.chainId}).`, `Card Vault: ${FAGENT.vault}`, "Call this Vault function directly (do not look up the ABI on-chain; the signature is given):", sig, ...params.map(([k, v]) => `- param ${k}: ${v}`), `- value: ${value}`]
+    : [`你是我的币安 Agent 钱包助手。网络：BNB Chain (chainId=${FAGENT.chainId})。`, `卡牌金库 Vault：${FAGENT.vault}`, "请直接调用金库合约的函数（不要去链上查 ABI，函数签名已给出）：", sig, ...params.map(([k, v]) => `- 参数 ${k}：${v}`), `- value：${value}`];
   if (note) lines.push(note);
   lines.push(en ? "Show me the transaction preview; send only after I confirm." : "生成交易预览让我确认，确认后再发送。");
   return lines.join("\n");

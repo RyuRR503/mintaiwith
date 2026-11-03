@@ -1,6 +1,6 @@
 import { translate, type Language } from "./i18n";
 import { parseEther } from "viem";
-import { 7AGENT } from "./config";
+import { FAGENT } from "./config";
 
 function orderPrice(price: string) {
   if (!/^\d+(\.\d{1,18})?$/.test(price)) throw new Error("价格格式不正确");
@@ -8,7 +8,7 @@ function orderPrice(price: string) {
   if (wei <= 0n || wei > (1n << 96n) - 1n) throw new Error("价格超出合约范围");
   return wei;
 }
-export const commandHead = `你是我的币安 Agent 钱包助手。网络：BNB Chain，chainId=${7AGENT.chainId}。项目代币 CA：${7AGENT.token}。卡牌金库 Vault：${7AGENT.vault}。所有卡牌函数调用 Vault，不调用代币 CA 或工厂。先从已验证源码获取 ABI 并核对函数签名，读取最新状态并模拟交易；展示函数、参数、BNB 金额和 gas，等我确认后才发送。失败立即停止，不索要或导出私钥。`;
+export const commandHead = `你是我的币安 Agent 钱包助手。网络：BNB Chain，chainId=${FAGENT.chainId}。项目代币 CA：${FAGENT.token}。卡牌金库 Vault：${FAGENT.vault}。所有卡牌函数调用 Vault，不调用代币 CA 或工厂。先从已验证源码获取 ABI 并核对函数签名，读取最新状态并模拟交易；展示函数、参数、BNB 金额和 gas，等我确认后才发送。失败立即停止，不索要或导出私钥。`;
 export function mintCommand(count: number, language: Language = "zh") {
   const t = (text: string, ...values: unknown[]) => translate(language, text, ...values);
   if (!Number.isInteger(count) || count < 1 || count > 7) throw new Error(t("铸造数量须为 1–7"));
