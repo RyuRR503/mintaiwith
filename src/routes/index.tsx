@@ -88,7 +88,7 @@ function GenesisPage() {
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
-            <h1 className="gx-heading mt-3">7AGENT<span className="text-primary">.</span></h1>
+            <h1 className="gx-heading mt-3"><span className="gx-heading-seven">7</span>AGENT<span className="text-primary">.</span></h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
             <p className="text-2xl font-semibold leading-relaxed">一张卡，接住 AI 时代的<br className="hidden md:block" />每一笔税收</p>
