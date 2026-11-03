@@ -19,14 +19,14 @@ export function HoloCard({ id, kind }: { id: number; kind: Kind }) {
     el.style.setProperty("--ry", `${(x - 0.5) * 26}deg`);
     el.style.setProperty("--mx", `${x * 100}%`);
     el.style.setProperty("--my", `${y * 100}%`);
-    el.dataset.active = "true";
+    el.dataset["active"] = "true";
   };
   const leave = () => {
     const el = ref.current;
     if (!el) return;
     el.style.setProperty("--rx", "0deg");
     el.style.setProperty("--ry", "0deg");
-    el.dataset.active = "false";
+    el.dataset["active"] = "false";
   };
 
   return (
