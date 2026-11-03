@@ -186,19 +186,6 @@ function GenesisPage() {
           <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label="天数" />
         </div>
 
-        <div data-reveal className="gx-rise gx-tax-tool">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div><p className="gx-kicker">C / TAX FLOW</p><h3 className="mt-2 text-3xl font-bold">交易税去哪了</h3></div>
-            <div className="text-right"><p className="text-muted-foreground">假设交易量</p><p className="font-display text-5xl">{fmt(volume)} BNB</p></div>
-          </div>
-          <Slider className="mt-4" min={10} max={5000} step={10} value={[volume]} onValueChange={v => setVolume(v[0] ?? 0)} aria-label="交易量" />
-          <div className="mt-6 grid min-h-20 grid-cols-[5fr_3fr_2fr] overflow-hidden rounded-md">
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-primary text-primary-foreground"><span>分红</span><strong>{flow.dividend.toFixed(2)}</strong></div>
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-primary/60 text-primary-foreground"><span>地板</span><strong>{flow.floor.toFixed(2)}</strong></div>
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-muted text-foreground"><span>运营</span><strong>{flow.ops.toFixed(2)}</strong></div>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">2% 税 = {flow.tax.toFixed(2)} BNB（Flap 先抽协议费）。分红所有卡平分；地板基金先补 0.02 BNB 触发费，再从最低挂单收卡销毁。</p>
-        </div>
       </section>
 
       <footer className="border-t border-border/60 px-6 py-8 text-center font-mono text-xs text-muted-foreground">
