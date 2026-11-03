@@ -26,9 +26,9 @@ const sections = [
   { title: "代币分配", paragraphs: [
     "① 开池流动性：124,672,000 枚（约 16.0%），与 36.75 BNB 一起进池子，LP 直接销毁。",
     "② 预售卡发放：20,000 张 × 8,440 = 168,800,000 枚（约 21.7%），开池后 5 天线性释放。",
-    "③ 团队卡发放：38,888 张 × 8,440 = 328,214,720 枚（约 42.2%），每张从铸出时起 5 天线性释放。团队卡每 19 张付费铸造才解锁 1 张，与普通卡同权。",
-    "④ 阶梯卖单：58,611,119 枚（约 7.5%），由金库挂单卖出，卖出所得 BNB 分 7 天按卡等权分红。",
-    "⑤ 未分配：97,479,938 枚（约 12.5%），永久留在金库，不发放、不流通。",
+    "!团队卡只占全部卡牌的 5%（38,888 / 777,777），而且不能一次放出：每铸出 19 张付费卡，才解锁 1 张团队卡。团队卡与普通卡同权。",
+    "③ 阶梯卖单：58,611,119 枚（约 7.5%），由金库挂单卖出，卖出所得 BNB 分 7 天按卡等权分红。",
+    "④ 未分配：97,479,938 枚（约 12.5%），锁在金库里，合约没有任何函数能取出，等于永久不流通。",
     "开池后铸造的卡不占以上额度：它们用 BNB 当场在池子里买币，30% 销毁，70% 5 天释放给铸造地址。",
   ] },
   { title: "预售", paragraphs: [
@@ -74,7 +74,7 @@ function CardRulesPage() {
       <p className="mb-3 font-mono text-xs text-primary">7AGENT / RULES</p>
       <h1 className="text-4xl font-bold">{t("卡牌规则")}</h1>
       <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground">{t("依据 7AGENT 开池版合约。合约尚未部署，上线后以链上合约为准。")}</p>
-      <div className="mt-10 max-w-3xl">{sections.map((section, i) => <section key={section.title} className="grid grid-cols-[32px_1fr] gap-4 border-t border-border py-7 sm:gap-8"><span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span><div className="min-w-0"><h2 className="mb-3 text-xl">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></div></section>)}</div>
+      <div className="mt-10 max-w-3xl">{sections.map((section, i) => <section key={section.title} className="grid grid-cols-[32px_1fr] gap-4 border-t border-border py-7 sm:gap-8"><span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span><div className="min-w-0"><h2 className="mb-3 text-xl">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => paragraph.startsWith("!") ? <p key={paragraph} className="rounded-md border border-primary/50 bg-primary/10 px-4 py-3 text-sm font-medium leading-7 text-foreground">{t(paragraph.slice(1))}</p> : <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></div></section>)}</div>
       <Button asChild className="mt-6"><Link to="/">{t("返回铸造")}<ArrowUpRight /></Link></Button>
     </main>
   </div>;
