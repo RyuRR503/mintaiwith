@@ -296,7 +296,6 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-mint-tool, .gx-vesting-tool { min-width: 0; padding-block: 32px; }
 .gx-mint-tool { padding-right: 40px; }
 .gx-vesting-tool { border-left: 1px solid var(--border); padding-left: 40px; }
-.gx-tax-tool { grid-column: 1 / -1; padding-top: 32px; border-top: 1px solid var(--border); }
 .gx-mint-mark { border: 1px solid var(--border); transition: background .4s, border-color .4s, transform .5s var(--ease-cine); }
 .gx-mint-mark-active { background: color-mix(in oklab, var(--primary) 18%, var(--background)); border-color: var(--primary); transform: translateY(-3px); }
 .gx-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -366,7 +365,6 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes gx-swap { from { opacity: 0; transform: translateY(12px); clip-path: inset(0 0 8% 0); } to { opacity: 1; transform: none; clip-path: inset(0); } }
 .gx-pop { animation: gx-pop .4s cubic-bezier(.3,1.6,.5,1) both; }
 @keyframes gx-pop { from { opacity: 0; transform: scale(.6) translateY(10px); } }
-.gx-flow { font-family: var(--font-mono); font-size: .8rem; transition: all .5s; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
 
 /* Collectible holo card (hero exhibit) */

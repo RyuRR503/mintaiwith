@@ -8,7 +8,7 @@ import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
 import { HoloCard } from "@/components/agent-cards/HoloCard";
-import { POOL_EDITION as P, mintQuote, vested, taxFlow, isPoolDeployed } from "@/lib/fagent/pool-edition";
+import { POOL_EDITION as P, mintQuote, vested, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -27,9 +27,9 @@ const fmt = (n: number, d = 0) => n.toLocaleString("en-US", { maximumFractionDig
 const phases = [
   { k: "01", title: "预售", body: `前 ${fmt(P.presaleCards)} 张，每张 ${P.presalePrice} BNB，共 49 BNB。窗口 7 天。没卖满可烧卡全额退款。` },
   { k: "02", title: "开池", body: `卖满后 7 天内任何人可开池：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚进池，LP 销毁。超时则永久关闭，只能退款。` },
-  { k: "03", title: "释放", body: `预售卡、团队卡各 ${fmt(P.cardGrant)} 枚，5 天线性释放，每天 1,688 枚。币跟地址走，不跟卡走。` },
+  { k: "03", title: "释放", body: `预售卡每张 ${fmt(P.cardGrant)} 枚，5 天线性释放，每天 1,688 枚。币跟地址走，不跟卡走。` },
   { k: "04", title: "开池后铸造", body: `每张 ${P.openPrice} BNB，不涨价。25% 给运营，75% 当场买币：30% 进黑洞，70% 记在你名下 5 天释放。` },
-  { k: "05", title: "地板基金", body: `交易税 2%：50% 分红、30% 地板基金、20% 运营。每 30 分钟从最低挂单收卡并销毁，全价付给卖家。` },
+  { k: "05", title: "地板基金", body: `交易税的一部分进入地板基金，每 30 分钟从最低挂单收卡并销毁，全价付给卖家。比例见规则。` },
 ];
 
 function useReveal() {
@@ -49,7 +49,6 @@ function GenesisPage() {
   const [phase, setPhase] = useState<"presale" | "open">("presale");
   const [count, setCount] = useState(3);
   const [day, setDay] = useState(2);
-  const [volume, setVolume] = useState(100);
   const [active, setActive] = useState(0);
   const progress = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -67,8 +66,7 @@ function GenesisPage() {
   }, []);
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
-  const flow = taxFlow(volume);
-  const kind = id <= P.presaleCards ? "presale" : id % 20 === 0 ? "team" : "open";
+  const kind = id <= P.presaleCards ? "presale" : "open";
   const selectedPhase = phases[active] ?? phases[0];
   if (!selectedPhase) return null;
 
@@ -123,7 +121,7 @@ function GenesisPage() {
         <dl className="gx-container gx-metrics">
           {[
             { label: "公开铸造", value: fmt(P.paidCards), note: `总量 ${fmt(P.totalCards)} 张` },
-            { label: "团队卡牌", value: fmt(P.teamCards), note: "每 19 张解锁 1 张团队卡" },
+            { label: "线性释放", value: `${P.vestDays} 天`, note: `预售卡每张 ${fmt(P.cardGrant)} 枚` },
             { label: "每地址上限", value: "10 张", note: `代币总量 ${fmt(P.totalTokens)}` },
             { label: "初始池子", value: `${P.poolBnb} BNB`, note: "LP 销毁" },
           ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{item.label}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
@@ -157,7 +155,7 @@ function GenesisPage() {
 
       {/* Calculators */}
       <section className="gx-container gx-workspace">
-        <div data-reveal className="gx-rise gx-chapter-heading lg:col-span-2"><p className="gx-kicker">02 / ALLOCATION</p><h2>每一笔，都有去向</h2><span className="gx-chapter-note">铸造 · 释放 · 税收</span></div>
+        <div data-reveal className="gx-rise gx-chapter-heading lg:col-span-2"><p className="gx-kicker">02 / CALCULATOR</p><h2>先算清楚，再铸造</h2><span className="gx-chapter-note">铸造 · 释放</span></div>
         <div data-reveal className="gx-rise gx-mint-tool">
           <p className="gx-kicker">A / MINT</p>
           <h3 className="mt-2 text-3xl font-bold">铸造试算</h3>
@@ -180,7 +178,7 @@ function GenesisPage() {
         <div data-reveal className="gx-rise gx-vesting-tool">
           <p className="gx-kicker">B / VESTING</p>
           <h3 className="mt-2 text-3xl font-bold">5 天线性释放</h3>
-          <p className="mt-2 text-muted-foreground">以 {q.count} 张预售/团队卡为例，共 {fmt(grant)} 枚。</p>
+          <p className="mt-2 text-muted-foreground">以 {q.count} 张预售卡为例，共 {fmt(grant)} 枚。</p>
           <div className="mt-8 flex h-40 items-end gap-1">
             {Array.from({ length: 40 }, (_, i) => { const on = i / 40 < day / P.vestDays; return <div key={i} className={`flex-1 rounded-t-sm transition-all duration-500 ${on ? "bg-primary" : "bg-muted"}`} style={{ height: `${20 + (i / 40) * 80}%`, transitionDelay: `${i * 8}ms` }} />; })}
           </div>
@@ -188,19 +186,6 @@ function GenesisPage() {
           <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label="天数" />
         </div>
 
-        <div data-reveal className="gx-rise gx-tax-tool">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div><p className="gx-kicker">C / TAX FLOW</p><h3 className="mt-2 text-3xl font-bold">交易税去哪了</h3></div>
-            <div className="text-right"><p className="text-muted-foreground">假设交易量</p><p className="font-display text-5xl">{fmt(volume)} BNB</p></div>
-          </div>
-          <Slider className="mt-4" min={10} max={5000} step={10} value={[volume]} onValueChange={v => setVolume(v[0] ?? 0)} aria-label="交易量" />
-          <div className="mt-6 grid min-h-20 grid-cols-[5fr_3fr_2fr] overflow-hidden rounded-md">
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-primary text-primary-foreground"><span>分红</span><strong>{flow.dividend.toFixed(2)}</strong></div>
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-primary/60 text-primary-foreground"><span>地板</span><strong>{flow.floor.toFixed(2)}</strong></div>
-            <div className="gx-flow flex flex-col items-center justify-center gap-1 bg-muted text-foreground"><span>运营</span><strong>{flow.ops.toFixed(2)}</strong></div>
-          </div>
-          <p className="mt-4 text-sm text-muted-foreground">2% 税 = {flow.tax.toFixed(2)} BNB（Flap 先抽协议费）。分红所有卡平分；地板基金先补 0.02 BNB 触发费，再从最低挂单收卡销毁。</p>
-        </div>
       </section>
 
       <footer className="border-t border-border/60 px-6 py-8 text-center font-mono text-xs text-muted-foreground">
