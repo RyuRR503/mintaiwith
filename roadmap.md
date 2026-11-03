@@ -1,4 +1,5 @@
 # Standalone FAGENT
+- [ ] Deepen homepage editorial layout and coordinated motion; verify desktop/mobile interactions and reduced-motion rendering.
 - [x] Deliver standalone merge-tiered v2 package: preserve equal batch allocation, capped price ladder, 78 local tests passing across final suite runs, independently compiled flattened files and inspected 41-file ZIP. Mainnet fork not rerun; live website and deployment unchanged.
 - [x] Package the proposed reserve-distribution edition as ten design and accounting files; verify all 389 tiers and inspect the ZIP, without changing the live website or contract.
 - [x] Close public access to unused CATCH places/spawns without deleting records; live permissions verified, basic security rescan clear, 16 tests pass, all five FAGENT pages and current-vault command copying verified. Deep code analysis is not covered by this rescan.
