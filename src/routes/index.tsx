@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Shuffle, Lock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Shuffle, Lock, ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { FagentLogo } from "@/components/agent-cards/FagentLogo";
@@ -34,7 +34,9 @@ const phases = [
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("gx-in")), { threshold: 0.15 });
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("gx-in"); io.unobserve(e.target); }
+    }), { threshold: 0.08 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
@@ -48,6 +50,20 @@ function GenesisPage() {
   const [day, setDay] = useState(2);
   const [volume, setVolume] = useState(100);
   const [active, setActive] = useState(0);
+  const progress = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        if (progress.current) progress.current.style.transform = `scaleX(${height > 0 ? window.scrollY / height : 0})`;
+      });
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => { window.removeEventListener("scroll", update); cancelAnimationFrame(frame); };
+  }, []);
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
   const flow = taxFlow(volume);
@@ -64,40 +80,44 @@ function GenesisPage() {
           <LanguageSwitch />
         </div>
         <CardNavigation compact className="gx-container flex justify-between gap-4 overflow-x-auto md:hidden" />
+        <div ref={progress} className="gx-reading-progress" aria-hidden="true" />
       </header>
 
       {/* Hero */}
       <section className="gx-container gx-intro">
-        <div data-reveal className="gx-rise min-w-0">
-          <p className="font-mono text-xs text-primary">GENESIS / 001</p>
-          <h1 className="gx-heading mt-4">FAGENT<span className="gx-heading-sub text-primary">777,777 张独一无二</span></h1>
-          <p className="mt-6 text-xl font-medium">一张卡，接住 AI 时代的每一笔税收</p>
-          <p className="mt-3 max-w-sm text-sm text-muted-foreground">每张卡由编号生成，世上只有一张。</p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="gx-title-row">
+          <div data-reveal className="gx-rise min-w-0">
+            <p className="gx-kicker">GENESIS / 001</p>
+            <h1 className="gx-heading mt-3">FAGENT<span className="text-primary">.</span></h1>
+          </div>
+          <div data-reveal className="gx-rise gx-manifesto">
+            <p className="text-2xl font-semibold leading-relaxed">一张卡，接住 AI 时代的<br className="hidden md:block" />每一笔税收</p>
+            <p className="mt-3 text-sm text-muted-foreground">777,777 张独一无二 · 币安 Agent 钱包</p>
+          </div>
+        </div>
+        <div className="gx-exhibit">
+          <div data-reveal className="gx-rise gx-art-stage">
+            <GenerativeCard id={id} kind={kind} className="absolute inset-0 h-full w-full cursor-crosshair" />
+            <div className="gx-art-edition pointer-events-none"><span>FAGENT / #{String(id).padStart(6, "0")}</span><span>{kind === "presale" ? "PRESALE" : kind === "team" ? "TEAM" : "OPEN"}</span></div>
+            <div className="gx-art-serial pointer-events-none">{String(id).padStart(6, "0")}<ArrowUpRight aria-hidden="true" /></div>
+          </div>
+          <aside data-reveal className="gx-rise gx-exhibit-rail">
+            <div>
+              <p className="gx-kicker">THE COLLECTION</p>
+              <p className="mt-4 text-xl font-medium">编号即身份<br />每张，只有一张</p>
+              <p className="mt-3 text-sm text-muted-foreground">每张卡由编号生成，世上只有一张。</p>
+            </div>
+            <div className="gx-art-controls">
+              <label className="mb-4 flex justify-between font-mono text-xs text-muted-foreground"><span>卡号</span><span>{fmt(id)}</span></label>
+              <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label="卡号" />
+              <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>随机一张<Shuffle className="size-4" /></Button>
+            </div>
             <Button size="lg" disabled={!isPoolDeployed()} className="gap-2">
               {isPoolDeployed() ? "去铸造" : <><Lock className="size-4" />合约未上线</>}
             </Button>
-            <Button size="lg" variant="outline" className="gap-2" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>
-              <Shuffle className="size-4" />随机一张
-            </Button>
-          </div>
+          </aside>
         </div>
-        <div data-reveal className="gx-rise gx-collectible">
-          <div className="gx-card relative aspect-[3/4] overflow-hidden rounded-lg border border-primary/40">
-            <GenerativeCard id={id} kind={kind} className="absolute inset-0 h-full w-full cursor-crosshair" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-between p-5 font-mono text-xs">
-              <span className="text-primary">FAGENT</span>
-              <span className="text-muted-foreground">{kind === "presale" ? "PRESALE" : kind === "team" ? "TEAM" : "OPEN"}</span>
-            </div>
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 p-5">
-              <p className="font-display text-5xl leading-none">#{String(id).padStart(6, "0")}</p>
-            </div>
-          </div>
-          <div className="mt-5">
-            <label className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>卡号</span><span>{fmt(id)} / {fmt(P.totalCards)}</span></label>
-            <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 0)} aria-label="卡号" />
-          </div>
-        </div>
+        <div className="gx-exhibit-caption"><span>777,777 / GENESIS EDITION</span><ArrowDownRight className="size-4 text-primary" aria-hidden="true" /></div>
       </section>
 
       <section className="border-y border-border/60">
@@ -112,23 +132,24 @@ function GenesisPage() {
       </section>
 
       {/* Lifecycle */}
-      <section className="gx-container py-14 md:py-16">
-        <h2 data-reveal className="gx-rise font-display text-3xl md:text-4xl">一张卡的一生</h2>
-        <div className="mt-8 grid gap-8 lg:grid-cols-[210px_1fr]">
-          <ol className="flex gap-2 overflow-x-auto lg:flex-col">
+      <section className="gx-container gx-chapter">
+        <div data-reveal className="gx-rise gx-chapter-heading"><p className="gx-kicker">01 / LIFECYCLE</p><h2>一张卡的一生</h2><span className="gx-chapter-note">从铸造，到价值流转</span></div>
+        <div className="mt-8">
+          <ol className="gx-phase-nav">
             {phases.map((p, i) => <li key={p.k}>
-              <Button variant="ghost" aria-pressed={active === i} onClick={() => setActive(i)} className={`group flex h-12 w-full justify-start gap-4 rounded-none border-l-2 px-4 text-left ${active === i ? "border-primary text-foreground" : "border-border text-muted-foreground hover:text-foreground"}`}>
+              <Button variant="ghost" aria-pressed={active === i} onClick={() => setActive(i)} className={`gx-phase-button ${active === i ? "gx-phase-active" : ""}`}>
                 <span className="font-mono text-xs">{p.k}</span><span className="whitespace-nowrap text-base font-semibold">{p.title}</span>
               </Button>
             </li>)}
           </ol>
-          <div key={active} className="gx-swap grid min-h-60 gap-6 border-t border-border pt-6 md:grid-cols-[1fr_180px] md:items-center lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div key={active} className="gx-swap gx-phase-detail">
+            <span className="gx-phase-number" aria-hidden="true">{selectedPhase.k}</span>
             <div>
               <p className="font-mono text-xs text-primary">{selectedPhase.k} / 05</p>
               <h3 className="mt-4 text-2xl font-bold">{selectedPhase.title}</h3>
               <p className="mt-4 max-w-lg text-base text-muted-foreground">{selectedPhase.body}</p>
             </div>
-            <div className="hidden aspect-square overflow-hidden rounded-lg border border-primary/30 md:block">
+            <div className="gx-phase-art">
               <GenerativeCard id={active * 131071 + 19} kind={active === 0 ? "presale" : "open"} className="h-full w-full" />
             </div>
           </div>
@@ -136,16 +157,17 @@ function GenesisPage() {
       </section>
 
       {/* Calculators */}
-      <section className="gx-container grid items-stretch gap-5 pb-16 lg:grid-cols-2">
-        <div data-reveal className="gx-rise min-w-0 rounded-lg border border-border bg-card p-5 md:p-7">
-          <p className="font-mono text-xs tracking-[0.3em] text-primary">MINT</p>
+      <section className="gx-container gx-workspace">
+        <div data-reveal className="gx-rise gx-chapter-heading lg:col-span-2"><p className="gx-kicker">02 / ALLOCATION</p><h2>每一笔，都有去向</h2><span className="gx-chapter-note">铸造 · 释放 · 税收</span></div>
+        <div data-reveal className="gx-rise gx-mint-tool">
+          <p className="gx-kicker">A / MINT</p>
           <h3 className="mt-2 text-3xl font-bold">铸造试算</h3>
           <div className="mt-5 inline-flex rounded-md border border-border p-1">
             {(["presale", "open"] as const).map(p => <Button key={p} size="sm" variant={phase === p ? "default" : "ghost"} aria-pressed={phase === p} onClick={() => setPhase(p)}>{p === "presale" ? "预售" : "开池后"}</Button>)}
           </div>
           <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">张数</span><span className="font-display text-5xl">{q.count}</span></div>
           <Slider className="mt-3" min={1} max={P.maxPerAddress} step={1} value={[count]} onValueChange={v => setCount(v[0] ?? 0)} aria-label="张数" />
-          <div className="mt-6 flex gap-2">{Array.from({ length: q.count }, (_, i) => <div key={i} className="gx-pop h-14 flex-1 overflow-hidden rounded-md border border-primary/30" style={{ animationDelay: `${i * 40}ms` }}><GenerativeCard id={id + i} interactive={false} className="h-full w-full" /></div>)}</div>
+          <div className="mt-6 grid h-12 grid-cols-10 gap-1.5" aria-hidden="true">{Array.from({ length: P.maxPerAddress }, (_, i) => <div key={i} className={`gx-mint-mark ${i < q.count ? "gx-mint-mark-active" : ""}`} />)}</div>
           <dl className="mt-6 grid grid-cols-2 gap-4 font-mono text-sm">
             <div><dt className="text-muted-foreground">支付</dt><dd className="text-2xl text-foreground">{q.bnb} BNB</dd></div>
             {phase === "presale"
@@ -156,8 +178,8 @@ function GenesisPage() {
           {phase === "open" && <p className="mt-3 text-xs text-muted-foreground">到手代币按当时池子价格决定，网站上线后实时报价。</p>}
         </div>
 
-        <div data-reveal className="gx-rise min-w-0 rounded-lg border border-border bg-card p-5 md:p-7">
-          <p className="font-mono text-xs tracking-[0.3em] text-primary">VESTING</p>
+        <div data-reveal className="gx-rise gx-vesting-tool">
+          <p className="gx-kicker">B / VESTING</p>
           <h3 className="mt-2 text-3xl font-bold">5 天线性释放</h3>
           <p className="mt-2 text-muted-foreground">以 {q.count} 张预售/团队卡为例，共 {fmt(grant)} 枚。</p>
           <div className="mt-8 flex h-40 items-end gap-1">
@@ -167,9 +189,9 @@ function GenesisPage() {
           <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label="天数" />
         </div>
 
-        <div data-reveal className="gx-rise min-w-0 border-t border-border pt-10 lg:col-span-2">
+        <div data-reveal className="gx-rise gx-tax-tool">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <div><p className="font-mono text-xs tracking-[0.3em] text-primary">TAX FLOW</p><h3 className="mt-2 text-3xl font-bold">交易税去哪了</h3></div>
+            <div><p className="gx-kicker">C / TAX FLOW</p><h3 className="mt-2 text-3xl font-bold">交易税去哪了</h3></div>
             <div className="text-right"><p className="text-muted-foreground">假设交易量</p><p className="font-display text-5xl">{fmt(volume)} BNB</p></div>
           </div>
           <Slider className="mt-4" min={10} max={5000} step={10} value={[volume]} onValueChange={v => setVolume(v[0] ?? 0)} aria-label="交易量" />
