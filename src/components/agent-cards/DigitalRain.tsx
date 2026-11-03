@@ -30,7 +30,7 @@ export function DigitalRain({ className }: { className?: string }) {
     const resize = () => {
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
-      cell = Math.max(14, Math.round(canvas.width / 90));
+      cell = Math.max(13, Math.round(canvas.width / 70));
       cols = Math.ceil(canvas.width / cell);
       drops = Array.from({ length: cols }, () => Math.random() * (canvas.height / cell));
       speeds = Array.from({ length: cols }, () => 0.25 + Math.random() * 0.6);
@@ -52,7 +52,7 @@ export function DigitalRain({ className }: { className?: string }) {
         // head glows brighter, trail fades via the translucent fill above
         const near = p.active && Math.hypot(x - p.x * w, y - p.y * h) < w * 0.12;
         ctx.fillStyle = gold;
-        ctx.globalAlpha = near ? 0.95 : 0.5;
+        ctx.globalAlpha = near ? 0.95 : 0.62;
         ctx.fillText(glyph ?? "7", x, y);
         if (near) { ctx.globalAlpha = 0.35; ctx.fillText("7", x, y - cell); }
         drops[c] = (drops[c] ?? 0) + (speeds[c] ?? 0.4) * dt * (near ? 2.2 : 1);
