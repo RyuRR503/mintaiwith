@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "./test-expect";
 import { POOL_EDITION, mintQuote, vested, taxFlow, isPoolDeployed } from "./pool-edition";
 
 describe("pool edition rules", () => {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "./test-expect";
 import { binanceMint, binanceCard, getBinanceCommands, SIGNATURES } from "./binance";
 import { getAgentCommands } from "./commands";
 import { vaultAbi } from "./vault-abi";
