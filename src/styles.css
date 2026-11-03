@@ -396,3 +396,9 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
 /* the card's own 7 matches the site violet — one signal colour across the whole UI */
 .hc-card .gx-wordmark-seven { color: var(--primary); text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent); }
+
+.gx-live-dot { width: 8px; height: 8px; border-radius: 9999px; background: var(--primary); box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 60%, transparent); animation: gx-live-pulse 1.8s ease-out infinite; }
+@keyframes gx-live-pulse { to { box-shadow: 0 0 0 10px transparent; } }
+.gx-live-bar { transform-origin: left; animation: gx-live-grow 1.4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes gx-live-grow { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .gx-live-dot, .gx-live-bar { animation: none; } }

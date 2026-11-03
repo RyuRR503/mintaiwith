@@ -37,7 +37,7 @@ export function CardExperience({ page = "mint" }: { page?: CardPage }) {
       <div className="ac-audit-bar" role="note">
         <div className="ac-container flex items-center justify-center gap-2 py-2 text-center text-xs font-medium">
           <ShieldCheck className="size-3.5 shrink-0" />
-          <span>{t("机制与合约已通过 Flap 审计与验证 · 资金安全由链上合约保障")}</span>
+          <span>{t("开池版合约即将上线 · 当前市场与账本数据来自旧版合约")}</span>
         </div>
       </div>
 
@@ -83,7 +83,7 @@ export function CardExperience({ page = "mint" }: { page?: CardPage }) {
           </div>
         </section>
 
-        <section className="ac-flow"><div className="mb-8 flex items-center justify-between"><h2 className="text-xl">{t("从交易税，到卡牌权益。")}</h2><span className="hidden font-mono text-[10px] text-muted-foreground sm:block">THE CARD CYCLE</span></div><div className="grid gap-8 md:grid-cols-3">{[{ n: "01", title: t("铸造 · 买入"), text: t("0.002 BNB 铸造一张卡，80% 通过 Flap 买入项目代币，按批次记账。") }, { n: "02", title: t("持有 · 分税"), text: t("每张有效卡牌等权。批次售满或本批满 7 天后经同步等操作分配；已分到卡上的 BNB 可单独领取。") }, { n: "03", title: t("交易 · 兑换"), text: t("卡牌自由挂单交易。本批售满或本批满 7 天后，可销毁兑换对应代币及未领分红。") }].map(item => <div key={item.n} className="border-t border-border pt-5"><span className="font-mono text-xs text-primary">{item.n} /</span><h3 className="mb-3 mt-4 text-base">{item.title}</h3><p className="text-xs leading-6 text-muted-foreground">{item.text}</p></div>)}</div></section>
+        <section className="ac-flow"><div className="mb-8 flex items-center justify-between"><h2 className="text-xl">{t("从交易税，到卡牌权益。")}</h2><span className="hidden font-mono text-[10px] text-muted-foreground sm:block">THE CARD CYCLE</span></div><div className="grid gap-8 md:grid-cols-3">{[{ n: "01", title: t("预售 · 开池"), text: t("前 20,000 张每张 0.00245 BNB，卖满即可开池，LP 销毁。") }, { n: "02", title: t("释放 · 分红"), text: t("代币 5 天线性释放。交易税 50% 按卡等权分红，记在卡上主动领取。") }, { n: "03", title: t("交易 · 地板"), text: t("卡牌自由挂单交易。地板基金每 30 分钟从最低挂单收卡销毁。") }].map(item => <div key={item.n} className="border-t border-border pt-5"><span className="font-mono text-xs text-primary">{item.n} /</span><h3 className="mb-3 mt-4 text-base">{item.title}</h3><p className="text-xs leading-6 text-muted-foreground">{item.text}</p></div>)}</div></section>
         <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-border py-7 text-xs text-muted-foreground"><FagentLogo className="text-base" /><span>{t("BNB Chain · 无固定收益承诺 · 数字资产存在风险")}</span><Button asChild variant="ghost" size="sm"><Link to="/rules">{t("合约规则")}<ArrowUpRight /></Link></Button></footer>
       </main>
 

@@ -25,3 +25,7 @@
 - [x] Rename visible branding FAGENT → 7AGENT (code identifiers unchanged), replace image logo with gold text wordmark, add golden digital-rain hero animation; 26 rule tests pass, tsgo clean, homepage verified in browser.
 - [x] Recolor: black background kept, all buttons and active accents switched to butterfly violet, collectible card frame/foil/art/serial kept gold; 33 rule tests pass, build OK, card and button colors measured in the live preview.
 - [x] Strip team-card wording and the trading-tax-destination calculator from the homepage, keeping that disclosure in `/rules`; 6 pool-edition tests pass, tsgo clean, homepage text checked in the browser.
+
+- [x] 首页铸造数据面板（演示数据，部署后换链上）
+- [x] 规则页改为开池版合约
+- [ ] 市场/指令/金库页改接新合约（等部署地址）
