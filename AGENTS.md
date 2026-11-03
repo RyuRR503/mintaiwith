@@ -19,6 +19,7 @@
 - Market math lives in the shared market utility: label fee-derived cumulative volume as an estimate and cap lowest-price purchase selections with the deployed MAX_BUY to avoid misleading totals or oversized transactions.
 - Reuse FagentLogo and AgentCardArt with project-owned asset pointers; this preserves the approved identity after remixing.
 - Keep colors and card treatments in semantic tokens in src/styles.css; this preserves the established theme across all card views.
+- Genesis canvas art prepaints deterministically, redraws on resize and pauses painting offscreen; reduced-motion users receive a static visible composition so layout changes never erase the artwork.
 - Keep drizzle/schema.ts blank; never replay copied CATCH migrations. Only explicitly requested schema or security changes may create new migrations.
 - Retired CATCH places/spawns tables remain inaccessible to anon/authenticated roles; preserve records and service access so hardening does not change FAGENT chain reads.
 - Preserve generated Cloud integration files but leave them unused by the standalone preview; platform-managed configuration must not be hand-edited.

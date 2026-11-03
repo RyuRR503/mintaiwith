@@ -267,7 +267,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-manifesto { padding-bottom: 5px; }
 .gx-kicker { font: 10px var(--font-mono); color: var(--primary); letter-spacing: 0; }
 .gx-exhibit { display: grid; grid-template-columns: minmax(0, 1fr) 240px; border-block: 1px solid var(--border); }
-.gx-art-stage { position: relative; height: 310px; overflow: hidden; background: var(--background-deep); }
+.gx-art-stage { position: relative; min-height: 310px; height: 100%; overflow: hidden; background: var(--background-deep); }
 .gx-art-edition { position: absolute; inset: 20px 24px auto; display: flex; justify-content: space-between; font: 9px var(--font-mono); color: var(--muted-foreground); }
 .gx-art-serial { position: absolute; inset: auto 24px 16px; display: flex; justify-content: space-between; align-items: center; font: 64px var(--font-display); color: var(--foreground); }
 .gx-art-serial svg { width: 28px; height: 28px; color: var(--primary); }
@@ -318,7 +318,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
   .gx-manifesto p:first-child { font-size: 18px; }
   .gx-manifesto p:last-child { font-size: 11px; }
   .gx-exhibit { grid-template-columns: minmax(0, 1fr); }
-  .gx-art-stage { height: 220px; }
+  .gx-art-stage { height: 220px; min-height: 0; }
   .gx-art-edition { inset: 16px 16px auto; font-size: 8px; }
   .gx-art-serial { inset: auto 16px 12px; font-size: 48px; }
   .gx-exhibit-rail { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; border-left: 0; border-top: 1px solid var(--border); padding: 16px 0; gap: 16px; }
@@ -362,4 +362,4 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-pop { animation: gx-pop .4s cubic-bezier(.3,1.6,.5,1) both; }
 @keyframes gx-pop { from { opacity: 0; transform: scale(.6) translateY(10px); } }
 .gx-flow { font-family: var(--font-mono); font-size: .8rem; transition: all .5s; }
-@media (prefers-reduced-motion: reduce) { .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
