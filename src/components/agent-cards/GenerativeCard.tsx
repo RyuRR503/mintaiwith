@@ -29,7 +29,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
     };
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
-    const gold = token("--gold", "#d4a94a");
+    const flow = token("--primary", "#8b5cf6");
     const bg = token("--background-deep", token("--background", "#0a0a0a"));
     const fg = token("--foreground", "#f5f0e6");
     const rand = rng(id + 7);
@@ -51,7 +51,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       ctx.globalAlpha = 0.55; ctx.lineWidth = 1.1 * dpr;
       for (const q of parts) {
         const a = field(q.x, q.y), nx = q.x + Math.cos(a) * 0.004, ny = q.y + Math.sin(a) * 0.004;
-        ctx.strokeStyle = q.life % 9 < 1 ? fg : gold;
+        ctx.strokeStyle = q.life % 9 < 1 ? fg : flow;
         ctx.beginPath(); ctx.moveTo(q.x * w, q.y * h); ctx.lineTo(nx * w, ny * h); ctx.stroke();
         q.x = nx; q.y = ny; q.life -= 1;
         if (q.life < 0 || nx < 0 || nx > 1 || ny < 0 || ny > 1) { q.x = rand(); q.y = rand(); q.life = 120 + rand() * 160; }
