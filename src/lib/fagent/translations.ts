@@ -300,5 +300,9 @@ export const english: Record<string, string> = {
   "地址格式不正确": "Invalid address format",
   "钱包信息读取失败，请重试。": "Unable to read wallet information. Please retry.",
   "卡牌不存在、已销毁，或暂时无法读取。": "Card does not exist, has been burned, or cannot currently be read.",
-  "成交日志暂时无法读取，请重试。": "Trade logs are temporarily unavailable. Please retry."
+  "成交日志暂时无法读取，请重试。": "Trade logs are temporarily unavailable. Please retry.",
+  "锁仓": "LOCKED",
+  "锁仓中": "Locked",
+  "代币锁在合约里": "Tokens locked in the contract",
+  "虚线一段是团队卡代币，锁在合约里，逐张解锁": "The dashed arc is team-card supply, locked in the contract and released one card at a time"
 };
