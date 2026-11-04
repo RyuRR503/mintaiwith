@@ -1,6 +1,7 @@
 import { translate, type Language } from "./i18n";
 import { parseEther } from "viem";
 import { FAGENT } from "./config";
+import { fnKey, walletCommand, withChecks } from "./checks";
 
 function orderPrice(price: string) {
   if (!/^\d+(\.\d{1,18})?$/.test(price)) throw new Error("价格格式不正确");
@@ -43,7 +44,7 @@ export function cardCommand(kind: "claim" | "redeem" | "list" | "unlist", id: nu
 }
 export function getAgentCommands(language: Language = "zh") {
 const t = (text: string, ...values: unknown[]) => translate(language, text, ...values);
-return [
+const list = [
   { group: "铸造", title: t("铸造卡牌"), fn: "mint(uint256 count)", desc: t("每张 0.002 BNB，每地址终身最多 7 张。"), text: mintCommand(1, language) },
   { group: "买", title: t("买入挂单卡牌"), fn: "buy(tokenIds, maxPrices)", desc: t("检查最新卖单，按最高限价购买。"), text: t("{0}\n卡号【填写整数，不带 #】，最高价【填写 BNB】。先读取有效卖单，调用 buy([卡号],[最高价 wei])，value 为最高价 wei。超过限价会跳过，仅按 Sold 日志确认实际成交。", translate(language, commandHead)) },
   { group: "买", title: t("发布求购"), fn: "placeBid(price, quantity, batchPlusOne)", desc: t("BNB 托管在金库，未成交部分可撤回。"), text: t("{0}\n每张出价【BNB】，数量【整数】，只收第【N】批或不限。调用 placeBid(出价 wei,数量,批次参数)，value=出价 wei×数量。不限填 0；页面第 N 批填 N（底层 batchId=N-1）。确认后发送并报告 bidId。", translate(language, commandHead)) },
@@ -55,6 +56,11 @@ return [
   { group: "收益", title: t("销毁兑换"), fn: "redeem(tokenId)", desc: t("本批售满或本批满 7 天后可兑换，不可撤销。"), text: cardCommand("redeem", "【卡号】", undefined, language) },
   { group: "收益", title: t("同步税收"), fn: "sync()", desc: t("按合约条件登记税收并触发到期分配。"), text: t("{0}\n读取 undistributedTax()、userMints()、totalWeight()、batchOpenedAt()、STALL_RELEASE()；展示本批是否售满或满 7 天及同步预览。调用 sync()，value=0；未到期同步不代表已分红。", translate(language, commandHead)) },
   { group: "收益", title: t("提取卖卡收入"), fn: "withdrawProceeds(to)", desc: t("只提取记在自己地址下的待付卖卡款。"), text: t("{0}\n读取 proceedsOwed(我的地址)，大于 0 时调用 withdrawProceeds(我的地址)，value=0，确认后发送。", translate(language, commandHead)) },
-] as const;
+];
+const en = language === "en";
+return [
+  { group: "铸造", title: en ? "Check my wallet" : "查询我的钱包", fn: "balanceOf(address)", desc: en ? "Read-only: BNB balance, mint slots left, cards held." : "只读：BNB 余额、剩余铸造名额、持有卡牌。", text: walletCommand(language) },
+  ...list.map(c => ({ ...c, text: withChecks(fnKey(c.fn), c.text, language) })),
+];
 }
 export const agentCommands = getAgentCommands();

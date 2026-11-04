@@ -2,6 +2,7 @@ import { parseEther } from "viem";
 import { useEffect, useState } from "react";
 import type { Language } from "./i18n";
 import { FAGENT } from "./config";
+import { walletCommand, withChecks } from "./checks";
 
 /** Short, explicit commands for the Binance Wallet built-in AI: full signature, one param per line, no ABI lookup. */
 export type CommandStyle = "general" | "binance";
@@ -58,7 +59,8 @@ export function getBinanceCommands(lang: Language = "zh") {
   const en = lang === "en";
   const ph = (zh: string, e: string) => (en ? `[${e}]` : `【${zh}】`);
   const id = ph("卡号", "cardId");
-  return [
+  const keys = ["mint", "buy", "placeBid", "cancelBids", "list", "sellToBid", "unlist", "claim", "redeem", "sync", "withdrawProceeds"];
+  return [walletCommand(lang), ...[
     binanceMint(1, lang),
     binanceCommand(SIGNATURES.buy, [["tokenIds", `[${id}]`], ["maxPrices", `[${ph("最高价 wei", "max price in wei")}]`]], ph("等于最高价 wei", "equal to max price in wei"), lang),
     binanceCommand(SIGNATURES.placeBid, [["price", ph("每张出价 wei", "price per card in wei")], ["quantity", ph("数量", "quantity")], ["batchPlusOne", ph("第 N 批填 N，不限填 0", "batch N, or 0 for any")]], ph("出价 wei × 数量", "price wei × quantity"), lang),
@@ -70,5 +72,5 @@ export function getBinanceCommands(lang: Language = "zh") {
     binanceCard("redeem", id, undefined, lang),
     binanceCommand(SIGNATURES.sync, [], "0", lang),
     binanceCommand(SIGNATURES.withdrawProceeds, [["to", ph("我的钱包地址", "my wallet address")]], "0", lang),
-  ];
+  ].map((text, i) => withChecks(keys[i] ?? "", text, lang))];
 }

@@ -27,3 +27,26 @@ describe("binance wallet commands", () => {
     }
   });
 });
+
+describe("pre-check blocks", () => {
+  it("mint command checks balance, Agent ID, slots and price with explicit signatures", () => {
+    for (const t of [getBinanceCommands("zh")[1]!, getAgentCommands("zh")[1]!.text]) {
+      expect(t).toContain("eth_getBalance");
+      expect(t).toContain("function hasAgentId(address) view returns (bool)");
+      expect(t).toContain("function mintsUsed(address) view returns (uint256)");
+      expect(t).toContain("function mintPrice() view returns (uint256)");
+    }
+  });
+  it("wallet check is first and read-only in both formats", () => {
+    expect(getBinanceCommands("zh")[0]).toContain("只读查询，不发送任何交易");
+    expect(getAgentCommands("zh")[0]!.text).toBe(getBinanceCommands("zh")[0]!);
+  });
+  it("read signatures exist in the vault ABI", async () => {
+    const { READS } = await import("./checks");
+    for (const [k, sig] of Object.entries(READS)) {
+      if (k === "balance") continue;
+      const name = sig.match(/function (\w+)\(/)![1];
+      expect((vaultAbi as unknown as any[]).some(f => f.type === "function" && f.name === name)).toBe(true);
+    }
+  });
+});
