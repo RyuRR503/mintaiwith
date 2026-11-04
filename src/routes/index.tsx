@@ -209,14 +209,14 @@ function GenesisPage() {
           </div>
           <dl className="gx-metrics">
             {[
-              { label: "已铸造", value: fmt(M.minted), note: t("总量 {0} 张", fmt(P.totalCards)) },
-              { label: "已募集", value: `${fmt(M.presaleRaisedBnb, 2)} BNB`, note: t("预售目标 49 BNB") },
-              { label: "铸造地址", value: fmt(M.minters), note: t("每地址最多 {0} 张", P.maxPerAddress) },
-              { label: "预售剩余", value: fmt(st.presaleLeft), note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
-            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
+              { label: "已铸造", value: M.minted, d: 0, suffix: "", note: t("总量 {0} 张", fmt(P.totalCards)) },
+              { label: "已募集", value: M.presaleRaisedBnb, d: 2, suffix: " BNB", note: t("预售目标 49 BNB") },
+              { label: "铸造地址", value: M.minters, d: 0, suffix: "", note: t("每地址最多 {0} 张", P.maxPerAddress) },
+              { label: "预售剩余", value: st.presaleLeft, d: 0, suffix: "", note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
+            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl"><CountUp value={item.value} decimals={item.d} suffix={item.suffix} /></dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
           </dl>
           <div className="mt-6">
-            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
+            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary"><CountUp value={st.presalePct} decimals={1} suffix="%" /></span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
           <div className="mt-10"><PoolStats /></div>
