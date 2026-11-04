@@ -114,7 +114,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
         // Staggered light sweep: passes M, I, N, T one after another.
         const cycle = ((t * sweepSpeed * 1.4) % 1.8) - 0.4 - i * 0.12;
         if (cycle > -0.2 && cycle < 1.2) {
-          const band = ctx.createLinearGradient(lx, top, lx + widths[i], bottom);
+          const band = ctx.createLinearGradient(lx, top, lx + (widths[i] ?? 0), bottom);
           const c = (v: number) => Math.min(1, Math.max(0, v));
           band.addColorStop(0, "transparent");
           band.addColorStop(c(cycle - 0.18), "transparent");
@@ -126,7 +126,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
         }
         ctx.globalCompositeOperation = "lighter";
         ctx.globalAlpha = 0.3; ctx.strokeStyle = fg; ctx.lineWidth = dpr * 0.8; ctx.strokeText(ch, lx, ly);
-        x += widths[i] + track;
+        x += (widths[i] ?? 0) + track;
       });
 
       // Fine sparks rising through the card.
