@@ -138,6 +138,9 @@ function GenesisPage() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         if (stage.current) stage.current.style.setProperty("--par", `${Math.min(60, window.scrollY * 0.08)}px`);
+        // Scroll-driven camera: hero pulls back as the viewer scrolls away.
+        const hp = Math.min(1, Math.max(0, window.scrollY / Math.max(1, heroEl.offsetHeight)));
+        heroEl.style.setProperty("--hp", hp.toFixed(3));
       });
     };
     heroEl.addEventListener("pointermove", onMove);
@@ -153,6 +156,15 @@ function GenesisPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      {/* Cinematic layer: opening title card, film grain and vignette. All decorative, never block clicks. */}
+      <div className="gx-opening" aria-hidden="true">
+        <span className="gx-opening-bar gx-opening-bar-top" />
+        <span className="gx-opening-bar gx-opening-bar-bottom" />
+        <span className="gx-opening-line" />
+        <span className="gx-opening-mark"><span className="text-primary">7</span>AGENT</span>
+      </div>
+      <div className="gx-grain" aria-hidden="true" />
+      <div className="gx-vignette" aria-hidden="true" />
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="gx-container flex items-center justify-between gap-5 py-3">
           <FagentLogo className="text-xl" />
@@ -166,6 +178,7 @@ function GenesisPage() {
       {/* Hero */}
       <section ref={hero} className="gx-container gx-intro">
         <div className="gx-ambient" aria-hidden="true" />
+        <div className="gx-streak" aria-hidden="true" />
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
