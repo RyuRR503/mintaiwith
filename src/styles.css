@@ -403,3 +403,14 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-live-bar { transform-origin: left; animation: gx-live-grow 1.4s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes gx-live-grow { from { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) { .gx-live-dot, .gx-live-bar { animation: none; } }
+
+/* Inner pages: Genesis frame */
+.gx-page-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; align-items: end; padding-block: 56px 28px; }
+.gx-page-title { font-size: 76px; line-height: 1; font-weight: 700; letter-spacing: 0; }
+.gx-page-art { position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.gx-page-index { position: absolute; right: 14px; bottom: 6px; font: 400 64px var(--font-mono); color: color-mix(in oklab, var(--primary) 70%, transparent); line-height: 1; }
+@media (max-width: 767px) {
+  .gx-page-hero { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 32px 20px; }
+  .gx-page-title { font-size: 48px; }
+  .gx-page-art { aspect-ratio: 16 / 9; }
+}
