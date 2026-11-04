@@ -45,6 +45,53 @@ function useReveal() {
   }, []);
 }
 
+/** Eased count-up that starts when the element scrolls into view. */
+function CountUp({ value, decimals = 0, suffix = "" }: { value: number; decimals?: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { el.textContent = fmt(value, decimals) + suffix; return; }
+    let raf = 0;
+    const io = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      const t0 = performance.now(), dur = 1400;
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = fmt(value * eased, decimals) + suffix;
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, [value, decimals, suffix]);
+  return <span ref={ref}>0{suffix}</span>;
+}
+
+/** Magnetic hover: the element leans a few px toward the pointer. */
+function useMagnet<T extends HTMLElement>(strength = 6) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const move = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+    };
+    const leave = () => { el.style.transform = ""; };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); };
+  }, [strength]);
+  return ref;
+}
+
 function GenesisPage() {
   useReveal();
   const { t } = useLanguage();
