@@ -62,6 +62,11 @@ function TokenomicsPage() {
       </li>)}</ul>
     </div>
 
+    <div className="gx-callout mt-10">
+      <p className="text-base font-bold text-foreground">{t("团队卡的代币是锁住的，不是团队一次拿走")}</p>
+      <p className="mt-2 font-normal text-muted-foreground">{t("团队卡只占全部卡牌的 5%，而且不能自己放出来：大家每铸出 19 张付费卡，才解锁 1 张团队卡。没人铸造，团队卡就一张也解锁不了，对应的代币一直锁在合约里，相当于锁仓。团队卡和普通卡同权，没有额外权益。")}</p>
+    </div>
+
     <h2 className="mt-20 mb-6 text-2xl font-bold">{t("钱和币的去向")}</h2>
     <div className="grid gap-5 md:grid-cols-3">{flows.map(f => <section key={f.title} className="gx-panel p-6">
       <f.icon className="size-6 text-primary" aria-hidden="true" />
