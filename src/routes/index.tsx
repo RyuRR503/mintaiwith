@@ -9,6 +9,7 @@ import { CardNavigation } from "@/components/agent-cards/CardNavigation";
 import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
 import { HoloCard } from "@/components/agent-cards/HoloCard";
+import { useLanguage } from "@/components/agent-cards/LanguageProvider";
 import { POOL_EDITION as P, POOL_MOCK as M, poolStatus, mintQuote, vested, isPoolDeployed } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
@@ -46,6 +47,7 @@ function useReveal() {
 
 function GenesisPage() {
   useReveal();
+  const { t } = useLanguage();
   const [id, setId] = useState(7777);
   const [phase, setPhase] = useState<"presale" | "open">("presale");
   const [count, setCount] = useState(3);
@@ -92,8 +94,8 @@ function GenesisPage() {
             <h1 className="gx-heading mt-3"><span className="gx-heading-seven">7</span>AGENT<span className="text-primary">.</span></h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
-            <p className="text-2xl font-semibold leading-relaxed">一张卡，接住 AI 时代的<br className="hidden md:block" />每一笔税收</p>
-            <p className="mt-3 text-sm text-muted-foreground">777,777 张独一无二 · 币安 Agent 钱包</p>
+            <p className="text-2xl font-semibold leading-relaxed">{t("一张卡，接住 AI 时代的")}<br className="hidden md:block" />{t("每一笔税收")}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{t("777,777 张独一无二 · 币安 Agent 钱包")}</p>
           </div>
         </div>
         <div className="gx-exhibit">
@@ -103,16 +105,16 @@ function GenesisPage() {
           <aside data-reveal className="gx-rise gx-exhibit-rail">
             <div>
               <p className="gx-kicker">THE COLLECTION</p>
-              <p className="mt-4 text-xl font-medium">编号即身份<br />每张，只有一张</p>
-              <p className="mt-3 text-sm text-muted-foreground">每张卡由编号生成，世上只有一张。</p>
+              <p className="mt-4 text-xl font-medium">{t("编号即身份")}<br />{t("每张，只有一张")}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t("每张卡由编号生成，世上只有一张。")}</p>
             </div>
             <div className="gx-art-controls">
-              <label className="mb-4 flex justify-between font-mono text-xs text-muted-foreground"><span>卡号</span><span>{fmt(id)}</span></label>
-              <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label="卡号" />
-              <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>随机一张<Shuffle className="size-4" /></Button>
+              <label className="mb-4 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("卡号")}</span><span>{fmt(id)}</span></label>
+              <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label={t("卡号")} />
+              <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>{t("随机一张")}<Shuffle className="size-4" /></Button>
             </div>
             <Button size="lg" disabled={!isPoolDeployed()} className="gap-2">
-              {isPoolDeployed() ? "去铸造" : <><Lock className="size-4" />合约未上线</>}
+              {isPoolDeployed() ? t("去铸造") : <><Lock className="size-4" />{t("合约未上线")}</>}
             </Button>
           </aside>
         </div>
@@ -122,19 +124,19 @@ function GenesisPage() {
       <section className="border-y border-border/60">
         <div className="gx-container py-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="flex items-center gap-2 font-mono text-xs text-primary"><span className="gx-live-dot" />LIVE / {st.phase === "presale" ? "预售进行中" : "开池后铸造"}</p>
-            <span className="rounded border border-border px-2 py-1 font-mono text-[11px] text-muted-foreground">演示数据 · 合约部署后自动换成链上实时数据</span>
+            <p className="flex items-center gap-2 font-mono text-xs text-primary"><span className="gx-live-dot" />LIVE / {st.phase === "presale" ? t("预售进行中") : t("开池后铸造")}</p>
+            <span className="rounded border border-border px-2 py-1 font-mono text-[11px] text-muted-foreground">{t("演示数据 · 合约部署后自动换成链上实时数据")}</span>
           </div>
           <dl className="gx-metrics">
             {[
-              { label: "已铸造", value: fmt(M.minted), note: `总量 ${fmt(P.totalCards)} 张` },
-              { label: "已募集", value: `${fmt(M.presaleRaisedBnb, 2)} BNB`, note: `预售目标 49 BNB` },
-              { label: "铸造地址", value: fmt(M.minters), note: `每地址最多 ${P.maxPerAddress} 张` },
-              { label: "预售剩余", value: fmt(st.presaleLeft), note: `卖满 ${fmt(P.presaleCards)} 张即可开池` },
-            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{item.label}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
+              { label: "已铸造", value: fmt(M.minted), note: t("总量 {0} 张", fmt(P.totalCards)) },
+              { label: "已募集", value: `${fmt(M.presaleRaisedBnb, 2)} BNB`, note: t("预售目标 49 BNB") },
+              { label: "铸造地址", value: fmt(M.minters), note: t("每地址最多 {0} 张", P.maxPerAddress) },
+              { label: "预售剩余", value: fmt(st.presaleLeft), note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
+            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
           </dl>
           <div className="mt-6">
-            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>预售进度</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
+            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
           <div className="mt-10"><PoolStats /></div>
@@ -143,12 +145,12 @@ function GenesisPage() {
 
       {/* Lifecycle */}
       <section className="gx-container gx-chapter">
-        <div data-reveal className="gx-rise gx-chapter-heading"><p className="gx-kicker">01 / LIFECYCLE</p><h2>一张卡的一生</h2><span className="gx-chapter-note">从铸造，到价值流转</span></div>
+        <div data-reveal className="gx-rise gx-chapter-heading"><p className="gx-kicker">01 / LIFECYCLE</p><h2>{t("一张卡的一生")}</h2><span className="gx-chapter-note">{t("从铸造，到价值流转")}</span></div>
         <div className="mt-8">
           <ol className="gx-phase-nav">
             {phases.map((p, i) => <li key={p.k}>
               <Button variant="ghost" aria-pressed={active === i} onClick={() => setActive(i)} className={`gx-phase-button ${active === i ? "gx-phase-active" : ""}`}>
-                <span className="font-mono text-xs">{p.k}</span><span className="whitespace-nowrap text-base font-semibold">{p.title}</span>
+                <span className="font-mono text-xs">{p.k}</span><span className="whitespace-nowrap text-base font-semibold">{t(p.title)}</span>
               </Button>
             </li>)}
           </ol>
@@ -156,8 +158,8 @@ function GenesisPage() {
             <span className="gx-phase-number" aria-hidden="true">{selectedPhase.k}</span>
             <div>
               <p className="font-mono text-xs text-primary">{selectedPhase.k} / 05</p>
-              <h3 className="mt-4 text-2xl font-bold">{selectedPhase.title}</h3>
-              <p className="mt-4 max-w-lg text-base text-muted-foreground">{selectedPhase.body}</p>
+              <h3 className="mt-4 text-2xl font-bold">{t(selectedPhase.title)}</h3>
+              <p className="mt-4 max-w-lg text-base text-muted-foreground">{t(selectedPhase.body)}</p>
             </div>
             <div className="gx-phase-art">
               <GenerativeCard id={active * 131071 + 19} kind={active === 0 ? "presale" : "open"} className="h-full w-full" />
@@ -168,41 +170,41 @@ function GenesisPage() {
 
       {/* Calculators */}
       <section className="gx-container gx-workspace">
-        <div data-reveal className="gx-rise gx-chapter-heading lg:col-span-2"><p className="gx-kicker">02 / CALCULATOR</p><h2>先算清楚，再铸造</h2><span className="gx-chapter-note">铸造 · 释放</span></div>
+        <div data-reveal className="gx-rise gx-chapter-heading lg:col-span-2"><p className="gx-kicker">02 / CALCULATOR</p><h2>{t("先算清楚，再铸造")}</h2><span className="gx-chapter-note">{t("铸造 · 释放")}</span></div>
         <div data-reveal className="gx-rise gx-mint-tool">
           <p className="gx-kicker">A / MINT</p>
-          <h3 className="mt-2 text-3xl font-bold">铸造试算</h3>
+          <h3 className="mt-2 text-3xl font-bold">{t("铸造试算")}</h3>
           <div className="mt-5 inline-flex rounded-md border border-border p-1">
-            {(["presale", "open"] as const).map(p => <Button key={p} size="sm" variant={phase === p ? "default" : "ghost"} aria-pressed={phase === p} onClick={() => setPhase(p)}>{p === "presale" ? "预售" : "开池后"}</Button>)}
+            {(["presale", "open"] as const).map(p => <Button key={p} size="sm" variant={phase === p ? "default" : "ghost"} aria-pressed={phase === p} onClick={() => setPhase(p)}>{p === "presale" ? t("预售") : t("开池后")}</Button>)}
           </div>
-          <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">张数</span><span className="font-display text-5xl">{q.count}</span></div>
-          <Slider className="mt-3" min={1} max={P.maxPerAddress} step={1} value={[count]} onValueChange={v => setCount(v[0] ?? 0)} aria-label="张数" />
+          <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">{t("张数")}</span><span className="font-display text-5xl">{q.count}</span></div>
+          <Slider className="mt-3" min={1} max={P.maxPerAddress} step={1} value={[count]} onValueChange={v => setCount(v[0] ?? 0)} aria-label={t("张数")} />
           <div className="mt-6 grid h-12 grid-cols-10 gap-1.5" aria-hidden="true">{Array.from({ length: P.maxPerAddress }, (_, i) => <div key={i} className={`gx-mint-mark ${i < q.count ? "gx-mint-mark-active" : ""}`} />)}</div>
           <dl className="mt-6 grid grid-cols-2 gap-4 font-mono text-sm">
-            <div><dt className="text-muted-foreground">支付</dt><dd className="text-2xl text-foreground">{q.bnb} BNB</dd></div>
+            <div><dt className="text-muted-foreground">{t("支付")}</dt><dd className="text-2xl text-foreground">{q.bnb} BNB</dd></div>
             {phase === "presale"
-              ? <div><dt className="text-muted-foreground">获得代币</dt><dd className="text-2xl text-primary">{fmt(q.tokens ?? 0)}</dd></div>
-              : <><div><dt className="text-muted-foreground">运营 25%</dt><dd className="text-2xl">{q.ops}</dd></div>
-                 <div className="col-span-2"><dt className="text-muted-foreground">进池买币 75%</dt><dd className="text-2xl text-primary">{q.swap} BNB → 70% 归你 · 30% 销毁</dd></div></>}
+              ? <div><dt className="text-muted-foreground">{t("获得代币")}</dt><dd className="text-2xl text-primary">{fmt(q.tokens ?? 0)}</dd></div>
+              : <><div><dt className="text-muted-foreground">{t("运营 25%")}</dt><dd className="text-2xl">{q.ops}</dd></div>
+                 <div className="col-span-2"><dt className="text-muted-foreground">{t("进池买币 75%")}</dt><dd className="text-2xl text-primary">{q.swap} BNB → {t("70% 归你 · 30% 销毁")}</dd></div></>}
           </dl>
-          {phase === "open" && <p className="mt-3 text-xs text-muted-foreground">到手代币按当时池子价格决定，网站上线后实时报价。</p>}
+          {phase === "open" && <p className="mt-3 text-xs text-muted-foreground">{t("到手代币按当时池子价格决定，网站上线后实时报价。")}</p>}
         </div>
 
         <div data-reveal className="gx-rise gx-vesting-tool">
           <p className="gx-kicker">B / VESTING</p>
-          <h3 className="mt-2 text-3xl font-bold">5 天线性释放</h3>
-          <p className="mt-2 text-muted-foreground">以 {q.count} 张预售卡为例，共 {fmt(grant)} 枚。</p>
+          <h3 className="mt-2 text-3xl font-bold">{t("5 天线性释放")}</h3>
+          <p className="mt-2 text-muted-foreground">{t("以 {0} 张预售卡为例，共 {1} 枚。", q.count, fmt(grant))}</p>
           <div className="mt-8 flex h-40 items-end gap-1">
             {Array.from({ length: 40 }, (_, i) => { const on = i / 40 < day / P.vestDays; return <div key={i} className={`flex-1 rounded-t-sm transition-all duration-500 ${on ? "bg-primary" : "bg-muted"}`} style={{ height: `${20 + (i / 40) * 80}%`, transitionDelay: `${i * 8}ms` }} />; })}
           </div>
-          <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">第 {day.toFixed(1)} 天</span><span className="font-display text-5xl text-primary">{fmt(vested(grant, day))}</span></div>
-          <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label="天数" />
+          <div className="mt-6 flex items-end justify-between"><span className="text-muted-foreground">{t("第 {0} 天", day.toFixed(1))}</span><span className="font-display text-5xl text-primary">{fmt(vested(grant, day))}</span></div>
+          <Slider className="mt-3" min={0} max={P.vestDays} step={0.1} value={[day]} onValueChange={v => setDay(v[0] ?? 0)} aria-label={t("天数")} />
         </div>
 
       </section>
 
       <footer className="border-t border-border/60 px-6 py-8 text-center font-mono text-xs text-muted-foreground">
-        开池版合约尚未部署 · 铸造数据为演示数据，不代表链上实时数据
+        {t("开池版合约尚未部署 · 铸造数据为演示数据，不代表链上实时数据")}
       </footer>
     </main>
   );
