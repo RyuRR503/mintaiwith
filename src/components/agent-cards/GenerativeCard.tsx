@@ -11,10 +11,12 @@ function token(name: string, fallback: string) {
   return v || fallback;
 }
 
-/** Flow-field artwork unique to each card id; the pointer bends the field. */
+type Pulse = { r: number; speed: number; alpha: number; width: number };
+
+/** Electric-pulse artwork unique to each card id: energy rings expand from the core over a faint grid; the pointer fires extra pulses. */
 export function GenerativeCard({ id, className, interactive = true, kind = "open" }: { id: number; className?: string; interactive?: boolean; kind?: "presale" | "open" | "team" }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const pointer = useRef({ x: -1, y: -1, active: false });
+  const pointer = useRef({ x: 0.5, y: 0.5, active: false, fire: 0 });
 
   useEffect(() => {
     const canvas = ref.current; if (!canvas) return;
@@ -32,61 +34,100 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
     const flow = token("--primary", "#8b5cf6");
     const bg = token("--background-deep", token("--background", "#0a0a0a"));
     const fg = token("--foreground", "#f5f0e6");
+
     const rand = rng(id + 7);
-    const freq = 0.6 + rand() * 2.4, twist = rand() * Math.PI * 2, arms = 2 + Math.floor(rand() * 5);
-    const count = kind === "team" ? 140 : 180;
-    const parts = Array.from({ length: count }, () => ({
-      x: rand(), y: rand(), life: 40 + rand() * 200,
-      highlight: rand() < 0.08,
-      path: [] as { x: number; y: number }[],
+    // Per-card identity: core position, ring count, pulse tempo, grid density.
+    const core = { x: 0.32 + rand() * 0.36, y: 0.3 + rand() * 0.4 };
+    const tempo = 0.5 + rand() * 0.5;
+    const gridStep = 10 + Math.floor(rand() * 6);
+    const ringCount = kind === "team" ? 4 : 3;
+    const pulses: Pulse[] = Array.from({ length: ringCount }, (_, i) => ({
+      r: i / ringCount, speed: (0.0016 + rand() * 0.0012) * tempo, alpha: 0.5, width: 1 + rand(),
     }));
-    let t = 0, raf = 0, visible = true, lastFrame = 0;
-    const field = (x: number, y: number) => {
-      const cx = x - 0.5, cy = y - 0.5;
-      let a = Math.atan2(cy, cx) * arms + Math.sin(x * freq * 6 + t) * 1.2 + Math.cos(y * freq * 5 - t * 0.7) + twist;
-      const p = pointer.current;
-      if (p.active) { const dx = x - p.x, dy = y - p.y, d = Math.hypot(dx, dy); if (d < 0.35) a += (0.35 - d) * 9 * Math.sign(Math.sin(id)); }
-      return a;
-    };
-    const advance = () => {
-      for (const q of parts) {
-        const a = field(q.x, q.y), nx = q.x + Math.cos(a) * 0.004, ny = q.y + Math.sin(a) * 0.004;
-        q.path.push({ x: q.x, y: q.y });
-        if (q.path.length > 36) q.path.shift();
-        q.x = nx; q.y = ny; q.life -= 1;
-        if (q.life < 0 || nx < 0 || nx > 1 || ny < 0 || ny > 1) {
-          q.x = rand(); q.y = rand(); q.life = 120 + rand() * 160; q.path = [];
-        }
-      }
-      t += 0.004;
-    };
+    const sparks = Array.from({ length: kind === "team" ? 26 : 34 }, () => ({
+      a: rand() * Math.PI * 2, d: 0.08 + rand() * 0.5, size: 0.6 + rand() * 1.6, tw: rand() * Math.PI * 2,
+    }));
+    let t = rand() * 100, raf = 0, visible = true, lastFrame = 0;
+
     const paint = () => {
       const w = canvas.width, h = canvas.height;
-      // Fully replace the previous frame: old paths never accumulate as shadows.
+      const cx = core.x * w, cy = core.y * h;
+      const maxR = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
+      // Fully replace the previous frame: nothing accumulates as shadows.
       ctx.globalAlpha = 1;
       ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
-      ctx.lineWidth = 0.9 * dpr;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      for (const q of parts) {
-        const start = q.path[0];
-        if (!start || q.path.length < 2) continue;
-        ctx.globalAlpha = q.highlight ? 0.35 : 0.65;
-        ctx.strokeStyle = q.highlight ? fg : flow;
-        ctx.beginPath();
-        ctx.moveTo(start.x * w, start.y * h);
-        for (let i = 1; i < q.path.length; i++) {
-          const point = q.path[i];
-          if (point) ctx.lineTo(point.x * w, point.y * h);
-        }
-        ctx.stroke();
+
+      // Faint circuit grid.
+      const step = (Math.min(w, h) / gridStep) || 1;
+      ctx.strokeStyle = flow;
+      ctx.lineWidth = 0.5 * dpr;
+      ctx.globalAlpha = 0.06;
+      ctx.beginPath();
+      for (let x = step; x < w; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
+      for (let y = step; y < h; y += step) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
+      ctx.stroke();
+
+      // Expanding energy rings.
+      for (const p of pulses) {
+        const rr = p.r * maxR;
+        if (rr < 1) continue;
+        const fade = 1 - p.r;
+        ctx.globalAlpha = p.alpha * fade * 0.55;
+        ctx.strokeStyle = flow;
+        ctx.lineWidth = p.width * dpr;
+        ctx.beginPath(); ctx.arc(cx, cy, rr, 0, Math.PI * 2); ctx.stroke();
+        // Bright leading edge.
+        ctx.globalAlpha = fade * 0.8;
+        ctx.lineWidth = 0.7 * dpr;
+        ctx.strokeStyle = fg;
+        ctx.beginPath(); ctx.arc(cx, cy, rr, -0.4 + t, 0.15 + t); ctx.stroke();
       }
+
+      // Pointer pulse: a sharp ring fired from the pointer position.
+      const p = pointer.current;
+      if (p.fire > 0) {
+        const pr = (1 - p.fire) * maxR * 0.45;
+        ctx.globalAlpha = p.fire * 0.5;
+        ctx.strokeStyle = flow;
+        ctx.lineWidth = 1.4 * dpr;
+        ctx.beginPath(); ctx.arc(p.x * w, p.y * h, pr, 0, Math.PI * 2); ctx.stroke();
+      }
+
+      // Orbiting sparks.
+      for (const s of sparks) {
+        const a = s.a + t * 0.35;
+        const sx = cx + Math.cos(a) * s.d * maxR * 0.8;
+        const sy = cy + Math.sin(a) * s.d * maxR * 0.8;
+        const tw = 0.35 + 0.65 * Math.abs(Math.sin(t * 2 + s.tw));
+        ctx.globalAlpha = tw * 0.7;
+        ctx.fillStyle = flow;
+        ctx.beginPath(); ctx.arc(sx, sy, s.size * dpr, 0, Math.PI * 2); ctx.fill();
+      }
+
+      // Core glow.
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.28);
+      glow.addColorStop(0, flow);
+      glow.addColorStop(1, "transparent");
+      ctx.globalAlpha = 0.22 + 0.08 * Math.sin(t * 3);
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalAlpha = 0.9;
+      ctx.fillStyle = fg;
+      ctx.beginPath(); ctx.arc(cx, cy, 1.6 * dpr, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
     };
-    // Seed a complete, bounded composition, including for reduced motion.
-    for (let i = 0; i < 36; i++) advance();
+
+    const advance = () => {
+      for (const p of pulses) { p.r += p.speed; if (p.r > 1) p.r = 0; }
+      const p = pointer.current;
+      if (p.fire > 0) p.fire = Math.max(0, p.fire - 0.02);
+      t += 0.008;
+    };
+
+    // Prepaint a complete composition, including for reduced motion.
+    for (let i = 0; i < 60; i++) advance();
     repaint = paint;
     repaint();
     const draw = (timestamp: number) => {
@@ -102,6 +143,6 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
   }, [id, kind]);
 
   return <canvas ref={ref} className={className} aria-label={`7AGENT #${id}`} role="img"
-    onPointerMove={interactive ? e => { const r = e.currentTarget.getBoundingClientRect(); pointer.current = { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, active: true }; } : undefined}
+    onPointerMove={interactive ? e => { const r = e.currentTarget.getBoundingClientRect(); pointer.current = { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, active: true, fire: 1 }; } : undefined}
     onPointerLeave={() => { pointer.current.active = false; }} />;
 }
