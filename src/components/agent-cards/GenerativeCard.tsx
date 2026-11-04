@@ -1,8 +1,5 @@
 import { useEffect, useRef } from "react";
 
-/** Brand word drawn on every card. */
-const GLYPH = ".AI";
-
 function rng(seed: number) {
   let s = (seed * 2654435761) >>> 0 || 1;
   return () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) % 100000) / 100000; };
@@ -14,7 +11,7 @@ function token(name: string, fallback: string) {
   return v || fallback;
 }
 
-/** Brand glyph per card: violet letterform, moving light band, receding echoes, pointer depth. */
+/** Brand "AI" numeral per card: violet glyph, moving light band, receding echoes, pointer depth. */
 export function GenerativeCard({ id, className, interactive = true, kind = "open" }: { id: number; className?: string; interactive?: boolean; kind?: "presale" | "open" | "team" }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const pointer = useRef({ x: 0.5, y: 0.5, active: false });
@@ -38,7 +35,9 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
 
     const rand = rng(id + 7);
     const display = token("--font-poster", "'Bebas Neue', sans-serif");
+    const echoes = (kind === "team" ? 5 : 3) + Math.floor(rand() * 3);
     const sweepSpeed = 0.22 + rand() * 0.12;
+    const sweepAngle = 0.5 + rand() * 0.6;
     const sparks = Array.from({ length: 30 }, () => ({ x: rand(), ph: rand(), sp: 0.08 + rand() * 0.12 }));
     let t = rand() * 100, raf = 0, visible = true, lastFrame = 0;
     let ox = 0, oy = 0;
@@ -57,77 +56,56 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.3) * 0.15;
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
 
-      // Per-letter layout: tracked letters, each with its own depth, float and light.
-      let fs = h * 0.66;
+      let fs = Math.min(h * 0.72, w * 1.2);
+      const cx = w / 2, cy = h * 0.53;
       ctx.font = `400 ${fs}px ${display}`;
-      ctx.textAlign = "left"; ctx.textBaseline = "middle";
-      const letters = GLYPH.split("");
-      const measure = () => letters.map(ch => ctx.measureText(ch).width);
-      let widths = measure();
-      let track = fs * 0.06;
-      let total = widths.reduce((a, v) => a + v, 0) + track * (letters.length - 1);
-      if (total > w * 0.84) {
-        fs *= (w * 0.84) / total; ctx.font = `400 ${fs}px ${display}`;
-        widths = measure(); track = fs * 0.06;
-        total = widths.reduce((a, v) => a + v, 0) + track * (letters.length - 1);
-      }
-      const cx = w / 2, cy = h * 0.52;
+      const aw = ctx.measureText("AI").width || 1;
+      if (aw > w * 0.5) { fs *= (w * 0.5) / aw; ctx.font = `400 ${fs}px ${display}`; }
+      const gw = ctx.measureText("AI").width;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
 
-      // Ambient glow, stretched horizontally to match the word.
-      ctx.save();
-      ctx.translate(cx, cy); ctx.scale(1, 0.6);
-      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, w * 0.6);
+      // Ambient glow behind the numeral.
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.7);
       glow.addColorStop(0, flow); glow.addColorStop(1, "transparent");
-      ctx.globalAlpha = 0.18 + 0.06 * Math.sin(t * 1.1);
-      ctx.fillStyle = glow; ctx.fillRect(-w, -h, w * 2, h * 2);
-      ctx.restore();
+      ctx.globalAlpha = 0.14 + 0.05 * Math.sin(t * 1.1);
+      ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
 
-      // Thin horizon line through the word.
-      ctx.globalAlpha = 0.25; ctx.fillStyle = flow;
-      ctx.fillRect(w * 0.08, cy + fs * 0.42, w * 0.84, Math.max(1, dpr * 0.8));
+      // Echo outlines receding in depth.
+      ctx.strokeStyle = flow; ctx.lineWidth = dpr * 1.2;
+      for (let e = echoes; e >= 1; e--) {
+        ctx.globalAlpha = (0.08 + 0.16 * (1 - e / (echoes + 1))) * (0.7 + 0.3 * Math.sin(t * 1.3 - e * 0.7));
+        ctx.strokeText("AI", cx - ox * e * w * 0.035, cy - oy * e * h * 0.03);
+      }
 
-      let x = cx - total / 2;
-      const top = cy - fs * 0.42, bottom = cy + fs * 0.42;
-      letters.forEach((ch, i) => {
-        const phase = t * 1.2 - i * 0.55;
-        const lift = Math.sin(phase) * fs * 0.018;
-        const lx = x + ox * w * 0.02 * (1 + i * 0.15);
-        const ly = cy + lift + oy * h * 0.015;
-        const depth = 0.55 + 0.45 * (0.5 + 0.5 * Math.sin(phase));
+      // Main numeral: violet body with a moving light band.
+      const fx = cx + ox * w * 0.02, fy = cy + oy * h * 0.015;
+      ctx.globalAlpha = 1;
+      ctx.shadowColor = flow; ctx.shadowBlur = fs * 0.08;
+      ctx.fillStyle = flow; ctx.fillText("AI", fx, fy);
+      ctx.shadowBlur = 0;
+      const pos = ((t * sweepSpeed) % 1.6) - 0.3;
+      const dx = Math.cos(sweepAngle) * w, dy = Math.sin(sweepAngle) * h;
+      const band = ctx.createLinearGradient(cx - dx / 2, cy - dy / 2, cx + dx / 2, cy + dy / 2);
+      const c = (v: number) => Math.min(1, Math.max(0, v));
+      band.addColorStop(0, "transparent");
+      band.addColorStop(c(pos - 0.12), "transparent");
+      band.addColorStop(c(pos), fg);
+      band.addColorStop(c(pos + 0.12), "transparent");
+      band.addColorStop(1, "transparent");
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = 0.75; ctx.fillStyle = band; ctx.fillText("AI", fx, fy);
+      // Thin bright inner outline.
+      ctx.globalAlpha = 0.35; ctx.strokeStyle = fg; ctx.lineWidth = dpr; ctx.strokeText("AI", fx, fy);
 
-        // Single soft echo per letter (no stacked clutter).
-        ctx.globalCompositeOperation = "source-over";
-        ctx.globalAlpha = 0.22 * depth;
-        ctx.strokeStyle = flow; ctx.lineWidth = dpr;
-        ctx.strokeText(ch, lx - ox * w * 0.03, ly - oy * h * 0.025 + fs * 0.03);
-
-        // Body: lavender top -> violet -> deep fade, brightness breathes letter by letter.
-        const body = ctx.createLinearGradient(0, top + lift, 0, bottom + lift);
-        body.addColorStop(0, fg);
-        body.addColorStop(0.35, flow);
-        body.addColorStop(1, bg);
-        ctx.globalAlpha = 1;
-        ctx.shadowColor = flow; ctx.shadowBlur = fs * 0.1 * depth;
-        ctx.fillStyle = body; ctx.fillText(ch, lx, ly);
-        ctx.shadowBlur = 0;
-
-        // Staggered light sweep: passes M, I, N, T one after another.
-        const cycle = ((t * sweepSpeed * 1.4) % 1.8) - 0.4 - i * 0.12;
-        if (cycle > -0.2 && cycle < 1.2) {
-          const band = ctx.createLinearGradient(lx, top, lx + (widths[i] ?? 0), bottom);
-          const c = (v: number) => Math.min(1, Math.max(0, v));
-          band.addColorStop(0, "transparent");
-          band.addColorStop(c(cycle - 0.18), "transparent");
-          band.addColorStop(c(cycle), fg);
-          band.addColorStop(c(cycle + 0.18), "transparent");
-          band.addColorStop(1, "transparent");
-          ctx.globalCompositeOperation = "lighter";
-          ctx.globalAlpha = 0.7; ctx.fillStyle = band; ctx.fillText(ch, lx, ly);
-        }
-        ctx.globalCompositeOperation = "lighter";
-        ctx.globalAlpha = 0.3; ctx.strokeStyle = fg; ctx.lineWidth = dpr * 0.8; ctx.strokeText(ch, lx, ly);
-        x += (widths[i] ?? 0) + track;
-      });
+      // Brand dot hangs off the left baseline so "AI" stays centred.
+      const r = fs * 0.04;
+      const dX = fx - gw / 2 - r * 2.2, dY = fy + fs * 0.35 - r;
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1; ctx.shadowColor = flow; ctx.shadowBlur = r * 3 * (0.8 + 0.4 * Math.sin(t * 2));
+      ctx.fillStyle = flow; ctx.fillRect(dX - r, dY - r, r * 2, r * 2);
+      ctx.shadowBlur = 0;
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = 0.25 + 0.25 * Math.sin(t * 2); ctx.fillStyle = fg; ctx.fillRect(dX - r, dY - r, r * 2, r * 2);
 
       // Fine sparks rising through the card.
       ctx.fillStyle = fg;
