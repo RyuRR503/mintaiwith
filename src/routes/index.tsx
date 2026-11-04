@@ -160,11 +160,16 @@ function GenesisPage() {
       </header>
 
       {/* Hero */}
-      <section className="gx-container gx-intro">
+      <section ref={hero} className="gx-container gx-intro">
+        <div className="gx-ambient" aria-hidden="true" />
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
-            <h1 className="gx-heading mt-3"><span className="gx-heading-seven">7</span>AGENT<span className="text-primary">.</span></h1>
+            <h1 className="gx-heading mt-3" aria-label="7AGENT.">
+              {"7AGENT.".split("").map((ch, i) => (
+                <span key={i} aria-hidden="true" className={`gx-char ${ch === "7" ? "gx-heading-seven" : ch === "." ? "text-primary" : ""}`} style={{ animationDelay: `${0.15 + i * 0.07}s` }}>{ch}</span>
+              ))}
+            </h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
             <p className="text-2xl font-semibold leading-relaxed">{t("把 AI 时代的流水，")}<br className="hidden md:block" />{t("折进一张卡")}</p>
