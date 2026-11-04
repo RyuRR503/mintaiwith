@@ -49,7 +49,7 @@ function TokenomicsPage() {
       <div className="relative mx-auto w-full max-w-[420px]">
         <Donut active={active} onHover={setActive} />
         <div key={active} className="gx-swap pointer-events-none absolute inset-0 grid place-content-center text-center">
-          <p className="font-mono text-4xl font-bold text-primary">{((a.amount / P.totalTokens) * 100).toFixed(1)}%</p>
+          <p className="font-mono text-4xl font-bold text-primary">{a.key === "team" ? "5%" : `${((a.amount / P.totalTokens) * 100).toFixed(1)}%`}</p>{a.key === "team" && <p className="text-xs text-muted-foreground">{t("占全部卡牌")}</p>}
           <p className="mt-1 text-sm">{t(a.label)}</p>
         </div>
       </div>
@@ -57,7 +57,7 @@ function TokenomicsPage() {
         <button type="button" onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => setActive(i)} className={`gx-alloc ${active === i ? "gx-alloc-active" : ""}`}>
           <span className="size-3 rounded-full bg-primary" style={{ opacity: OPACITY[i] }} />
           <span className="min-w-0 flex-1 text-left"><span className="block font-medium">{t(x.label)}</span><span className="block text-xs text-muted-foreground">{t(x.note)}</span></span>
-          <span className="text-right font-mono text-sm">{fmt(x.amount)}<span className="block text-xs text-muted-foreground">{((x.amount / P.totalTokens) * 100).toFixed(1)}%</span></span>
+          {x.key === "team" ? <span className="text-right font-mono text-sm">5%<span className="block text-xs text-muted-foreground">{t("占全部卡牌")}</span></span> : <span className="text-right font-mono text-sm">{fmt(x.amount)}<span className="block text-xs text-muted-foreground">{((x.amount / P.totalTokens) * 100).toFixed(1)}%</span></span>}
         </button>
       </li>)}</ul>
     </div>
