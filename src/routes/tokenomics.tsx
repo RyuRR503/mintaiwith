@@ -22,15 +22,29 @@ export const Route = createFileRoute("/tokenomics")({
 const fmt = (n: number) => n.toLocaleString("en-US");
 const OPACITY = [1, 0.75, 0.55, 0.35, 0.2];
 
-function Donut({ active, onHover }: { active: number; onHover: (i: number) => void }) {
+function Donut({ active, onHover, lockedLabel }: { active: number; onHover: (i: number) => void; lockedLabel: string }) {
   const r = 80, c = 2 * Math.PI * r;
   let offset = 0;
+  const arcs = ALLOCATION.map((a, i) => {
+    const len = (a.amount / P.totalTokens) * c;
+    const arc = { a, i, len, start: offset };
+    offset += len;
+    return arc;
+  });
+  const team = arcs.find(x => x.a.key === "team") ?? arcs[arcs.length - 1]!;
+  const alpha = ((team.start + team.len / 2) / c) * Math.PI * 2;
+  const lx = 100 + 58 * Math.cos(alpha);
+  const ly = 100 + 58 * Math.sin(alpha);
+  const DASHES = 26;
+  const step = team.len / DASHES;
+  const dash = step * 0.5;
   return <svg viewBox="0 0 200 200" className="gx-donut" role="img" aria-label="代币分配">
-    {ALLOCATION.map((a, i) => {
-      const len = (a.amount / P.totalTokens) * c;
-      const el = <circle key={a.key} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={OPACITY[i]} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${len - 2} ${c - len + 2}`} strokeDashoffset={-offset} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />;
-      offset += len;
-      return el;
+    {arcs.map(({ a, i, len, start }) => {
+      if (a.key === "team") return <g key={a.key}>
+        {Array.from({ length: DASHES }, (_, k) => <circle key={k} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={0.22} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${dash} ${c - dash}`} strokeDashoffset={-(start + k * step)} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />)}
+        <text x={lx} y={ly} transform={`rotate(90 ${lx} ${ly})`} textAnchor="middle" dominantBaseline="middle" fontSize="12" fontWeight="700" fill="var(--primary)" style={{ pointerEvents: "none" }}>{lockedLabel}</text>
+      </g>;
+      return <circle key={a.key} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={OPACITY[i]} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${len - 2} ${c - len + 2}`} strokeDashoffset={-start} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />;
     })}
   </svg>;
 }
