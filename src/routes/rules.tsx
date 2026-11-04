@@ -82,7 +82,10 @@ const sections = [
 function CardRulesPage() {
   const { t } = useLanguage();
   return <SiteShell index="05" code="RULES" title="卡牌规则" lead="依据 7AGENT 开池版合约。合约尚未部署，上线后以链上合约为准。" seed={505}>
-      <div className="max-w-3xl">{sections.map((section, i) => <section key={section.title} className="grid grid-cols-[48px_1fr] gap-4 border-t border-border py-8 sm:gap-8"><span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span><div className="min-w-0"><h2 className="mb-4 text-2xl font-bold">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => paragraph.startsWith("!") ? <p key={paragraph} className="rounded-md border border-primary/50 bg-primary/10 px-4 py-3 text-sm font-medium leading-7 text-foreground">{t(paragraph.slice(1))}</p> : <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></div></section>)}</div>
+      <div className="grid gap-10 lg:grid-cols-[220px_1fr]">
+        <nav aria-label={t("规则目录")} className="gx-toc hidden lg:block">{sections.map((s, i) => <a key={s.title} href={`#r${i}`}><span>{String(i + 1).padStart(2, "0")}</span>{t(s.title)}</a>)}</nav>
+        <div className="min-w-0 space-y-5">{sections.map((section, i) => <section id={`r${i}`} key={section.title} className="gx-panel gx-rule scroll-mt-28 p-6 sm:p-8"><span className="gx-rule-no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><h2 className="mb-5 text-2xl font-bold">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => paragraph.startsWith("!") ? <p key={paragraph} className="gx-callout">{t(paragraph.slice(1))}</p> : <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></section>)}</div>
+      </div>
       <Button asChild className="mt-6"><Link to="/">{t("返回铸造")}<ArrowUpRight /></Link></Button>
   </SiteShell>;
 }
