@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 /** Brand word drawn on every card. */
-const GLYPH = "MINT";
+const GLYPH = ".AI";
 
 function rng(seed: number) {
   let s = (seed * 2654435761) >>> 0 || 1;
@@ -58,7 +58,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
 
       // Per-letter layout: tracked letters, each with its own depth, float and light.
-      let fs = h * 0.5;
+      let fs = h * 0.66;
       ctx.font = `400 ${fs}px ${display}`;
       ctx.textAlign = "left"; ctx.textBaseline = "middle";
       const letters = GLYPH.split("");
