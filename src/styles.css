@@ -87,9 +87,6 @@
   /* Shared warm gold accent; one shared matte warm gold. */
   --brand-gold: oklch(0.80433195 0.13466252 83.92509);
   --brand-violet: oklch(0.62 0.24 285); /* butterfly violet: logo 7 + every button and active accent */
-  --card-art-light: color-mix(in oklab, var(--brand-violet) 62%, var(--foreground));
-  --card-art-shade: color-mix(in oklab, var(--brand-violet) 62%, var(--background-deep));
-  --card-art-edge: color-mix(in oklab, var(--brand-violet) 36%, var(--foreground));
   --primary: var(--brand-violet);
   --primary-foreground: oklch(0.97 0.02 285);
 
@@ -372,38 +369,32 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
 
 /* Collectible holo card (hero exhibit) */
-.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: var(--background-deep); overflow: hidden; }
+.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: radial-gradient(60% 70% at 50% 45%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%); overflow: hidden; }
 .hc-scene { position: relative; perspective: 1100px; width: min(300px, 72vw); }
-.hc-shadow { position: absolute; inset: 20% 18% -3%; border-radius: 8px; background: color-mix(in oklab, var(--primary) 32%, transparent); filter: blur(32px); opacity: .35; animation: hc-pulse 5s ease-in-out infinite; }
-.hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 8px; padding: 2px;
-  background: linear-gradient(140deg, var(--card-art-light), var(--card-art-shade) 38%, var(--primary) 72%, var(--card-art-shade));
+.hc-shadow { position: absolute; inset: 12% 8% -6%; border-radius: 24px; background: color-mix(in oklab, var(--primary) 40%, transparent); filter: blur(42px); opacity: .45; animation: hc-pulse 5s ease-in-out infinite; }
+.hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 20px; padding: 6px;
+  background: linear-gradient(140deg, color-mix(in oklab, var(--primary) 90%, var(--foreground)), color-mix(in oklab, var(--primary) 35%, var(--background)) 40%, var(--primary) 70%, color-mix(in oklab, var(--primary) 30%, var(--background)));
   transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 6s ease-in-out infinite; }
 .hc-card[data-active="true"] { transition: transform .08s linear; animation-play-state: paused; }
-.hc-inner { position: relative; height: 100%; border-radius: 6px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; }
-.hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .95rem 1.15rem; }
-.hc-head { border-bottom: 1px solid color-mix(in oklab, var(--primary) 20%, transparent); }
-.hc-foot { border-top: 1px solid color-mix(in oklab, var(--primary) 20%, transparent); }
-.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: 0; color: var(--primary); }
-.hc-art { position: relative; flex: 1; margin: 0 .6rem; overflow: hidden; }
+.hc-inner { position: relative; height: 100%; border-radius: 15px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
+.hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; transform: translateZ(30px); }
+.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--primary); border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); padding: .15rem .45rem; border-radius: 999px; }
+.hc-art { position: relative; flex: 1; margin: 0 .6rem; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent); }
 .hc-art-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 18px color-mix(in oklab, var(--background-deep) 55%, transparent); pointer-events: none; }
-.hc-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: 0; color: var(--muted-foreground); }
+.hc-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .2em; color: var(--muted-foreground); }
 .hc-serial { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--foreground); }
 .hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--primary); }
-.hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 8px; pointer-events: none; }
-.hc-foil { opacity: .08; transition: opacity .4s;
+.hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; }
+.hc-foil { opacity: .1; transition: opacity .4s;
   background: linear-gradient(115deg, transparent 25%, color-mix(in oklab, var(--primary) 35%, transparent) 45%, color-mix(in oklab, var(--foreground) 20%, transparent) 50%, transparent 65%);
   background-size: 300% 300%; background-position: var(--mx) var(--my); animation: hc-foil 9s linear infinite; }
-.hc-card[data-active="true"] .hc-foil { opacity: .16; animation: none; }
+.hc-card[data-active="true"] .hc-foil { opacity: .18; animation: none; }
 .hc-glare { background: radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--foreground) 35%, transparent), transparent 45%); mix-blend-mode: overlay; opacity: 0; transition: opacity .4s; }
-.hc-card[data-active="true"] .hc-glare { opacity: .3; }
-@keyframes hc-float { 0%,100% { transform: rotateX(3deg) rotateY(-5deg) translateY(0); } 50% { transform: rotateX(-2deg) rotateY(5deg) translateY(-9px); } }
+.hc-card[data-active="true"] .hc-glare { opacity: .4; }
+@keyframes hc-float { 0%,100% { transform: rotateX(4deg) rotateY(-8deg) translateY(0); } 50% { transform: rotateX(-3deg) rotateY(8deg) translateY(-10px); } }
 @keyframes hc-foil { to { background-position: 300% 0; } }
 @keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
-@media (max-width: 767px) {
-  .gx-art-stage.hc-stage { height: auto; min-height: 0; padding: 28px 16px; }
-  .hc-scene { width: min(260px, 72vw); }
-}
 /* the card's own 7 matches the site violet — one signal colour across the whole UI */
 .hc-card .gx-wordmark-seven { color: var(--primary); text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent); }
 
