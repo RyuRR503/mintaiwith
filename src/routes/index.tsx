@@ -37,11 +37,15 @@ const phases = [
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    const showAll = () => els.forEach(el => el.classList.add("gx-in"));
+    if (typeof IntersectionObserver === "undefined") { showAll(); return; }
     const io = new IntersectionObserver(es => es.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add("gx-in"); io.unobserve(e.target); }
-    }), { threshold: 0.08 });
+    }), { threshold: 0, rootMargin: "0px 0px 10% 0px" });
     els.forEach(el => io.observe(el));
-    return () => io.disconnect();
+    // Safety net: never leave content hidden if the observer doesn't fire (e.g. in iframes).
+    const fallback = window.setTimeout(showAll, 1500);
+    return () => { io.disconnect(); window.clearTimeout(fallback); };
   }, []);
 }
 
