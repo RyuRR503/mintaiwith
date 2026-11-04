@@ -94,7 +94,7 @@ function GenesisPage() {
             <h1 className="gx-heading mt-3"><span className="gx-heading-seven">7</span>AGENT<span className="text-primary">.</span></h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
-            <p className="text-2xl font-semibold leading-relaxed">{t("一张卡，接住 AI 时代的")}<br className="hidden md:block" />{t("每一笔税收")}</p>
+            <p className="text-2xl font-semibold leading-relaxed">{t("把 AI 时代的流水，")}<br className="hidden md:block" />{t("折进一张卡")}</p>
             <p className="mt-3 text-sm text-muted-foreground">{t("777,777 张独一无二 · 币安 Agent 钱包")}</p>
           </div>
         </div>
