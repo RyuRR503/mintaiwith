@@ -42,7 +42,7 @@ function TokenomicsPage() {
   const flows = [
     { icon: Gift, title: "分红", items: ["每笔交易 2% 税，其中 50% 按卡平均分给持卡人", "阶梯卖单卖币所得 BNB 100% 分给持卡人，7 天匀速发放"] },
     { icon: Flame, title: "销毁", items: ["开池时 97,479,938 枚打入黑洞，LP 同时销毁", "开池后铸造买到的代币，30% 当场销毁", "地板基金收走的卡直接销毁，开池后卡未领的代币一起销毁"] },
-    { icon: Droplets, title: "进池", items: [`只在开池时进一次：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚`, "开池后铸造的 BNB 75% 在池子里买币，不是加流动性"] },
+    { icon: Droplets, title: "进池", items: [`只在开池时进一次：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚`] },
   ];
   return <SiteShell index="06" code="TOKENOMICS" title="代币经济" lead={`总量 ${fmt(P.totalTokens)} 枚，合约写死，不能增发。每一枚去了哪里，都在下面。`} seed={606}>
     <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,420px)_1fr]">
