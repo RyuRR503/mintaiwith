@@ -400,6 +400,10 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes hc-foil { to { background-position: 300% 0; } }
 @keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
+@media (max-width: 767px) {
+  .gx-art-stage.hc-stage { height: auto; min-height: 0; padding: 28px 16px; }
+  .hc-scene { width: min(260px, 72vw); }
+}
 /* the card's own 7 matches the site violet — one signal colour across the whole UI */
 .hc-card .gx-wordmark-seven { color: var(--primary); text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 55%, transparent); }
 
