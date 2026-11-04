@@ -35,7 +35,7 @@ export function HoloCard({ id, kind }: { id: number; kind: Kind }) {
       <div ref={ref} className="hc-card" data-active="false">
         <div className="hc-inner">
           <header className="hc-head">
-            <span className="gx-wordmark text-sm"><span className="gx-wordmark-seven">7</span>AGENT</span>
+            <span className="gx-wordmark text-sm">MINT<span className="gx-wordmark-seven">.AI</span></span>
             <span className="hc-tier">{tier}</span>
           </header>
           <div className="hc-art">

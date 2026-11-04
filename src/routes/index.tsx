@@ -14,9 +14,9 @@ import { POOL_EDITION as P, POOL_MOCK as M, poolStatus, mintQuote, vested, isPoo
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "7AGENT Genesis — 开池版卡牌" },
-    { name: "description", content: "7AGENT 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
-    { property: "og:title", content: "7AGENT Genesis — 开池版卡牌" },
+    { title: "MINT.AI Genesis — 开池版卡牌" },
+    { name: "description", content: "MINT.AI 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
+    { property: "og:title", content: "MINT.AI Genesis — 开池版卡牌" },
     { property: "og:description", content: "777,777 张卡，每张一幅由编号生成的代码艺术。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -161,7 +161,7 @@ function GenesisPage() {
         <span className="gx-opening-bar gx-opening-bar-top" />
         <span className="gx-opening-bar gx-opening-bar-bottom" />
         <span className="gx-opening-line" />
-        <span className="gx-opening-mark"><span className="text-primary">7</span>AGENT</span>
+        <span className="gx-opening-mark">MINT<span className="text-primary">.AI</span></span>
       </div>
       <div className="gx-grain" aria-hidden="true" />
       <div className="gx-vignette" aria-hidden="true" />
@@ -182,9 +182,9 @@ function GenesisPage() {
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
-            <h1 className="gx-heading mt-3" aria-label="7AGENT.">
-              {"7AGENT.".split("").map((ch, i) => (
-                <span key={i} aria-hidden="true" className={`gx-char ${ch === "7" ? "gx-heading-seven" : ch === "." ? "text-primary" : ""}`} style={{ animationDelay: `${0.15 + i * 0.07}s` }}>{ch}</span>
+            <h1 className="gx-heading mt-3" aria-label="MINT.AI">
+              {"MINT.AI".split("").map((ch, i) => (
+                <span key={i} aria-hidden="true" className={`gx-char ${i >= 4 ? "gx-heading-seven" : ""}`} style={{ animationDelay: `${0.15 + i * 0.07}s` }}>{ch}</span>
               ))}
             </h1>
           </div>

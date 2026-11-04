@@ -6,9 +6,9 @@ import { useLanguage } from "@/components/agent-cards/LanguageProvider";
 
 export const Route = createFileRoute("/rules")({
   head: () => ({ meta: [
-    { title: "7AGENT — 卡牌规则" },
-    { name: "description", content: "7AGENT 开池版：预售、开池、5 天释放、交易税与地板基金规则。" },
-    { property: "og:title", content: "7AGENT — 卡牌规则" },
+    { title: "MINT.AI — 卡牌规则" },
+    { name: "description", content: "MINT.AI 开池版：预售、开池、5 天释放、交易税与地板基金规则。" },
+    { property: "og:title", content: "MINT.AI — 卡牌规则" },
     { property: "og:description", content: "777,777 张卡的预售、开池、释放与交易税规则。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -81,7 +81,7 @@ const sections = [
 
 function CardRulesPage() {
   const { t } = useLanguage();
-  return <SiteShell index="05" code="RULES" title="卡牌规则" lead="依据 7AGENT 开池版合约。合约尚未部署，上线后以链上合约为准。" seed={505}>
+  return <SiteShell index="05" code="RULES" title="卡牌规则" lead="依据 MINT.AI 开池版合约。合约尚未部署，上线后以链上合约为准。" seed={505}>
       <div className="grid gap-10 lg:grid-cols-[220px_1fr]">
         <nav aria-label={t("规则目录")} className="gx-toc hidden lg:block">{sections.map((s, i) => <a key={s.title} href={`#r${i}`}><span>{String(i + 1).padStart(2, "0")}</span>{t(s.title)}</a>)}</nav>
         <div className="min-w-0 space-y-5">{sections.map((section, i) => <section id={`r${i}`} key={section.title} className="gx-panel gx-rule scroll-mt-28 p-6 sm:p-8"><span className="gx-rule-no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><h2 className="mb-5 text-2xl font-bold">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => paragraph.startsWith("!") ? <p key={paragraph} className="gx-callout">{t(paragraph.slice(1))}</p> : <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></section>)}</div>

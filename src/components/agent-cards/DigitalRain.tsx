@@ -6,7 +6,7 @@ function token(name: string, fallback: string) {
   return v || fallback;
 }
 
-const GLYPHS = "7AGENT01ΞΣΔ₿";
+const GLYPHS = "MINTAI01ΞΣΔ₿";
 
 /**
  * Golden digital rain: slow columns of glyphs falling over the hero.
