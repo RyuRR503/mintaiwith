@@ -69,7 +69,7 @@ export const ALLOCATION = (() => {
     { key: "burn", label: "开池销毁", amount: 97_479_938, note: "开池时打入黑洞地址" },
   ];
   const team = POOL_EDITION.totalTokens - fixed.reduce((a, b) => a + b.amount, 0);
-  return [...fixed, { key: "team", label: "团队卡", amount: team, note: "每铸 19 张付费卡解锁 1 张，逐张放出" }];
+  return [...fixed, { key: "team", label: "团队卡", amount: team, note: "锁仓中：每铸出 19 张付费卡才解锁 1 张，没人铸造就一直锁着" }];
 })();
 
 export function poolStatus(minted: number) {
