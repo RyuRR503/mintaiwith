@@ -40,42 +40,36 @@ export function VaultLedger({ data }: { data: Snapshot }) {
   ];
   return (
     <>
-      <div className="ac-mint-grid">
-        <section>
-          <h3 className="text-xl">{t("BNB 税收账本")}</h3>
-          <p className="mt-2 text-xs text-muted-foreground">{t("链上数据")}</p>
-          {rows.map(([label, value]) => (
-            <div key={label} className="flex flex-wrap justify-between gap-2 border-b border-border py-4 text-sm">
-              <span className="text-muted-foreground">{label}</span>
-              <span className="break-all font-mono">{formatBnb(value ?? "0")} BNB</span>
-            </div>
-          ))}
-          <h3 className="mt-10 text-lg">{t("各批还没领的代币")}</h3>
-          <div className="border-b border-border py-4 text-sm">
-            <div className="flex flex-wrap justify-between gap-2">
-              <span className="text-muted-foreground">{t("第")} {data.batch} {t("批还没领的代币")}</span>
-              <span className="break-all font-mono">{Number(data.batchInventory).toLocaleString("en-US", { maximumFractionDigits: 4 })} {t("枚")}</span>
-            </div>
-            <p className="mt-2 text-xs text-muted-foreground">{t("本批还没售满，代币先堆在这一批，售满后销毁卡牌才能领走。")}</p>
+      <div className="gx-bento">
+        {rows.map(([label, value], i) => (
+          <div key={label} className={`gx-tile ${i === 0 ? "gx-tile-hero" : ""}`}>
+            <span className="gx-tile-no">0{i + 1}</span>
+            <p className="text-xs text-muted-foreground">{label}</p>
+            <p className="gx-tile-value">{formatBnb(value ?? "0")}<span>BNB</span></p>
           </div>
-        </section>
-        <section className="space-y-5 border-l border-border pl-6">
-          <p className="font-mono text-[10px] text-primary">DISTRIBUTION LOGIC</p>
-          <h3 className="text-xl">{t("税收先累积，批次售满再分配。")}</h3>
-          <div className="space-y-4 text-sm leading-7 text-muted-foreground">
+        ))}
+        <div className="gx-tile">
+          <span className="gx-tile-no">05</span>
+          <p className="text-xs text-muted-foreground">{t("第")} {data.batch} {t("批还没领的代币")}</p>
+          <p className="gx-tile-value">{Number(data.batchInventory).toLocaleString("en-US", { maximumFractionDigits: 0 })}<span>{t("枚")}</span></p>
+        </div>
+      </div>
+      <div className="gx-flow-line mt-14" aria-hidden="true">{[t("交易税"), t("金库"), t("分红"), t("持卡人")].map((x, i) => <span key={x} style={{ animationDelay: `${i * 0.4}s` }}>{x}</span>)}</div>
+      <div className="mt-14 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <section className="gx-panel p-7">
+          <p className="gx-kicker">DISTRIBUTION</p>
+          <h3 className="mt-3 text-2xl font-bold">{t("税收先累积，批次售满再分配。")}</h3>
+          <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground">
             <p>{t("77 批全部售完之前，每次有一批售满，累积的 BNB 税收才会分配给当时所有有效、未销毁的卡牌。不是实时到账，也不是固定收益。")}</p>
             <p>{t("如果某一批从第一张付费卡铸出起 7 天还没卖满，攒着的税会分给当时有效的卡牌，不会一直锁在金库里。")}</p>
-            <p>{t("例如第 1 批累积 10 BNB 税收，9,500 张付费卡售满后，连同 500 份团队权益共 10,000 份，每份约记入 0.001 BNB，需主动领取。团队未铸卡也计入份数。全部售完后，后续税收经同步等操作分配；销毁卡牌不再参与。")}</p>
           </div>
-          <Button asChild variant="link" className="px-0 text-primary">
-            <Link to="/rules">{t("查看完整规则")}<ArrowUpRight /></Link>
-          </Button>
-          <div className="border border-border p-6">
-            <h3 className="text-lg">{t("管理我的卡")}</h3>
-            <p className="mt-3 text-sm leading-7 text-muted-foreground">{t("铸造之后的事都用这一条：领分红、提取卖卡收入、下架、销毁换代币。Agent 会先读出你的卡，再问你要做什么。")}</p>
-            <Button variant="outline" className="mt-5 w-full" onClick={() => setCommand(t(manageCommand))}>
-              <Copy />{t("复制管理指令")}</Button>
-          </div>
+          <Button asChild variant="link" className="mt-3 px-0 text-primary"><Link to="/rules">{t("查看完整规则")}<ArrowUpRight /></Link></Button>
+        </section>
+        <section className="gx-panel gx-panel-glow flex flex-col p-7">
+          <p className="gx-kicker">MY CARDS</p>
+          <h3 className="mt-3 text-2xl font-bold">{t("管理我的卡")}</h3>
+          <p className="mt-4 flex-1 text-sm leading-7 text-muted-foreground">{t("铸造之后的事都用这一条：领分红、提取卖卡收入、下架、销毁换代币。Agent 会先读出你的卡，再问你要做什么。")}</p>
+          <Button className="mt-6 w-full" onClick={() => setCommand(t(manageCommand))}><Copy />{t("复制管理指令")}</Button>
         </section>
       </div>
       <CommandDialog text={command} onClose={() => setCommand(null)} />

@@ -414,3 +414,44 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
   .gx-page-title { font-size: 48px; }
   .gx-page-art { aspect-ratio: 16 / 9; }
 }
+
+/* Inner-page 7AGENT surfaces */
+.gx-panel { position: relative; border: 1px solid var(--border); border-radius: 18px; background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 7%, var(--card)), var(--background) 70%); transition: border-color .4s, transform .4s var(--ease-cine, ease), box-shadow .4s; }
+.gx-panel:hover { border-color: color-mix(in oklab, var(--primary) 45%, var(--border)); }
+.gx-panel-glow { box-shadow: 0 30px 80px -40px color-mix(in oklab, var(--primary) 70%, transparent); border-color: color-mix(in oklab, var(--primary) 40%, var(--border)); }
+.gx-segment { display: inline-flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); }
+.gx-segment > button { border-radius: 999px !important; border: 0 !important; }
+.gx-segment > button.border-primary { background: var(--primary); color: var(--primary-foreground); }
+.gx-tiles { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (min-width: 768px) { .gx-tiles { grid-template-columns: repeat(4, minmax(0,1fr)); } }
+.gx-tiles > div, .gx-tile { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; padding: 22px; background: var(--card); transition: transform .4s, border-color .4s; }
+.gx-tiles > div:hover, .gx-tile:hover { transform: translateY(-4px); border-color: var(--primary); }
+.gx-tiles > div::after, .gx-tile::after { content: ""; position: absolute; inset: auto -30% -60% auto; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%); pointer-events: none; }
+.gx-book { overflow: hidden; }
+.gx-bento { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0,1fr)); }
+@media (min-width: 900px) { .gx-bento { grid-template-columns: 1.6fr 1fr 1fr; } .gx-tile-hero { grid-row: span 2; } }
+.gx-tile-hero { background: linear-gradient(150deg, color-mix(in oklab, var(--primary) 25%, var(--card)), var(--card)); }
+.gx-tile-no { position: absolute; top: 16px; right: 18px; font-family: var(--font-mono, monospace); font-size: 11px; color: var(--primary); }
+.gx-tile-value { margin-top: 18px; font-family: var(--font-mono, monospace); font-size: clamp(1.4rem, 2.4vw, 2rem); word-break: break-all; }
+.gx-tile-hero .gx-tile-value { font-size: clamp(2rem, 4.5vw, 3.6rem); margin-top: 48px; }
+.gx-tile-value span { margin-left: 8px; font-size: 12px; color: var(--muted-foreground); }
+.gx-flow-line { position: relative; display: flex; justify-content: space-between; gap: 8px; padding-top: 18px; border-top: 1px dashed color-mix(in oklab, var(--primary) 40%, var(--border)); }
+.gx-flow-line::before { content: ""; position: absolute; top: -2px; left: 0; width: 12%; height: 3px; border-radius: 3px; background: var(--primary); box-shadow: 0 0 16px var(--primary); animation: gx-flow 4s linear infinite; }
+.gx-flow-line span { font-family: var(--font-mono, monospace); font-size: 12px; letter-spacing: .12em; color: var(--muted-foreground); animation: gx-blink 1.6s ease-in-out infinite alternate; }
+@keyframes gx-flow { from { left: 0; } to { left: 88%; } }
+@keyframes gx-blink { to { color: var(--primary); } }
+.gx-cmd-group { margin-bottom: 48px; }
+.gx-cmd-label { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-size: 1.4rem; font-weight: 700; }
+.gx-cmd-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--primary), transparent); }
+.gx-term { position: relative; display: flex; flex-direction: column; padding: 46px 22px 22px; border: 1px solid var(--border); border-radius: 16px; background: color-mix(in oklab, var(--card) 70%, var(--background)); transition: border-color .4s, transform .4s; }
+.gx-term::before { content: ""; position: absolute; top: 18px; left: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 14px 0 0 var(--border), 28px 0 0 var(--border); }
+.gx-term:hover { transform: translateY(-3px); border-color: var(--primary); }
+.gx-term-fn { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--background); font-size: 11px; color: var(--primary); word-break: break-all; }
+.gx-toc { position: sticky; top: 110px; align-self: start; display: flex; flex-direction: column; gap: 2px; border-left: 1px solid var(--border); }
+.gx-toc a { display: flex; gap: 12px; padding: 7px 14px; margin-left: -1px; border-left: 2px solid transparent; font-size: 13px; color: var(--muted-foreground); transition: color .3s, border-color .3s; }
+.gx-toc a:hover { color: var(--foreground); border-color: var(--primary); }
+.gx-toc span { font-family: var(--font-mono, monospace); color: var(--primary); }
+.gx-rule { overflow: hidden; }
+.gx-rule-no { position: absolute; top: -18px; right: 14px; font-size: 7rem; font-weight: 800; line-height: 1; color: color-mix(in oklab, var(--primary) 12%, transparent); pointer-events: none; }
+.gx-callout { border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; background: color-mix(in oklab, var(--primary) 12%, transparent); padding: 12px 16px; font-size: .875rem; font-weight: 500; line-height: 1.75rem; }
+@media (prefers-reduced-motion: reduce) { .gx-flow-line::before, .gx-flow-line span { animation: none; } }
