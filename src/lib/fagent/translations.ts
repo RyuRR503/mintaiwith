@@ -304,7 +304,7 @@ export const english: Record<string, string> = {
   "锁仓": "LOCKED",
   "锁仓中": "Locked",
   "代币锁在合约里": "Tokens locked in the contract",
-  "虚线一段是团队卡代币，锁在合约里，逐张解锁": "The dashed arc is team-card supply, locked in the contract and released one card at a time"
+  "虚线一段是团队卡代币，锁在合约里，逐张解锁": "The dashed arc is team-card supply, locked in the contract and released one card at a time",
   "代币经济": "Tokenomics",
   "一张卡，接住 AI 时代的": "One card that captures",
   "每一笔税收": "every tax of the AI era",
