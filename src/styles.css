@@ -263,7 +263,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 /* Genesis (code-art) motion */
 .gx-container { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
 .gx-wordmark { display: inline-flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; line-height: 1; color: var(--foreground); white-space: nowrap; }
-.gx-wordmark-seven { color: var(--brand-violet); font-style: italic; margin-left: .02em; text-shadow: 0 0 18px color-mix(in oklab, var(--brand-violet) 60%, transparent); }
+.gx-wordmark-seven { color: var(--brand-violet); margin-left: .02em; text-shadow: 0 0 18px color-mix(in oklab, var(--brand-violet) 60%, transparent); }
 .gx-intro { position: relative; padding-block: 30px 0; }
 .gx-rain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .5; pointer-events: auto; }
 .gx-intro .gx-title-row, .gx-intro .gx-exhibit, .gx-intro .gx-exhibit-caption { position: relative; z-index: 1; }

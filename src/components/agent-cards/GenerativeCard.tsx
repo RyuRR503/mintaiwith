@@ -1,5 +1,8 @@
 import { useEffect, useRef } from "react";
 
+/** Brand glyph drawn on every card. */
+const GLYPH = "M";
+
 function rng(seed: number) {
   let s = (seed * 2654435761) >>> 0 || 1;
   return () => { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) % 100000) / 100000; };
@@ -11,7 +14,7 @@ function token(name: string, fallback: string) {
   return v || fallback;
 }
 
-/** Brand "7" numeral per card: violet glyph, moving light band, receding echoes, pointer depth. */
+/** Brand glyph per card: violet letterform, moving light band, receding echoes, pointer depth. */
 export function GenerativeCard({ id, className, interactive = true, kind = "open" }: { id: number; className?: string; interactive?: boolean; kind?: "presale" | "open" | "team" }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const pointer = useRef({ x: 0.5, y: 0.5, active: false });
@@ -56,9 +59,11 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.3) * 0.15;
       ox += (tx - ox) * 0.08; oy += (ty - oy) * 0.08;
 
-      const fs = Math.min(h * 0.92, w * 1.5);
+      let fs = Math.min(h * 0.92, w * 1.5);
       const cx = w / 2, cy = h * 0.53;
       ctx.font = `400 ${fs}px ${display}`;
+      const gw = ctx.measureText(GLYPH).width || 1;
+      if (gw > w * 0.66) { fs *= (w * 0.66) / gw; ctx.font = `400 ${fs}px ${display}`; }
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
 
       // Ambient glow behind the numeral.
@@ -71,14 +76,14 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       ctx.strokeStyle = flow; ctx.lineWidth = dpr * 1.2;
       for (let e = echoes; e >= 1; e--) {
         ctx.globalAlpha = (0.08 + 0.16 * (1 - e / (echoes + 1))) * (0.7 + 0.3 * Math.sin(t * 1.3 - e * 0.7));
-        ctx.strokeText("7", cx - ox * e * w * 0.035, cy - oy * e * h * 0.03);
+        ctx.strokeText(GLYPH, cx - ox * e * w * 0.035, cy - oy * e * h * 0.03);
       }
 
       // Main numeral: violet body with a moving light band.
       const fx = cx + ox * w * 0.02, fy = cy + oy * h * 0.015;
       ctx.globalAlpha = 1;
       ctx.shadowColor = flow; ctx.shadowBlur = fs * 0.08;
-      ctx.fillStyle = flow; ctx.fillText("7", fx, fy);
+      ctx.fillStyle = flow; ctx.fillText(GLYPH, fx, fy);
       ctx.shadowBlur = 0;
       const pos = ((t * sweepSpeed) % 1.6) - 0.3;
       const dx = Math.cos(sweepAngle) * w, dy = Math.sin(sweepAngle) * h;
@@ -90,9 +95,9 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       band.addColorStop(c(pos + 0.12), "transparent");
       band.addColorStop(1, "transparent");
       ctx.globalCompositeOperation = "lighter";
-      ctx.globalAlpha = 0.75; ctx.fillStyle = band; ctx.fillText("7", fx, fy);
+      ctx.globalAlpha = 0.75; ctx.fillStyle = band; ctx.fillText(GLYPH, fx, fy);
       // Thin bright inner outline.
-      ctx.globalAlpha = 0.35; ctx.strokeStyle = fg; ctx.lineWidth = dpr; ctx.strokeText("7", fx, fy);
+      ctx.globalAlpha = 0.35; ctx.strokeStyle = fg; ctx.lineWidth = dpr; ctx.strokeText(GLYPH, fx, fy);
 
       // Fine sparks rising through the card.
       ctx.fillStyle = fg;
