@@ -45,6 +45,53 @@ function useReveal() {
   }, []);
 }
 
+/** Eased count-up that starts when the element scrolls into view. */
+function CountUp({ value, decimals = 0, suffix = "" }: { value: number; decimals?: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { el.textContent = fmt(value, decimals) + suffix; return; }
+    let raf = 0;
+    const io = new IntersectionObserver(entries => {
+      if (!entries.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      const t0 = performance.now(), dur = 1400;
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = fmt(value * eased, decimals) + suffix;
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, [value, decimals, suffix]);
+  return <span ref={ref}>0{suffix}</span>;
+}
+
+/** Magnetic hover: the element leans a few px toward the pointer. */
+function useMagnet<T extends HTMLElement>(strength = 6) {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const move = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+    };
+    const leave = () => { el.style.transform = ""; };
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerleave", leave);
+    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); };
+  }, [strength]);
+  return ref;
+}
+
 function GenesisPage() {
   useReveal();
   const { t } = useLanguage();
@@ -67,6 +114,32 @@ function GenesisPage() {
     update();
     return () => { window.removeEventListener("scroll", update); cancelAnimationFrame(frame); };
   }, []);
+  const magnet = useMagnet<HTMLButtonElement>(7);
+  const hero = useRef<HTMLElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  // Ambient glow follows the pointer; the card stage drifts slightly on scroll.
+  useEffect(() => {
+    const heroEl = hero.current;
+    if (!heroEl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = heroEl.getBoundingClientRect();
+        heroEl.style.setProperty("--ax", `${((e.clientX - r.left) / r.width) * 100}%`);
+        heroEl.style.setProperty("--ay", `${((e.clientY - r.top) / r.height) * 100}%`);
+      });
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (stage.current) stage.current.style.setProperty("--par", `${Math.min(60, window.scrollY * 0.08)}px`);
+      });
+    };
+    heroEl.addEventListener("pointermove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { heroEl.removeEventListener("pointermove", onMove); window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
+  }, []);
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
   const kind = id <= P.presaleCards ? "presale" : "open";
@@ -87,11 +160,16 @@ function GenesisPage() {
       </header>
 
       {/* Hero */}
-      <section className="gx-container gx-intro">
+      <section ref={hero} className="gx-container gx-intro">
+        <div className="gx-ambient" aria-hidden="true" />
         <div className="gx-title-row">
           <div data-reveal className="gx-rise min-w-0">
             <p className="gx-kicker">GENESIS / 001</p>
-            <h1 className="gx-heading mt-3"><span className="gx-heading-seven">7</span>AGENT<span className="text-primary">.</span></h1>
+            <h1 className="gx-heading mt-3" aria-label="7AGENT.">
+              {"7AGENT.".split("").map((ch, i) => (
+                <span key={i} aria-hidden="true" className={`gx-char ${ch === "7" ? "gx-heading-seven" : ch === "." ? "text-primary" : ""}`} style={{ animationDelay: `${0.15 + i * 0.07}s` }}>{ch}</span>
+              ))}
+            </h1>
           </div>
           <div data-reveal className="gx-rise gx-manifesto">
             <p className="text-2xl font-semibold leading-relaxed">{t("把 AI 时代的流水，")}<br className="hidden md:block" />{t("折进一张卡")}</p>
@@ -100,7 +178,9 @@ function GenesisPage() {
         </div>
         <div className="gx-exhibit">
           <div data-reveal className="gx-rise gx-art-stage hc-stage">
-            <HoloCard id={id} kind={kind} />
+            <div ref={stage} className="gx-parallax h-full">
+              <HoloCard id={id} kind={kind} />
+            </div>
           </div>
           <aside data-reveal className="gx-rise gx-exhibit-rail">
             <div>
@@ -113,7 +193,7 @@ function GenesisPage() {
               <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label={t("卡号")} />
               <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>{t("随机一张")}<Shuffle className="size-4" /></Button>
             </div>
-            <Button size="lg" disabled={!isPoolDeployed()} className="gap-2">
+            <Button ref={magnet} size="lg" disabled={!isPoolDeployed()} className="gx-magnet gap-2">
               {isPoolDeployed() ? t("去铸造") : <><Lock className="size-4" />{t("合约未上线")}</>}
             </Button>
           </aside>
@@ -129,14 +209,14 @@ function GenesisPage() {
           </div>
           <dl className="gx-metrics">
             {[
-              { label: "已铸造", value: fmt(M.minted), note: t("总量 {0} 张", fmt(P.totalCards)) },
-              { label: "已募集", value: `${fmt(M.presaleRaisedBnb, 2)} BNB`, note: t("预售目标 49 BNB") },
-              { label: "铸造地址", value: fmt(M.minters), note: t("每地址最多 {0} 张", P.maxPerAddress) },
-              { label: "预售剩余", value: fmt(st.presaleLeft), note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
-            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl">{item.value}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
+              { label: "已铸造", value: M.minted, d: 0, suffix: "", note: t("总量 {0} 张", fmt(P.totalCards)) },
+              { label: "已募集", value: M.presaleRaisedBnb, d: 2, suffix: " BNB", note: t("预售目标 49 BNB") },
+              { label: "铸造地址", value: M.minters, d: 0, suffix: "", note: t("每地址最多 {0} 张", P.maxPerAddress) },
+              { label: "预售剩余", value: st.presaleLeft, d: 0, suffix: "", note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
+            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl"><CountUp value={item.value} decimals={item.d} suffix={item.suffix} /></dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
           </dl>
           <div className="mt-6">
-            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
+            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary"><CountUp value={st.presalePct} decimals={1} suffix="%" /></span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
           <div className="mt-10"><PoolStats /></div>

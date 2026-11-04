@@ -270,6 +270,12 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-title-row { display: grid; grid-template-columns: 1.6fr 1fr; align-items: end; gap: 48px; padding-bottom: 26px; }
 .gx-heading { font-size: 112px; line-height: .9; letter-spacing: 0; font-weight: 400; }
 .gx-heading-seven { color: var(--brand-violet); text-shadow: 0 0 28px color-mix(in oklab, var(--brand-violet) 55%, transparent); }
+.gx-char { display: inline-block; opacity: 0; animation: gx-char-in .9s var(--ease-cine) forwards; }
+@keyframes gx-char-in { from { opacity: 0; transform: translateY(.35em); filter: blur(10px); } to { opacity: 1; transform: none; filter: blur(0); } }
+.gx-ambient { position: absolute; inset: -10% -20%; z-index: 0; pointer-events: none; background: radial-gradient(42% 38% at var(--ax, 30%) var(--ay, 20%), color-mix(in oklab, var(--brand-violet) 13%, transparent), transparent 70%); animation: gx-breathe 7s ease-in-out infinite; }
+@keyframes gx-breathe { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+.gx-parallax { transform: translateY(calc(var(--par, 0px) * -1)); will-change: transform; }
+.gx-magnet { transition: transform .35s var(--ease-cine), box-shadow .35s; will-change: transform; }
 .gx-manifesto { padding-bottom: 5px; }
 .gx-kicker { font: 10px var(--font-mono); color: var(--primary); letter-spacing: 0; }
 .gx-exhibit { display: grid; grid-template-columns: minmax(0, 1fr) 240px; border-block: 1px solid var(--border); }
@@ -366,7 +372,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 @keyframes gx-swap { from { opacity: 0; transform: translateY(12px); clip-path: inset(0 0 8% 0); } to { opacity: 1; transform: none; clip-path: inset(0); } }
 .gx-pop { animation: gx-pop .4s cubic-bezier(.3,1.6,.5,1) both; }
 @keyframes gx-pop { from { opacity: 0; transform: scale(.6) translateY(10px); } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop { animation: none; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .gx-rise { opacity: 1; transform: none; clip-path: none; transition: none; } .gx-shimmer, .gx-marquee, .gx-swap, .gx-pop, .gx-char, .gx-ambient { animation: none; } .gx-char { opacity: 1; } .gx-parallax, .gx-magnet { transform: none !important; } .gx-card:hover { transform: none; } .gx-phase-button::after, .gx-mint-mark, .gx-workspace * { transition: none; } }
 
 /* Collectible holo card (hero exhibit) */
 .hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: radial-gradient(60% 70% at 50% 45%, color-mix(in oklab, var(--primary) 14%, transparent), transparent 70%); overflow: hidden; }
