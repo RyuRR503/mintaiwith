@@ -178,7 +178,9 @@ function GenesisPage() {
         </div>
         <div className="gx-exhibit">
           <div data-reveal className="gx-rise gx-art-stage hc-stage">
-            <HoloCard id={id} kind={kind} />
+            <div ref={stage} className="gx-parallax h-full">
+              <HoloCard id={id} kind={kind} />
+            </div>
           </div>
           <aside data-reveal className="gx-rise gx-exhibit-rail">
             <div>
@@ -191,7 +193,7 @@ function GenesisPage() {
               <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label={t("卡号")} />
               <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>{t("随机一张")}<Shuffle className="size-4" /></Button>
             </div>
-            <Button size="lg" disabled={!isPoolDeployed()} className="gap-2">
+            <Button ref={magnet} size="lg" disabled={!isPoolDeployed()} className="gx-magnet gap-2">
               {isPoolDeployed() ? t("去铸造") : <><Lock className="size-4" />{t("合约未上线")}</>}
             </Button>
           </aside>
