@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
-/** Brand glyph drawn on every card. */
-const GLYPH = "M";
+/** Brand word drawn on every card. */
+const GLYPH = "MINT";
 
 function rng(seed: number) {
   let s = (seed * 2654435761) >>> 0 || 1;
@@ -63,7 +63,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       const cx = w / 2, cy = h * 0.53;
       ctx.font = `400 ${fs}px ${display}`;
       const gw = ctx.measureText(GLYPH).width || 1;
-      if (gw > w * 0.66) { fs *= (w * 0.66) / gw; ctx.font = `400 ${fs}px ${display}`; }
+      if (gw > w * 0.8) { fs *= (w * 0.8) / gw; ctx.font = `400 ${fs}px ${display}`; }
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
 
       // Ambient glow behind the numeral.
