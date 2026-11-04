@@ -42,8 +42,8 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
       pts.push([0.82 - u * (0.42 + slant) + Math.sin(u * Math.PI) * 0.06, 0.12 + u * 0.78]);
     }
     const seg: number[] = [0];
-    for (let i = 1; i < pts.length; i++) seg.push(seg[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
-    const total = seg[seg.length - 1];
+    for (let i = 1; i < pts.length; i++) seg.push(seg[i - 1]! + Math.hypot(pts[i]![0] - pts[i - 1]![0], pts[i]![1] - pts[i - 1]![1]));
+    const total = seg[seg.length - 1]!;
     const echoes = (kind === "team" ? 5 : 3) + Math.floor(rand() * 3);
     const speed = 0.18 + rand() * 0.12;
     const sparks = Array.from({ length: 26 }, () => ({ at: rand(), off: (rand() - 0.5) * 0.08, ph: rand() * Math.PI * 2 }));
@@ -52,9 +52,9 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
 
     const pointAt = (f: number): [number, number] => {
       const d = (((f % 1) + 1) % 1) * total;
-      let i = 1; while (i < seg.length - 1 && seg[i] < d) i++;
-      const k = (d - seg[i - 1]) / (seg[i] - seg[i - 1] || 1);
-      return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k];
+      let i = 1; while (i < seg.length - 1 && seg[i]! < d) i++;
+      const a = pts[i - 1]!, b = pts[i]!, k = (d - seg[i - 1]!) / (seg[i]! - seg[i - 1]! || 1);
+      return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
     };
 
     const paint = () => {
