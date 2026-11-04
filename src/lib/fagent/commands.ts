@@ -45,7 +45,7 @@ export function cardCommand(kind: "claim" | "redeem" | "list" | "unlist", id: nu
 export function getAgentCommands(language: Language = "zh") {
 const t = (text: string, ...values: unknown[]) => translate(language, text, ...values);
 const list = [
-  { group: "铸造", title: t("铸造卡牌"), fn: "mint(uint256 count)", desc: t("每张 0.002 BNB，每地址终身最多 7 张。"), text: mintCommand(1, language) },
+  { group: "铸造", title: t("铸造卡牌"), fn: "mint(uint256 count)", desc: t("每张 0.002 BNB，每地址终身最多 7 张。"), text: language === "en" ? `${translate(language, commandHead)}\nMint cards: call mint(uint256 count) on the Vault (payable). Ask me the count first; value = live mintPrice() × count.` : `${commandHead}\n铸造卡牌：调用金库 mint(uint256 count)（payable）。先问我铸几张，value = mintPrice() 读数 × 张数。` },
   { group: "买", title: t("买入挂单卡牌"), fn: "buy(tokenIds, maxPrices)", desc: t("检查最新卖单，按最高限价购买。"), text: t("{0}\n卡号【填写整数，不带 #】，最高价【填写 BNB】。先读取有效卖单，调用 buy([卡号],[最高价 wei])，value 为最高价 wei。超过限价会跳过，仅按 Sold 日志确认实际成交。", translate(language, commandHead)) },
   { group: "买", title: t("发布求购"), fn: "placeBid(price, quantity, batchPlusOne)", desc: t("BNB 托管在金库，未成交部分可撤回。"), text: t("{0}\n每张出价【BNB】，数量【整数】，只收第【N】批或不限。调用 placeBid(出价 wei,数量,批次参数)，value=出价 wei×数量。不限填 0；页面第 N 批填 N（底层 batchId=N-1）。确认后发送并报告 bidId。", translate(language, commandHead)) },
   { group: "买", title: t("撤销求购"), fn: "cancelBids(bidIds)", desc: t("退回未成交部分的托管 BNB。"), text: t("{0}\n读取 bids(【bidId】)，确认买家为我且仍有剩余数量。调用 cancelBids([【bidId】])，报告实际退款。", translate(language, commandHead)) },
