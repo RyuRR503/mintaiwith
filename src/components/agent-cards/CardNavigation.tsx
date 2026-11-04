@@ -7,6 +7,7 @@ const pages = [
   { to: "/market", label: "卡牌市场" },
   { to: "/commands", label: "Agent 指令" },
   { to: "/vault", label: "金库账本" },
+  { to: "/tokenomics", label: "代币经济" },
   { to: "/rules", label: "规则" },
 ] as const;
 

@@ -1,3 +1,4 @@
+import { PoolStats } from "@/components/agent-cards/PoolStats";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Shuffle, Lock, ArrowDownRight, ArrowUpRight } from "lucide-react";
@@ -136,6 +137,7 @@ function GenesisPage() {
             <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>预售进度</span><span className="text-primary">{st.presalePct.toFixed(1)}%</span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
+          <div className="mt-10"><PoolStats /></div>
         </div>
       </section>
 

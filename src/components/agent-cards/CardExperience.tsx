@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AgentCommands } from "./AgentCommands";
 import { MarketBook } from "./MarketBook";
 import { SiteShell } from "./SiteShell";
+import { PoolStats } from "./PoolStats";
 
 export type CardPage = "market" | "commands" | "vault";
 
@@ -33,6 +34,7 @@ export function CardExperience({ page }: { page: CardPage }) {
       {result.error && <div role="alert" className="mb-6 text-sm text-destructive">{t(result.error)}<Button variant="link" onClick={() => void refetch()}>{t("重试")}</Button></div>}
       {page === "market" && <MarketBook />}
       {page === "commands" && <AgentCommands />}
+      {page === "vault" && <section className="mb-14"><p className="gx-kicker mb-2">{t("开池版 · 累计数据")}</p><PoolStats /></section>}
       {page === "vault" && supply && <VaultLedger data={supply} />}
     </SiteShell>
   );
