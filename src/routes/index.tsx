@@ -73,7 +73,7 @@ function CountUp({ value, decimals = 0, suffix = "" }: { value: number; decimals
     io.observe(el);
     return () => { io.disconnect(); cancelAnimationFrame(raf); };
   }, [value, decimals, suffix]);
-  return <span ref={ref}>0{suffix}</span>;
+  return <span ref={ref}>{fmt(value, decimals)}{suffix}</span>;
 }
 
 /** Magnetic hover: the element leans a few px toward the pointer. */
