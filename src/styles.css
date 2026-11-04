@@ -374,10 +374,10 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 /* Collectible holo card (hero exhibit) */
 .hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: var(--background-deep); overflow: hidden; }
 .hc-scene { position: relative; perspective: 1100px; width: min(300px, 72vw); }
-.hc-shadow { position: absolute; inset: 20% 18% -3%; border-radius: 8px; background: color-mix(in oklab, var(--primary) 24%, transparent); filter: blur(32px); opacity: .3; }
+.hc-shadow { position: absolute; inset: 20% 18% -3%; border-radius: 8px; background: color-mix(in oklab, var(--primary) 32%, transparent); filter: blur(32px); opacity: .35; animation: hc-pulse 5s ease-in-out infinite; }
 .hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 8px; padding: 2px;
   background: linear-gradient(140deg, var(--card-art-light), var(--card-art-shade) 38%, var(--primary) 72%, var(--card-art-shade));
-  transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 10s ease-in-out infinite; }
+  transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 6s ease-in-out infinite; }
 .hc-card[data-active="true"] { transition: transform .08s linear; animation-play-state: paused; }
 .hc-inner { position: relative; height: 100%; border-radius: 6px; background: var(--background-deep); display: flex; flex-direction: column; overflow: hidden; }
 .hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .95rem 1.15rem; }
@@ -390,13 +390,13 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .hc-serial { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--foreground); }
 .hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--primary); }
 .hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 8px; pointer-events: none; }
-.hc-foil { opacity: 0; transition: opacity .4s;
+.hc-foil { opacity: .08; transition: opacity .4s;
   background: linear-gradient(115deg, transparent 25%, color-mix(in oklab, var(--primary) 35%, transparent) 45%, color-mix(in oklab, var(--foreground) 20%, transparent) 50%, transparent 65%);
-  background-size: 300% 300%; background-position: var(--mx) var(--my); }
-.hc-card[data-active="true"] .hc-foil { opacity: .08; }
+  background-size: 300% 300%; background-position: var(--mx) var(--my); animation: hc-foil 9s linear infinite; }
+.hc-card[data-active="true"] .hc-foil { opacity: .16; animation: none; }
 .hc-glare { background: radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--foreground) 35%, transparent), transparent 45%); mix-blend-mode: overlay; opacity: 0; transition: opacity .4s; }
-.hc-card[data-active="true"] .hc-glare { opacity: .15; }
-@keyframes hc-float { 0%,100% { transform: rotateX(1deg) rotateY(-2deg) translateY(0); } 50% { transform: rotateX(-1deg) rotateY(2deg) translateY(-4px); } }
+.hc-card[data-active="true"] .hc-glare { opacity: .3; }
+@keyframes hc-float { 0%,100% { transform: rotateX(3deg) rotateY(-5deg) translateY(0); } 50% { transform: rotateX(-2deg) rotateY(5deg) translateY(-9px); } }
 @keyframes hc-foil { to { background-position: 300% 0; } }
 @keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hc-card, .hc-foil, .hc-shadow { animation: none; } }
