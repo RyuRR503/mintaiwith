@@ -114,6 +114,32 @@ function GenesisPage() {
     update();
     return () => { window.removeEventListener("scroll", update); cancelAnimationFrame(frame); };
   }, []);
+  const magnet = useMagnet<HTMLButtonElement>(7);
+  const hero = useRef<HTMLElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  // Ambient glow follows the pointer; the card stage drifts slightly on scroll.
+  useEffect(() => {
+    const heroEl = hero.current;
+    if (!heroEl || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = heroEl.getBoundingClientRect();
+        heroEl.style.setProperty("--ax", `${((e.clientX - r.left) / r.width) * 100}%`);
+        heroEl.style.setProperty("--ay", `${((e.clientY - r.top) / r.height) * 100}%`);
+      });
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (stage.current) stage.current.style.setProperty("--par", `${Math.min(60, window.scrollY * 0.08)}px`);
+      });
+    };
+    heroEl.addEventListener("pointermove", onMove);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { heroEl.removeEventListener("pointermove", onMove); window.removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); };
+  }, []);
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
   const kind = id <= P.presaleCards ? "presale" : "open";
