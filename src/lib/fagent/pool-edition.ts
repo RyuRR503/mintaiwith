@@ -57,7 +57,20 @@ export const POOL_MOCK = {
   floorFundBnb: 0,
   dividendBnb: 0,
   burnedTokens: 0,
+  burnedCards: 0,
 } as const;
+
+/** Token allocation from the pool-edition contract; team share is the remainder after the four fixed buckets. */
+export const ALLOCATION = (() => {
+  const fixed = [
+    { key: "pool", label: "开池流动性", amount: 124_672_000, note: "与 36.75 BNB 一起进池，LP 销毁" },
+    { key: "presale", label: "预售卡发放", amount: 168_800_000, note: "20,000 张 × 8,440 枚，开池后 5 天释放" },
+    { key: "ladder", label: "阶梯卖单", amount: 58_611_119, note: "币价涨到 1.5 / 2 / 3 倍才卖，BNB 全给持卡人" },
+    { key: "burn", label: "开池销毁", amount: 97_479_938, note: "开池时打入黑洞地址" },
+  ];
+  const team = POOL_EDITION.totalTokens - fixed.reduce((a, b) => a + b.amount, 0);
+  return [...fixed, { key: "team", label: "团队卡", amount: team, note: "每铸 19 张付费卡解锁 1 张，逐张放出" }];
+})();
 
 export function poolStatus(minted: number) {
   const presaleLeft = Math.max(0, POOL_EDITION.presaleCards - minted);
