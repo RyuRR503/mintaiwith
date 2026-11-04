@@ -22,7 +22,7 @@ export const Route = createFileRoute("/tokenomics")({
 const fmt = (n: number) => n.toLocaleString("en-US");
 const OPACITY = [1, 0.75, 0.55, 0.35, 0.2];
 
-function Donut({ active, onHover, lockedLabel }: { active: number; onHover: (i: number) => void; lockedLabel: string }) {
+function Donut({ active, onHover, lockedLabel, label }: { active: number; onHover: (i: number) => void; lockedLabel: string; label: string }) {
   const r = 80, c = 2 * Math.PI * r;
   let offset = 0;
   const arcs = ALLOCATION.map((a, i) => {
@@ -38,7 +38,7 @@ function Donut({ active, onHover, lockedLabel }: { active: number; onHover: (i: 
   const DASHES = 26;
   const step = team.len / DASHES;
   const dash = step * 0.5;
-  return <svg viewBox="0 0 200 200" className="gx-donut" role="img" aria-label="代币分配">
+  return <svg viewBox="0 0 200 200" className="gx-donut" role="img" aria-label={label}>
     {arcs.map(({ a, i, len, start }) => {
       if (a.key === "team") return <g key={a.key}>
         {Array.from({ length: DASHES }, (_, k) => <circle key={k} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={0.22} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${dash} ${c - dash}`} strokeDashoffset={-(start + k * step)} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />)}
@@ -61,7 +61,7 @@ function TokenomicsPage() {
   return <SiteShell index="06" code="TOKENOMICS" title="代币经济" lead={`总量 ${fmt(P.totalTokens)} 枚，合约写死，不能增发。每一枚去了哪里，都在下面。`} seed={606}>
     <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,420px)_1fr]">
       <div className="relative mx-auto w-full max-w-[420px]">
-        <Donut active={active} onHover={setActive} lockedLabel={t("锁仓")} />
+        <Donut active={active} onHover={setActive} lockedLabel={t("锁仓")} label={t("代币分配")} />
         <div key={active} className="gx-swap pointer-events-none absolute inset-0 grid place-content-center text-center">
           <p className="font-mono text-4xl font-bold text-primary">{a.key === "team" ? "5%" : `${((a.amount / P.totalTokens) * 100).toFixed(1)}%`}</p>{a.key === "team" && <p className="text-xs text-muted-foreground">{t("占全部卡牌")}</p>}
           {a.key === "team" && <p className="mt-2 justify-self-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{t("代币锁在合约里")}</p>}
