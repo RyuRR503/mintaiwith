@@ -1,4 +1,5 @@
 # Standalone FAGENT
+- [x] Deliver three new 1500×500 MINT.AI covers (lacquer gesture, satin impression, ink loop) after rejection of the previous directions; verify dimensions and inspect each image; website unchanged.
 - [x] Remove accumulating card-animation path shadows with fully cleared frames and bounded live paths; soften foil/glare overlays and verify live motion, pointer effects, mobile resize and static reduced-motion rendering.
 - [x] Deepen homepage editorial layout and coordinated motion; verify three viewport widths, interactive controls, reduced-motion art, resize redraw and six existing rule tests.
 - [x] Deliver standalone merge-tiered v2 package: preserve equal batch allocation, capped price ladder, 78 local tests passing across final suite runs, independently compiled flattened files and inspected 41-file ZIP. Mainnet fork not rerun; live website and deployment unchanged.
