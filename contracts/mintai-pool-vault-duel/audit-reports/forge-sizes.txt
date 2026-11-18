@@ -1,0 +1,21 @@
+Measured from the current compiler artifacts.
+solc 0.8.24, optimizer on, runs = 1, via IR, cancun.
+Runtime limit: 24,576 bytes. Initcode limit: 49,152 bytes.
+Measured 2026-11-12 after the 1-hour duel refund and the still-locked vest following the card.
+
+Contract                    Runtime    Margin    Initcode    Init margin
+MintAICards                  23,732       844      23,926       25,226
+MintAICardMarket             13,667    10,909      13,861       35,291
+MintAIVault                  24,241       335      24,435       24,717
+MintAIDuel                    6,405    18,171       6,594       42,558
+MintAIVaultFactory           12,942    11,634      13,132       36,020
+MintAILauncherFactory         8,030    16,546       8,219       40,933
+MintAIUpgradeAdmin            1,185    23,391       1,245       47,907
+MintAICardsLens               4,782    19,794       4,809       44,343
+MintAISystemDeployer            478    24,098      39,987        9,165
+MintAIParams                     57    24,519          85       49,067
+
+MintAISystemDeployer constructor arguments are address, address, address, bytes32 (128 bytes).
+The market implementation is deployed separately. 39,987 + 128 = 40,115. That is 9,037 bytes under the 49,152 initcode limit.
+Measured 2026-11-12 after moving the market implementation out of the one-click deployer so the order-book lens fits.
+MintAIVault has 335 bytes of runtime left. The generic schema descriptions were cleared to pay for moveCardVest. Do not add more vault code.

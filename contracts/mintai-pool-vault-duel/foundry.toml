@@ -1,0 +1,22 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["../fomo-countdown/lib"]
+allow_paths = ["../fomo-countdown"]
+test = "test"
+solc_version = "0.8.24"
+optimizer = true
+optimizer_runs = 1
+via_ir = true
+evm_version = "cancun"
+gas_limit = 500000000000
+remappings = [
+  "forge-std/=../fomo-countdown/lib/forge-std/src/",
+  "@openzeppelin/contracts/=../fomo-countdown/lib/openzeppelin-contracts/contracts/",
+  "@openzeppelin/contracts-upgradeable/=../fomo-countdown/lib/openzeppelin-contracts-upgradeable/contracts/",
+  "flap/=../fomo-countdown/src/flap/",
+]
+skip = ["../fomo-countdown/lib/**"]
+
+[rpc_endpoints]
+bsc = "${BSC_RPC_URL}"

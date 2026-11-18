@@ -1,0 +1,29 @@
+Compiling 1 files with Solc 0.8.24
+Solc 0.8.24 finished in 78.40s
+Compiler run successful!
+
+Ran 10 tests for test/MintAIFlow.t.sol:MintAIFlowTest
+[PASS] test_fork_accessControl() (gas: 3235891)
+[PASS] test_fork_agentIdAndLifetimeCap() (gas: 620109)
+[PASS] test_fork_floorCancelsAnUntouchedNewCardsTokens() (gas: 905456742)
+[PASS] test_fork_ladderNeedsTwapAndStreams() (gas: 904875929)
+Logs:
+  twap / opening price x100 170
+
+[PASS] test_fork_marketSettlesDividendToSeller() (gas: 906921779)
+[PASS] test_fork_postOpenMintBuysBurnsAndVests() (gas: 906002309)
+Logs:
+  estimate (tokens) 84398
+  vested to bob (tokens) 84398
+  burned (tokens) 36170
+
+[PASS] test_fork_presaleLaunchAndVesting() (gas: 910350559)
+[PASS] test_fork_pricesAndBudgets() (gas: 28573)
+[PASS] test_fork_refundWhenPresaleFails() (gas: 114749366)
+[PASS] test_fork_taxSplitFloorAndDividend() (gas: 909540728)
+Logs:
+  tax revenue to vault 56385793281688713
+
+Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 3.00s (11.73s CPU time)
+
+Ran 1 test suite in 3.07s (3.00s CPU time): 10 tests passed, 0 failed, 0 skipped (10 total tests)

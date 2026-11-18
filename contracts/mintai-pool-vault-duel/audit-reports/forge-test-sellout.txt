@@ -1,0 +1,11 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/MintAIStress.t.sol:MintAISellOutTest
+[PASS] test_sellOut_all777777CardsAndExactGrantBudget() (gas: 73317403278)
+Logs:
+  post-open mint BNB swapped: 2818044880000000000000
+  post-open tokens burned: 2608097085
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 38.25s (38.25s CPU time)
+
+Ran 1 test suite in 39.28s (38.25s CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
