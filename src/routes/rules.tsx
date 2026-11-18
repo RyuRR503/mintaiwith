@@ -12,7 +12,7 @@ export const Route = createFileRoute("/rules")({
     { property: "og:description", content: "777,777 张卡的预售、开池、释放与交易税规则。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
-  ], links: ["16x16", "32x32", "64x64"].map(sizes => ({ rel: "icon", type: "image/png", sizes, href: "/favicon-fagent-approved.png" })) }),
+  ], links: ["16x16", "32x32", "64x64"].map(sizes => ({ rel: "icon", type: "image/png", sizes, href: "/favicon.png" })) }),
   component: CardRulesPage,
 });
 
