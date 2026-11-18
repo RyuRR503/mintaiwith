@@ -1,8 +1,8 @@
-// Rules of the undeployed Flap Pool Launch edition (fagent-pool-vault package, 2026-11-03).
-// Display-only: the live site still reads the deployed vault in config.ts.
+import { FAGENT } from "./config";
+// Rules from fagent-pool-vault-duel.zip; live addresses discovered from the card.
 export const POOL_EDITION = {
-  vault: "" as string, // fill after deployment
-  cards: "" as string,
+  vault: "" as string, // never substitute a factory; discovered through cards.vault()
+  cards: FAGENT.cards,
   totalCards: 777_777,
   paidCards: 738_889,
   teamCards: 38_888,
@@ -12,7 +12,7 @@ export const POOL_EDITION = {
   presalePrice: 0.00245,
   openPrice: 0.0049,
   opsShareOpen: 0.25,
-  mintBurnShare: 0.3,
+  mintBurnShare: 0.1,
   cardGrant: 8_440,
   vestDays: 5,
   totalTokens: 777_777_777,
@@ -26,7 +26,7 @@ export const POOL_EDITION = {
   presaleWindowDays: 7,
 } as const;
 
-export const isPoolDeployed = () => POOL_EDITION.vault.length === 42;
+export const isPoolDeployed = () => POOL_EDITION.cards.length === 42;
 
 export function mintQuote(count: number, phase: "presale" | "open") {
   const n = Math.max(1, Math.min(POOL_EDITION.maxPerAddress, Math.floor(count)));
@@ -37,10 +37,11 @@ export function mintQuote(count: number, phase: "presale" | "open") {
   return { count: n, bnb: +bnb.toFixed(6), ops: +(bnb * POOL_EDITION.opsShareOpen).toFixed(6), swap: +(bnb * (1 - POOL_EDITION.opsShareOpen)).toFixed(6), tokens: null as number | null };
 }
 
-/** Linear 5-day release: unlocked tokens after `days`. */
+/** Presale grants release 20% at launch and the remainder over five days. */
 export function vested(total: number, days: number) {
   const r = Math.max(0, Math.min(1, days / POOL_EDITION.vestDays));
-  return Math.floor(total * r);
+  const upfront = Math.floor(total / 5);
+  return upfront + Math.floor((total - upfront) * r);
 }
 
 export function taxFlow(volumeBnb: number) {
@@ -48,17 +49,6 @@ export function taxFlow(volumeBnb: number) {
   const s = POOL_EDITION.taxSplit;
   return { tax, dividend: tax * s.dividend, floor: tax * s.floor, ops: tax * s.ops };
 }
-
-/** Demo snapshot shown until the pool edition is deployed. Replace with chain reads after deployment. */
-export const POOL_MOCK = {
-  minted: 13_482,
-  minters: 2_917,
-  presaleRaisedBnb: 13_482 * 0.00245,
-  floorFundBnb: 0,
-  dividendBnb: 0,
-  burnedTokens: 0,
-  burnedCards: 0,
-} as const;
 
 /** Token allocation from the pool-edition contract; team share is the remainder after the four fixed buckets. */
 export const ALLOCATION = (() => {

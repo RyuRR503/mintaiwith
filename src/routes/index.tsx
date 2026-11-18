@@ -1,3 +1,8 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { snapshotOptions } from "@/lib/fagent/queries";
+import { mintCommand } from "@/lib/fagent/commands";
+import { binanceMint } from "@/lib/fagent/binance";
+import { CommandDialog } from "@/components/agent-cards/ChainTools";
 import { PoolStats } from "@/components/agent-cards/PoolStats";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
@@ -10,9 +15,10 @@ import { LanguageSwitch } from "@/components/agent-cards/LanguageSwitch";
 import { GenerativeCard } from "@/components/agent-cards/GenerativeCard";
 import { HoloCard } from "@/components/agent-cards/HoloCard";
 import { useLanguage } from "@/components/agent-cards/LanguageProvider";
-import { POOL_EDITION as P, POOL_MOCK as M, poolStatus, mintQuote, vested, isPoolDeployed } from "@/lib/fagent/pool-edition";
+import { POOL_EDITION as P, poolStatus, mintQuote, vested } from "@/lib/fagent/pool-edition";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(snapshotOptions()),
   head: () => ({ meta: [
     { title: "MINT.AI Genesis — 开池版卡牌" },
     { name: "description", content: "MINT.AI 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
@@ -29,8 +35,8 @@ const fmt = (n: number, d = 0) => n.toLocaleString("en-US", { maximumFractionDig
 const phases = [
   { k: "01", title: "预售", body: `前 ${fmt(P.presaleCards)} 张，每张 ${P.presalePrice} BNB，共 49 BNB。窗口 7 天。没卖满可烧卡全额退款。` },
   { k: "02", title: "开池", body: `卖满后 7 天内任何人可开池：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚进池，LP 销毁。超时则永久关闭，只能退款。` },
-  { k: "03", title: "释放", body: `预售卡每张 ${fmt(P.cardGrant)} 枚，5 天线性释放，每天 1,688 枚。币跟地址走，不跟卡走。` },
-  { k: "04", title: "开池后铸造", body: `每张 ${P.openPrice} BNB，不涨价。25% 给运营，75% 当场买币：30% 进黑洞，70% 记在你名下 5 天释放。` },
+  { k: "03", title: "释放", body: `预售卡每张 ${fmt(P.cardGrant)} 枚，开池先释放 20%，剩余 80% 在 5 天内线性释放。币跟地址走，不跟卡走。` },
+  { k: "04", title: "开池后铸造", body: `每张 ${P.openPrice} BNB，不涨价。25% 给运营，75% 当场买币：10% 进黑洞，90% 记在你名下 5 天释放。` },
   { k: "05", title: "地板基金", body: `交易税的一部分进入地板基金，每 30 分钟从最低挂单收卡并销毁，全价付给卖家。比例见规则。` },
 ];
 
@@ -98,7 +104,11 @@ function useMagnet<T extends HTMLElement>(strength = 6) {
 
 function GenesisPage() {
   useReveal();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const en = language === "en";
+  const { data: result, refetch, isFetching } = useSuspenseQuery(snapshotOptions());
+  const live = result.data;
+  const [command, setCommand] = useState<string | null>(null);
   const [id, setId] = useState(7777);
   const [phase, setPhase] = useState<"presale" | "open">("presale");
   const [count, setCount] = useState(3);
@@ -150,7 +160,7 @@ function GenesisPage() {
   const q = mintQuote(count, phase);
   const grant = phase === "presale" ? q.tokens ?? 0 : P.cardGrant * count;
   const kind = id <= P.presaleCards ? "presale" : "open";
-  const st = poolStatus(M.minted);
+  const st = poolStatus(Math.min(live?.paid ?? 0, P.presaleCards));
   const selectedPhase = phases[active] ?? phases[0];
   if (!selectedPhase) return null;
 
@@ -210,8 +220,8 @@ function GenesisPage() {
               <Slider min={1} max={P.totalCards} step={1} value={[id]} onValueChange={v => setId(v[0] ?? 1)} aria-label={t("卡号")} />
               <Button size="lg" variant="outline" className="mt-5 w-full justify-between" onClick={() => setId(1 + Math.floor(Math.random() * P.totalCards))}>{t("随机一张")}<Shuffle className="size-4" /></Button>
             </div>
-            <Button ref={magnet} size="lg" disabled={!isPoolDeployed()} className="gx-magnet gap-2">
-              {isPoolDeployed() ? t("去铸造") : <><Lock className="size-4" />{t("合约未上线")}</>}
+            <Button ref={magnet} size="lg" disabled={!live || (live.phase !== "presale" && live.phase !== "open")} onClick={() => setCommand(mintCommand(count, language))} className="gx-magnet gap-2">
+              {live?.phase === "presale" || live?.phase === "open" ? t("去铸造") : <><Lock className="size-4" />{live?.phase === "ready" ? (en ? "Awaiting pool launch" : "等待开池") : live?.phase === "refund" ? (en ? "Presale closed" : "预售已结束") : (en ? "Chain data unavailable" : "链上数据暂不可用")}</>}
             </Button>
           </aside>
         </div>
@@ -221,19 +231,19 @@ function GenesisPage() {
       <section className="border-y border-border/60">
         <div className="gx-container py-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p className="flex items-center gap-2 font-mono text-xs text-primary"><span className="gx-live-dot" />LIVE / {st.phase === "presale" ? t("预售进行中") : t("开池后铸造")}</p>
-            <span className="rounded border border-border px-2 py-1 font-mono text-[11px] text-muted-foreground">{t("演示数据 · 合约部署后自动换成链上实时数据")}</span>
+            <p className="flex items-center gap-2 font-mono text-xs text-primary"><span className="gx-live-dot" />LIVE / {live ? live.phase === "presale" ? t("预售进行中") : live.phase === "open" ? t("开池后铸造") : live.phase === "ready" ? (en ? "Awaiting launch" : "等待开池") : (en ? "Refund available" : "可按规则退款") : (en ? "Unavailable" : "暂不可用")}</p>
+            <Button variant="outline" size="sm" disabled={isFetching} onClick={() => void refetch()}>{live ? t("链上数据 · 区块 {0}", live.block) : (en ? "Retry chain read" : "重试链上读取")}</Button>
           </div>
           <dl className="gx-metrics">
             {[
-              { label: "已铸造", value: M.minted, d: 0, suffix: "", note: t("总量 {0} 张", fmt(P.totalCards)) },
-              { label: "已募集", value: M.presaleRaisedBnb, d: 2, suffix: " BNB", note: t("预售目标 49 BNB") },
-              { label: "铸造地址", value: M.minters, d: 0, suffix: "", note: t("每地址最多 {0} 张", P.maxPerAddress) },
+              { label: "已铸造", value: live?.paid ?? 0, d: 0, suffix: "", note: t("总量 {0} 张", fmt(P.totalCards)) },
+              { label: "已募集", value: Number(live?.raisedBnb ?? 0), d: 2, suffix: " BNB", note: t("预售目标 49 BNB") },
+              { label: "铸造地址", value: live?.minters ?? 0, d: 0, suffix: "", note: t("每地址最多 {0} 张", P.maxPerAddress) },
               { label: "预售剩余", value: st.presaleLeft, d: 0, suffix: "", note: t("卖满 {0} 张即可开池", fmt(P.presaleCards)) },
-            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl"><CountUp value={item.value} decimals={item.d} suffix={item.suffix} /></dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
+            ].map(item => <div key={item.label}><dt className="text-xs text-muted-foreground">{t(item.label)}</dt><dd className="mt-2 font-display text-4xl">{live ? <CountUp value={item.value} decimals={item.d} suffix={item.suffix} /> : "—"}</dd><dd className="mt-2 text-xs text-muted-foreground">{item.note}</dd></div>)}
           </dl>
           <div className="mt-6">
-            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary"><CountUp value={st.presalePct} decimals={1} suffix="%" /></span></div>
+            <div className="mb-2 flex justify-between font-mono text-xs text-muted-foreground"><span>{t("预售进度")}</span><span className="text-primary">{live ? <CountUp value={st.presalePct} decimals={1} suffix="%" /> : "—"}</span></div>
             <div className="h-2 overflow-hidden rounded-full bg-muted"><div className="gx-live-bar h-full rounded-full bg-primary" style={{ width: `${st.presalePct}%` }} /></div>
           </div>
           <div className="mt-10"><PoolStats /></div>
@@ -282,7 +292,7 @@ function GenesisPage() {
             {phase === "presale"
               ? <div><dt className="text-muted-foreground">{t("获得代币")}</dt><dd className="text-2xl text-primary">{fmt(q.tokens ?? 0)}</dd></div>
               : <><div><dt className="text-muted-foreground">{t("运营 25%")}</dt><dd className="text-2xl">{q.ops}</dd></div>
-                 <div className="col-span-2"><dt className="text-muted-foreground">{t("进池买币 75%")}</dt><dd className="text-2xl text-primary">{q.swap} BNB → {t("70% 归你 · 30% 销毁")}</dd></div></>}
+                 <div className="col-span-2"><dt className="text-muted-foreground">{t("进池买币 75%")}</dt><dd className="text-2xl text-primary">{q.swap} BNB → {en ? "90% vests to you · 10% burned" : "90% 归你 · 10% 销毁"}</dd></div></>}
           </dl>
           {phase === "open" && <p className="mt-3 text-xs text-muted-foreground">{t("到手代币按当时池子价格决定，网站上线后实时报价。")}</p>}
         </div>
@@ -300,8 +310,9 @@ function GenesisPage() {
 
       </section>
 
+      <CommandDialog text={command} binanceText={command ? binanceMint(count, language) : null} onClose={() => setCommand(null)} />
       <footer className="border-t border-border/60 px-6 py-8 text-center font-mono text-xs text-muted-foreground">
-        {t("开池版合约尚未部署 · 铸造数据为演示数据，不代表链上实时数据")}
+        {en ? "NFT card live on BNB Chain · vault created at pool launch · all payments confirmed in Binance Agent Wallet" : "卡牌已在 BNB Chain 上线 · 金库在成功开池时创建 · 所有付款由币安 Agent 钱包确认"}
       </footer>
     </main>
   );

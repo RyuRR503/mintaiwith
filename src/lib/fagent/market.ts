@@ -2,7 +2,7 @@ import { formatEther } from "viem";
 
 export function saleCardIds(raw: string, maxSell: number) {
   const ids = [...new Set(raw.split(/[^0-9]+/).filter(Boolean).map(Number))];
-  if (!ids.length || ids.length > maxSell || ids.some(id => !Number.isInteger(id) || id < 0 || id > 769999)) return [];
+  if (!ids.length || ids.length > maxSell || ids.some(id => !Number.isInteger(id) || id < 1 || id > 777777)) return [];
   return ids;
 }
 

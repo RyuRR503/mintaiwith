@@ -28,12 +28,12 @@ const sections = [
     "③ 阶梯卖单：58,611,119 枚（约 7.5%），只在币价涨上去之后才卖，卖币得到的 BNB 全部分给持卡人。具体怎么运作见下面「阶梯卖单」一节。",
     "④ 开池时销毁：97,479,938 枚（约 12.5%），开池那一刻直接打进黑洞地址，永久退出流通，不进入池子、不挂单、不计入任何人名下。",
     "①–④ 之外剩下的部分对应团队卡，按上面的解锁节奏逐张放出，不会一次性进入流通。",
-    "开池后铸造的卡不占以上额度：它们用 BNB 当场在池子里买币，30% 销毁，70% 5 天释放给铸造地址。",
+    "开池后铸造的卡不占以上额度：它们用 BNB 当场在池子里买币，10% 销毁，90% 5 天释放给铸造地址。",
   ] },
   { title: "预售", paragraphs: [
     "前 20,000 张为预售，每张 0.00245 BNB，合计 49 BNB。预售窗口 7 天。",
-    "每张预售卡对应 8,440 枚代币，开池后 5 天线性释放，每天约 1,688 枚。代币记在铸造地址名下，不跟卡转移。",
-    "7 天内没卖满，可销毁预售卡，全额退回 BNB。",
+    "每张预售卡对应 8,440 枚代币，开池立即释放 20%，剩余 80% 在 5 天内线性释放。代币记在铸造地址名下，不跟卡转移。",
+    "预售截止后若未卖满，可主动销毁自己的预售卡，全额退回 BNB。",
   ] },
   { title: "开池", paragraphs: [
     "预售卖满后 7 天内，任何人都可触发开池：36.75 BNB 与 124,672,000 枚代币进入池子，LP 直接销毁；同一步骤把 97,479,938 枚打进黑洞地址销毁。另 12.25 BNB 为运营费用。",
@@ -41,7 +41,7 @@ const sections = [
   ] },
   { title: "开池后铸造", paragraphs: [
     "开池后每张 0.0049 BNB，不涨价。25% 为运营费用，75% 当场在池子里买币。",
-    "买到的代币：30% 直接销毁，70% 记在铸造地址名下，5 天线性释放。到手数量按成交时池子价格决定。",
+    "买到的代币：10% 直接销毁，90% 记在铸造地址名下，5 天线性释放。到手数量按成交时池子价格决定。",
   ] },
   { title: "阶梯卖单", paragraphs: [
     "一句话：金库里留了一批币，等币价涨到开盘价的 1.5 倍、2 倍、3 倍时，分三档按固定价格卖出，卖得的 BNB 全部分给持卡人。",
@@ -81,7 +81,7 @@ const sections = [
 
 function CardRulesPage() {
   const { t } = useLanguage();
-  return <SiteShell index="05" code="RULES" title="卡牌规则" lead="依据 MINT.AI 开池版合约。合约尚未部署，上线后以链上合约为准。" seed={505}>
+  return <SiteShell index="05" code="RULES" title="卡牌规则" lead="依据 MINT.AI 卡牌合约。卡牌已上线，金库在成功开池时创建。" seed={505}>
       <div className="grid gap-10 lg:grid-cols-[220px_1fr]">
         <nav aria-label={t("规则目录")} className="gx-toc hidden lg:block">{sections.map((s, i) => <a key={s.title} href={`#r${i}`}><span>{String(i + 1).padStart(2, "0")}</span>{t(s.title)}</a>)}</nav>
         <div className="min-w-0 space-y-5">{sections.map((section, i) => <section id={`r${i}`} key={section.title} className="gx-panel gx-rule scroll-mt-28 p-6 sm:p-8"><span className="gx-rule-no" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span><h2 className="mb-5 text-2xl font-bold">{t(section.title)}</h2><div className="space-y-3">{section.paragraphs.map(paragraph => paragraph.startsWith("!") ? <p key={paragraph} className="gx-callout">{t(paragraph.slice(1))}</p> : <p key={paragraph} className="text-sm leading-7 text-muted-foreground">{t(paragraph)}</p>)}</div></section>)}</div>

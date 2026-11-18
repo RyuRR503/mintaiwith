@@ -20,7 +20,7 @@ export const getWallet = createServerFn({ method: "GET" })
     catch { return { data: null, error: "钱包信息读取失败，请重试。" }; }
   });
 export const getCard = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => z.object({ id: z.number().int().min(0).max(769999) }).parse(input))
+  .inputValidator((input: unknown) => z.object({ id: z.number().int().min(1).max(777777) }).parse(input))
   .handler(async ({ data }) => {
     try { return { data: await readCard(data.id), error: null }; }
     catch { return { data: null, error: "卡牌不存在、已销毁，或暂时无法读取。" }; }

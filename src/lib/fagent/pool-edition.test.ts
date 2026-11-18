@@ -11,23 +11,25 @@ describe("pool edition rules", () => {
   it("caps a mint at 10 cards", () => {
     expect(mintQuote(50, "open").count).toBe(10);
   });
-  it("releases 1,688 tokens per day over 5 days", () => {
-    expect(vested(8440, 1)).toBe(1688);
+  it("releases 20 percent immediately and the remainder over 5 days", () => {
+    expect(vested(8440, 0)).toBe(1688);
+    expect(vested(8440, 1)).toBe(3038);
     expect(vested(8440, 9)).toBe(8440);
   });
   it("splits 2% tax 50/30/20", () => {
     const f = taxFlow(100);
     expect([f.tax, f.dividend, f.floor, f.ops].map(v => +v.toFixed(6))).toEqual([2, 1, 0.6, 0.4]);
   });
-  it("supply adds up and is not deployed yet", () => {
+  it("supply adds up and card is deployed", () => {
     expect(POOL_EDITION.paidCards + POOL_EDITION.teamCards).toBe(POOL_EDITION.totalCards);
     expect(POOL_EDITION.presaleCards * POOL_EDITION.presalePrice).toBeCloseTo(49);
-    expect(isPoolDeployed()).toBe(false);
+    expect(isPoolDeployed()).toBe(true);
   });
 });
 
 import { poolStatus as __ps } from "./pool-edition.ts";
 describe("poolStatus", () => {
+  it("post-open bought tokens burn ten percent", () => { expect(POOL_EDITION.mintBurnShare).toBe(0.1); });
   it("stays in presale until 20,000 mints", () => {
     expect(__ps(19_999).phase).toBe("presale");
     expect(__ps(20_000).phase).toBe("open");

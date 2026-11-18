@@ -1,97 +1,72 @@
-import { createPublicClient, fallback, http, formatEther, formatUnits, getAbiItem, type Address } from "viem";
+import { createPublicClient, fallback, http, formatEther, formatUnits, getAbiItem, parseAbi, type Address } from "viem";
 import { bsc } from "viem/chains";
-import { FAGENT, liveSupply } from "./config";
-import { vaultAbi } from "./vault-abi";
+import { FAGENT, deployedAddress, launchPhase } from "./config";
+import { cardsAbi } from "./cards-abi";
+import { lensAbi } from "./lens-abi";
+import { poolVaultAbi } from "./pool-vault-abi";
 import { estimatedMarketVolume, formatBnb } from "./market";
-
+const factoryAbi = parseAbi(["function presaleBuyerCount() view returns (uint256)"]);
+const agentAbi = parseAbi(["function balanceOf(address) view returns (uint256)"]);
 function client() {
   return createPublicClient({ chain: bsc, transport: fallback([
+    http("https://bsc-rpc.publicnode.com", { timeout: 12000, retryCount: 0 }),
     http("https://bsc-dataseed.bnbchain.org", { timeout: 10000, retryCount: 0 }),
-    http("https://bsc-dataseed1.defibit.io", { timeout: 10000, retryCount: 0 }),
-    http("https://bsc-dataseed1.ninicoin.io", { timeout: 10000, retryCount: 0 }),
   ], { rank: false, retryCount: 0 }) });
 }
 export async function readSnapshot() {
-  const c = client();
-  const block = await c.getBlock();
-  const names = ["TOTAL_CARDS", "userMints", "teamMinted", "totalWeight", "mintPrice", "MAX_MINTS", "batchOpenedAt", "STALL_RELEASE", "undistributedTax", "totalTaxReceived", "totalDividendPaid", "dividendLiability", "bidEscrow", "totalMarketFees", "marketFeeOwed", "opsOwed", "proceedsLiability", "projectToken", "nextBidId"] as const;
-  const values = await c.multicall({ contracts: names.map(functionName => ({ address: FAGENT.vault, abi: vaultAbi, functionName })), blockNumber: block.number, allowFailure: false });
-  const numberAt = (i: number) => Number(values[i]);
-  const weiAt = (i: number) => String(values[i]);
-  const token = String(values[17]);
-  if (token.toLowerCase() !== FAGENT.token) throw new Error("Vault token mismatch");
-  const supply = liveSupply(numberAt(1), numberAt(2), numberAt(0));
-  const batchId = BigInt(supply.batch - 1);
-  const [inventory, credit, accounted, balance, decimals] = await Promise.all([
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "batchInventory", args: [batchId], blockNumber: block.number }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "batchCredit", args: [batchId], blockNumber: block.number }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "batchAccounted", args: [batchId], blockNumber: block.number }),
-    c.getBalance({ address: FAGENT.vault, blockNumber: block.number }),
-    c.readContract({ address: FAGENT.token, abi: [{ type: "function", name: "decimals", inputs: [], outputs: [{ type: "uint8" }], stateMutability: "view" }] as const, functionName: "decimals", blockNumber: block.number }),
+  const c = client(); const block = await c.getBlock();
+  const names = ["paidMinted", "teamMinted", "lastTokenId", "presaleEscrow", "presaleDeadline", "presaleFilledAt", "launched", "vault", "launchedToken", "totalWeight", "totalDividendPaid", "dividendLiability", "pendingDividend", "bidEscrow", "totalMarketFees", "opsOwed", "proceedsLiability", "MAX_MINTS", "factory", "saltLocked"] as const;
+  const v = await c.multicall({ contracts: names.map(functionName => ({ address: FAGENT.cards, abi: cardsAbi, functionName })), blockNumber: block.number, allowFailure: false });
+  if (String(v[18]).toLowerCase() !== FAGENT.factory.toLowerCase()) throw new Error("Card factory mismatch");
+  const vault = String(v[7]) as Address; const token = String(v[8]) as Address;
+  const [minters, balance] = await Promise.all([
+    c.readContract({ address: FAGENT.factory, abi: factoryAbi, functionName: "presaleBuyerCount", blockNumber: block.number }),
+    c.getBalance({ address: FAGENT.cards, blockNumber: block.number }),
   ]);
-  return {
-    ...supply, total: numberAt(0), paid: numberAt(1), teamMinted: numberAt(2), weight: numberAt(3), burned: supply.minted - numberAt(3), price: formatEther(BigInt(weiAt(4))), maxMints: numberAt(5),
-    openedAt: numberAt(6), releaseSeconds: numberAt(7), chainTime: Number(block.timestamp), block: String(block.number),
-    undistributed: weiAt(8), taxReceived: weiAt(9), dividendsPaid: weiAt(10), dividendLiability: weiAt(11), bidEscrow: weiAt(12),
-    marketFees: weiAt(13), marketFeeOwed: weiAt(14), opsOwed: weiAt(15), proceedsLiability: weiAt(16), nextBidId: weiAt(18), balance: String(balance),
-    batchInventory: formatUnits(inventory, decimals), batchCredit: formatUnits(credit, decimals), batchAccounted: accounted, tokenDecimals: decimals,
-  };
+  const hasVault = Boolean(v[6]) && deployedAddress(vault);
+  let vaultStats = null;
+  if (hasVault) {
+    const names = ["totalTaxRevenue", "floorFund", "totalMintBurned", "totalForfeitBurned", "totalFloorBurned", "launchTime", "distributed"] as const;
+    const r = await c.multicall({ contracts: names.map(functionName => ({ address: vault, abi: poolVaultAbi, functionName })), blockNumber: block.number, allowFailure: false });
+    vaultStats = { taxReceived: String(r[0]), floorFundBnb: formatEther(BigInt(String(r[1]))), burnedTokens: formatUnits(BigInt(String(r[2])) + BigInt(String(r[3])) + (r[6] ? 97479938n * 10n ** 18n : 0n), 18), floorBurnedCards: Number(r[4]), launchTime: Number(r[5]) };
+  }
+  return { paid: Number(v[0]), teamMinted: Number(v[1]), minted: Number(v[0]) + Number(v[1]), lastTokenId: Number(v[2]), raisedBnb: formatEther(BigInt(String(v[3]))), minters: Number(minters), presaleDeadline: Number(v[4]), filledAt: Number(v[5]), launched: Boolean(v[6]), vault: hasVault ? vault : null, token: deployedAddress(token) ? token : null, weight: Number(v[9]), burned: Number(v[0]) + Number(v[1]) - Number(v[9]), dividendsPaid: String(v[10]), dividendLiability: String(v[11]), undistributed: String(v[12]), bidEscrow: String(v[13]), marketFees: String(v[14]), opsOwed: String(v[15]), proceedsLiability: String(v[16]), maxMints: Number(v[17]), saltLocked: Boolean(v[19]), balance: String(balance), block: String(block.number), chainTime: Number(block.timestamp), phase: launchPhase(Boolean(v[6]), Number(v[0]), Number(v[4]), Number(v[5]), Number(block.timestamp)), vaultStats };
 }
 export type Snapshot = Awaited<ReturnType<typeof readSnapshot>>;
-
 export async function readMarket(askCursor: string, bidCursor: string) {
-  const c = client();
-  const block = await c.getBlockNumber();
-  const [asks, bids, bidEnd, fees, escrow, feeBps, maxBuy] = await Promise.all([
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "getActiveListings", args: [BigInt(askCursor), 500n], blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "getActiveBids", args: [BigInt(bidCursor), 500n], blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "nextBidId", blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "totalMarketFees", blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "bidEscrow", blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "MARKET_FEE_BPS", blockNumber: block }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "MAX_BUY", blockNumber: block }),
+  const c = client(); const block = await c.getBlockNumber();
+  const [asks, bids, fees, escrow] = await Promise.all([
+    c.readContract({ address: FAGENT.orderbook, abi: lensAbi, functionName: "getActiveListings", args: [FAGENT.cards, BigInt(askCursor), 500n], blockNumber: block }),
+    c.readContract({ address: FAGENT.orderbook, abi: lensAbi, functionName: "getActiveBids", args: [FAGENT.cards, BigInt(bidCursor), 500n], blockNumber: block }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "totalMarketFees", blockNumber: block }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "bidEscrow", blockNumber: block }),
   ]);
-  return {
-    block: String(block),
-    volume: formatBnb(estimatedMarketVolume(String(fees), Number(feeBps))), escrow: formatBnb(escrow), feeBps: Number(feeBps), maxBuy: Number(maxBuy),
-    asks: asks[0].map((id, i) => ({ id: Number(id), seller: asks[1][i]?.seller ?? "", priceWei: String(asks[1][i]?.price ?? 0n), price: formatEther(asks[1][i]?.price ?? 0n) })),
-    bids: bids[0].map((id, i) => ({ id: String(id), bidder: bids[1][i]?.bidder ?? "", priceWei: String(bids[1][i]?.price ?? 0n), price: formatEther(bids[1][i]?.price ?? 0n), remaining: Number(bids[1][i]?.remaining ?? 0), batchPlusOne: Number(bids[1][i]?.batchPlusOne ?? 0) })),
-    askNext: String(asks[2]), bidNext: String(bids[2]), bidEnd: String(bidEnd),
-  };
+  return { block: String(block), volume: formatBnb(estimatedMarketVolume(String(fees), 100)), escrow: formatBnb(escrow), feeBps: 100, maxBuy: 250,
+    asks: asks[0].map(o => ({ id: Number(o.tokenId), seller: o.seller, priceWei: String(o.price), price: formatEther(o.price) })),
+    bids: bids[0].map(o => ({ id: String(o.bidId), bidder: o.bidder, priceWei: String(o.price), price: formatEther(o.price), remaining: Number(o.remaining), batchPlusOne: 0 })),
+    askNext: String(asks[1]), askEnd: String(asks[2]), bidNext: String(bids[1]), bidEnd: String(bids[2]) };
 }
 export type MarketData = Awaited<ReturnType<typeof readMarket>>;
-
 export async function readWallet(address: Address) {
-  const c = client();
-  const [used, hasAgentId, proceeds, balance] = await Promise.all([
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "mintsUsed", args: [address] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "hasAgentId", args: [address] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "proceedsOwed", args: [address] }),
-    c.getBalance({ address }),
+  const c = client(); const [used, agent, proceeds, balance, maxMints] = await Promise.all([
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "mintsUsed", args: [address] }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "AGENT_ID_NFT" }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "proceedsOwed", args: [address] }),
+    c.getBalance({ address }), c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "MAX_MINTS" }),
   ]);
-  return { address, used: Number(used), hasAgentId, proceeds: String(proceeds), balance: formatEther(balance) };
+  const held = await c.readContract({ address: agent, abi: agentAbi, functionName: "balanceOf", args: [address] });
+  return { address, used: Number(used), maxMints: Number(maxMints), hasAgentId: held > 0n, proceeds: String(proceeds), balance: formatEther(balance) };
 }
 export async function readCard(id: number) {
-  const c = client();
-  const batch = BigInt(Math.floor(id / 10000));
-  const [owner, active, dividend, tokens, accounted, decimals, block, opened, release] = await Promise.all([
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "ownerOf", args: [BigInt(id)] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "isActive", args: [BigInt(id)] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "pendingDividend", args: [BigInt(id)] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "repurchaseOf", args: [BigInt(id)] }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "batchAccounted", args: [batch] }),
-    c.readContract({ address: FAGENT.token, abi: [{ type: "function", name: "decimals", inputs: [], outputs: [{ type: "uint8" }], stateMutability: "view" }] as const, functionName: "decimals" }),
-    c.getBlock(),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "batchOpenedAt" }),
-    c.readContract({ address: FAGENT.vault, abi: vaultAbi, functionName: "STALL_RELEASE" }),
+  const c = client(); const [owner, dividend, launched] = await Promise.all([
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "ownerOf", args: [BigInt(id)] }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "pendingDividendOf", args: [BigInt(id)] }),
+    c.readContract({ address: FAGENT.cards, abi: cardsAbi, functionName: "launched" }),
   ]);
-  return { id, owner, active, dividend: formatEther(dividend), tokens: formatUnits(tokens, decimals), accounted, chainTime: Number(block.timestamp), openedAt: Number(opened), releaseSeconds: Number(release) };
+  return { id, owner, dividend: formatEther(dividend), launched };
 }
 export async function readHistory(toBlock?: string) {
-  const c = createPublicClient({ chain: bsc, transport: http("https://bsc-rpc.publicnode.com", { timeout: 15000, retryCount: 1 }) });
-  const head = toBlock ? BigInt(toBlock) : await c.getBlockNumber();
-  const from = head > 999n ? head - 999n : 0n;
-  const logs = await c.getLogs({ address: FAGENT.vault, event: getAbiItem({ abi: vaultAbi, name: "Sold" }), fromBlock: from, toBlock: head });
-  return { fromBlock: String(from), toBlock: String(head), next: from > 0n ? String(from - 1n) : null,
-    trades: logs.reverse().map(log => ({ id: String(log.args.tokenId), price: formatEther(log.args.price ?? 0n), seller: log.args.seller ?? "", buyer: log.args.buyer ?? "", hash: log.transactionHash, block: String(log.blockNumber), logIndex: log.logIndex })) };
+  const c = client(); const head = toBlock ? BigInt(toBlock) : await c.getBlockNumber(); const from = head > 999n ? head - 999n : 0n;
+  const logs = await c.getLogs({ address: FAGENT.cards, event: getAbiItem({ abi: cardsAbi, name: "Sold" }), fromBlock: from, toBlock: head });
+  return { fromBlock: String(from), toBlock: String(head), next: from > 0n ? String(from - 1n) : null, trades: logs.reverse().map(log => ({ id: String(log.args.tokenId), price: formatEther(log.args.price ?? 0n), seller: log.args.seller ?? "", buyer: log.args.buyer ?? "", hash: log.transactionHash, block: String(log.blockNumber), logIndex: log.logIndex })) };
 }

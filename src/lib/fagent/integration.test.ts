@@ -1,17 +1,31 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { encodeFunctionData, decodeFunctionData } from "viem";
-import { vaultAbi } from "./vault-abi";
-import { FAGENT, liveSupply, redemptionReady } from "./config";
+import { cardsAbi } from "./cards-abi";
+import { FAGENT, liveSupply, redemptionReady, launchPhase, deployedAddress, ZERO_ADDRESS } from "./config";
 import { mintCommand, bidCommand, batchBuyCommand } from "./commands";
 import { estimatedMarketVolume, formatBnb, purchaseSelection, saleCardIds } from "./market";
 
-test("the selected deployed vault is distinct from its token and factory", () => {
-  assert.equal(FAGENT.vault, "0xbc2d8b6f4c4e2803c5e842e6e8250b79ee442b78");
-  assert.equal(FAGENT.token, "0x457badee84b6be7539458eac993983058c7f7777");
-  assert.equal(FAGENT.factory, "0x150209007c2c6176796DB254d792f976b6FBF931");
-  assert.notEqual(FAGENT.factory, FAGENT.vault);
-  assert.notEqual(FAGENT.token, FAGENT.vault);
+test("deployment uses NFT card, lens and factories as distinct targets", () => {
+  assert.equal(FAGENT.cards, "0xc781e11A506F9d8DfCd38B1125A4ccDC199EB36F");
+  assert.equal(FAGENT.launcherFactory, "0x2312DE6a1f6281c723F530b7E009F18c3c204BE9");
+  assert.equal(FAGENT.factory, "0x798D1a41C4EfEa013b1d293ae1134339b8CA31b6");
+  assert.equal(FAGENT.orderbook, "0x85b6CfD82a9B0589dc255cB47a1351181366Dba5");
+  assert.equal(FAGENT.duel, "0x2617efF6dEB81cD398c2C7d774BE1Fc9714e4dec");
+  assert.equal(FAGENT.upgradeManager, "0xF3213fbDF1D1C993362725a68AcBa883520D7D2C5");
+  assert.equal(new Set(Object.values(FAGENT).filter(x => typeof x === "string")).size, 6);
+});
+test("pool cannot open just because 20000 cards sold, vault waits for launch", () => {
+  assert.equal(launchPhase(false, 20000, 100, 100, 101), "ready");
+  assert.equal(launchPhase(true, 20000, 100, 100, 101), "open");
+  assert.equal(deployedAddress(ZERO_ADDRESS), false);
+  assert.equal(deployedAddress(FAGENT.upgradeManager), false);
+});
+test("refund begins strictly after the 7-day presale or stalled launch deadline", () => {
+  assert.equal(launchPhase(false, 19999, 604800, 0, 604800), "presale");
+  assert.equal(launchPhase(false, 19999, 604800, 0, 604801), "refund");
+  assert.equal(launchPhase(false, 20000, 1, 100, 604900), "ready");
+  assert.equal(launchPhase(false, 20000, 1, 100, 604901), "refund");
 });
 test("live supply counts materialized NFTs separately from activated team rights", () => {
   assert.deepEqual(liveSupply(19, 0, 770000), { minted: 19, remaining: 769981, batch: 1, batchPaid: 19, activatedTeam: 1 });
@@ -30,14 +44,14 @@ test("issuance progress uses cumulative minted cards out of 770000, not active d
   assert.equal((supply.minted / 770000 * 100).toFixed(2), "4.68");
 });
 test("selected ABI supports count-based mint, not obsolete mint()", () => {
-  const data = encodeFunctionData({ abi: vaultAbi, functionName: "mint", args: [2n] });
-  assert.deepEqual(decodeFunctionData({ abi: vaultAbi, data }).args, [2n]);
-  assert.ok(mintCommand(2).includes("value=4000000000000000 wei"));
-  assert.throws(() => mintCommand(8));
+  const data = encodeFunctionData({ abi: cardsAbi, functionName: "mint", args: [2n, 0n] });
+  assert.deepEqual(decodeFunctionData({ abi: cardsAbi, data }).args, [2n, 0n]);
+  assert.ok(mintCommand(2).includes("value=4900000000000000 wei"));
+  assert.throws(() => mintCommand(11));
 });
 test("human batch 1 maps to batchPlusOne 1 and 5 cards escrow exactly 0.01 BNB", () => {
-  const command = bidCommand("0.002", 5, 1);
-  assert.ok(command.includes("参数 2000000000000000、5、1"));
+  const command = bidCommand("0.002", 5, 0);
+  assert.ok(command.includes("参数 2000000000000000, 5"));
   assert.ok(command.includes("value=10000000000000000 wei"));
 });
 test("order commands reject invalid amount, quantity and batch", () => {
@@ -68,12 +82,12 @@ test("quick purchase selects cheapest cards and respects the 150 card contract c
 });
 test("batch purchase pays the sum of individual price caps", () => {
   const command = batchBuyCommand([{ id: 500, priceWei: "1000000000000000" }, { id: 501, priceWei: "2000000000000000" }], 150);
-  assert.ok(command.includes("参数 [500,501]、[1000000000000000,2000000000000000]"));
+  assert.ok(command.includes("参数 [500,501], [1000000000000000,2000000000000000]"));
   assert.ok(command.includes("value=3000000000000000 wei"));
 });
 test("sell-to-bid accepts at most 250 unique valid card IDs", () => {
-  assert.equal(saleCardIds(Array.from({ length: 250 }, (_, i) => String(i)).join(","), 250).length, 250);
-  assert.deepEqual(saleCardIds(Array.from({ length: 251 }, (_, i) => String(i)).join(","), 250), []);
+  assert.equal(saleCardIds(Array.from({ length: 250 }, (_, i) => String(i + 1)).join(","), 250).length, 250);
+  assert.deepEqual(saleCardIds(Array.from({ length: 251 }, (_, i) => String(i + 1)).join(","), 250), []);
   assert.deepEqual(saleCardIds("500,500,501", 250), [500, 501]);
-  assert.deepEqual(saleCardIds("770000", 250), []);
+  assert.deepEqual(saleCardIds("777778", 250), []);
 });
