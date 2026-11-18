@@ -34,7 +34,7 @@ const fmt = (n: number, d = 0) => n.toLocaleString("en-US", { maximumFractionDig
 
 const phases = [
   { k: "01", title: "预售", body: `前 ${fmt(P.presaleCards)} 张，每张 ${P.presalePrice} BNB，共 49 BNB。窗口 7 天。没卖满可烧卡全额退款。` },
-  { k: "02", title: "开池", body: `卖满后 7 天内任何人可开池：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚进池，LP 销毁。超时则永久关闭，只能退款。` },
+  { k: "02", title: "开池", body: `卖出第 ${fmt(P.presaleCards)} 张的那一笔自动开池：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚进池，LP 销毁。卖满即开池，无需等待。` },
   { k: "03", title: "释放", body: `预售卡每张 ${fmt(P.cardGrant)} 枚，开池先释放 20%，剩余 80% 在 5 天内线性释放。币跟地址走，不跟卡走。` },
   { k: "04", title: "开池后铸造", body: `每张 ${P.openPrice} BNB，不涨价。25% 给运营，75% 当场买币：10% 进黑洞，90% 记在你名下 5 天释放。` },
   { k: "05", title: "地板基金", body: `交易税的一部分进入地板基金，每 30 分钟从最低挂单收卡并销毁，全价付给卖家。比例见规则。` },

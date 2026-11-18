@@ -10,9 +10,11 @@ export const FAGENT = {
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 export const deployedAddress = (address: string) => /^0x[0-9a-fA-F]{40}$/.test(address) && address.toLowerCase() !== ZERO_ADDRESS;
 export function launchPhase(launched: boolean, paid: number, deadline: number, filledAt: number, time: number) {
+  // Deployed contract: the mint that sells the 20,000th card opens the pool in the same
+  // transaction, so a sold-out presale can never enter a refund state.
   if (launched) return "open";
   if (paid < 20000) return time > deadline ? "refund" : "presale";
-  return filledAt > 0 && time > filledAt + 604800 ? "refund" : "ready";
+  return "ready";
 }
 
 export function liveSupply(paid: number, teamMinted: number, total: number, paidPerBatch = 9500) {

@@ -21,11 +21,13 @@ test("pool cannot open just because 20000 cards sold, vault waits for launch", (
   assert.equal(deployedAddress(ZERO_ADDRESS), false);
   assert.equal(deployedAddress(FAGENT.upgradeManager), false);
 });
-test("refund begins strictly after the 7-day presale or stalled launch deadline", () => {
+test("refund begins strictly after the 7-day presale deadline; a sold-out presale auto-launches and never refunds", () => {
   assert.equal(launchPhase(false, 19999, 604800, 0, 604800), "presale");
   assert.equal(launchPhase(false, 19999, 604800, 0, 604801), "refund");
+  // The 20,000th mint opens the pool in the same transaction, so a full presale
+  // can only ever read as launched on-chain; "ready" is just the defensive fallback.
   assert.equal(launchPhase(false, 20000, 1, 100, 604900), "ready");
-  assert.equal(launchPhase(false, 20000, 1, 100, 604901), "refund");
+  assert.equal(launchPhase(false, 20000, 1, 100, 99999999), "ready");
 });
 test("live supply counts materialized NFTs separately from activated team rights", () => {
   assert.deepEqual(liveSupply(19, 0, 770000), { minted: 19, remaining: 769981, batch: 1, batchPaid: 19, activatedTeam: 1 });

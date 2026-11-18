@@ -1,4 +1,4 @@
-// Generated from user-uploaded fagent-pool-vault-duel.zip Solidity 0.8.24.
+// Generated from user-uploaded fagent-pool-vault-duel-2.zip Solidity 0.8.24.
 export const poolVaultAbi = [
   {
     "inputs": [],
@@ -650,6 +650,19 @@ export const poolVaultAbi = [
   },
   {
     "inputs": [],
+    "name": "DUEL_TRIGGER_DELAY",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "LADDER_STREAM",
     "outputs": [
       {
@@ -955,7 +968,7 @@ export const poolVaultAbi = [
         "type": "string"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1183,6 +1196,24 @@ export const poolVaultAbi = [
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "moveCardVest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "obsNew",
     "outputs": [
@@ -1294,24 +1325,6 @@ export const poolVaultAbi = [
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "start",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "count",
-        "type": "uint256"
-      }
-    ],
-    "name": "pushPresale",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "repayDuelTick",
     "outputs": [],
@@ -1404,6 +1417,19 @@ export const poolVaultAbi = [
   },
   {
     "inputs": [],
+    "name": "sweepMark",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "sync",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -1430,6 +1456,50 @@ export const poolVaultAbi = [
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "who",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "from",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokensOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "total",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "claimed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "claimable",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "locked",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

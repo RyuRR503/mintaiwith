@@ -1,4 +1,4 @@
-// Generated from user-uploaded fagent-pool-vault-duel.zip Solidity 0.8.24.
+// Generated from user-uploaded fagent-pool-vault-duel-2.zip Solidity 0.8.24.
 export const cardsAbi = [
   {
     "inputs": [],
@@ -145,12 +145,18 @@ export const cardsAbi = [
   },
   {
     "inputs": [],
-    "name": "IdentityLocked",
+    "name": "InvalidInitialization",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "InvalidInitialization",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "LadderTooSmall",
     "type": "error"
   },
   {
@@ -262,11 +268,6 @@ export const cardsAbi = [
   {
     "inputs": [],
     "name": "ReentrancyGuardReentrantCall",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "SaltLocked",
     "type": "error"
   },
   {
@@ -965,12 +966,12 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256[]",
-        "name": "tokenIds",
+        "name": "",
         "type": "uint256[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "maxPrices",
+        "name": "",
         "type": "uint256[]"
       }
     ],
@@ -978,7 +979,7 @@ export const cardsAbi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "bought",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -989,7 +990,7 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256[]",
-        "name": "bidIds",
+        "name": "",
         "type": "uint256[]"
       }
     ],
@@ -997,7 +998,7 @@ export const cardsAbi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "refunded",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1021,6 +1022,19 @@ export const cardsAbi = [
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "description",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1169,7 +1183,7 @@ export const cardsAbi = [
     ],
     "name": "initialize",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1230,24 +1244,6 @@ export const cardsAbi = [
   },
   {
     "inputs": [],
-    "name": "launch",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "token_",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "pair_",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "launched",
     "outputs": [
       {
@@ -1302,12 +1298,12 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256[]",
-        "name": "tokenIds",
+        "name": "",
         "type": "uint256[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "prices",
+        "name": "",
         "type": "uint256[]"
       }
     ],
@@ -1357,13 +1353,6 @@ export const cardsAbi = [
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "lockSalt",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1640,12 +1629,12 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "price",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "quantity",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1653,7 +1642,7 @@ export const cardsAbi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "bidId",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1934,12 +1923,12 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "bidId",
+        "name": "",
         "type": "uint256"
       },
       {
         "internalType": "uint256[]",
-        "name": "tokenIds",
+        "name": "",
         "type": "uint256[]"
       }
     ],
@@ -1947,7 +1936,7 @@ export const cardsAbi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "received",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -1968,34 +1957,6 @@ export const cardsAbi = [
       }
     ],
     "name": "setApprovalForAll",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "meta_",
-        "type": "string"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "salt_",
-        "type": "bytes32"
-      }
-    ],
-    "name": "setLaunchIdentity",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2024,6 +1985,58 @@ export const cardsAbi = [
     "name": "setTeamWallet",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sideStreamEnd",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sideStreamLast",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sideStreamRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sideStreamRemaining",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -2407,7 +2420,7 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "uint256[]",
-        "name": "tokenIds",
+        "name": "",
         "type": "uint256[]"
       }
     ],
@@ -2433,7 +2446,7 @@ export const cardsAbi = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "to",
+        "name": "",
         "type": "address"
       }
     ],
@@ -2441,7 +2454,7 @@ export const cardsAbi = [
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "",
         "type": "uint256"
       }
     ],
