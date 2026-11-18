@@ -15,6 +15,7 @@ import { Route as MarketRouteImport } from './routes/market'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as TokenomicsRouteImport } from './routes/tokenomics'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as VideoRouteImport } from './routes/video'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideoRoute = VideoRouteImport.update({
+  id: '/video',
+  path: '/video',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
   '/vault': typeof VaultRoute
+  '/video': typeof VideoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
   '/vault': typeof VaultRoute
+  '/video': typeof VideoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,27 @@ export interface FileRoutesById {
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
   '/vault': typeof VaultRoute
+  '/video': typeof VideoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/commands' | '/market' | '/rules' | '/tokenomics' | '/vault'
+  fullPaths:
+    | '/'
+    | '/commands'
+    | '/market'
+    | '/rules'
+    | '/tokenomics'
+    | '/vault'
+    | '/video'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/commands' | '/market' | '/rules' | '/tokenomics' | '/vault'
+  to:
+    | '/'
+    | '/commands'
+    | '/market'
+    | '/rules'
+    | '/tokenomics'
+    | '/vault'
+    | '/video'
   id:
     | '__root__'
     | '/'
@@ -85,6 +108,7 @@ export interface FileRouteTypes {
     | '/rules'
     | '/tokenomics'
     | '/vault'
+    | '/video'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +118,7 @@ export interface RootRouteChildren {
   RulesRoute: typeof RulesRoute
   TokenomicsRoute: typeof TokenomicsRoute
   VaultRoute: typeof VaultRoute
+  VideoRoute: typeof VideoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/video': {
+      id: '/video'
+      path: '/video'
+      fullPath: '/video'
+      preLoaderRoute: typeof VideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -150,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   RulesRoute: RulesRoute,
   TokenomicsRoute: TokenomicsRoute,
   VaultRoute: VaultRoute,
+  VideoRoute: VideoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
