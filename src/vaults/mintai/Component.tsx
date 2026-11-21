@@ -295,7 +295,8 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 /* Navigation — same 8 tabs, warm editorial styling */
 .gx-app .ac-tab { position: relative; height: 40px; padding: 0 2px; border: 0; background: transparent; color: var(--muted-foreground); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: color .2s; }
 .gx-app .ac-tab:hover, .gx-app .ac-tab-active { color: var(--foreground); }
-.ac-tab-active::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 16px; height: 2px; border-radius: 2px; background: var(--primary); transform: translateX(-50%); }
+.ac-tab-active::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 18px; height: 2px; border-radius: 2px; background: var(--primary); transform: translateX(-50%); animation: ant-tab-pop .38s var(--ease-cine) both; }
+@keyframes ant-tab-pop { from { transform: translateX(-50%) scaleX(0); opacity: 0; } to { transform: translateX(-50%) scaleX(1); opacity: 1; } }
 .gx-x { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--foreground); transition: border-color .2s, color .2s, transform .2s; }
 .gx-x svg { width: 15px; height: 15px; fill: currentColor; }
 .gx-x:hover { color: var(--primary); border-color: var(--primary); transform: translateY(-1px); }
@@ -394,11 +395,35 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 @media (min-width: 760px) { .gx-token-layout { grid-template-columns: minmax(220px, 42%) minmax(0, 1fr); } }
 .gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 
-/* Crisp Warm Paper Reveal (no dark curtain or laser streak) */
-.ant-opening { position: absolute; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; background: var(--background); animation: gx-open-fade .55s var(--ease-cine) .6s forwards; }
-.ant-opening-inner { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: ant-open-rise .55s var(--ease-cine) both; }
+/* Crisp Warm Paper Reveal (first load only) + Smooth Route Choreography */
+.ant-opening { position: absolute; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; background: var(--background); animation: gx-open-fade .5s var(--ease-cine) .52s forwards; }
+.ant-opening-inner { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: ant-open-rise .5s var(--ease-cine) both; }
 @keyframes ant-open-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes gx-open-fade { to { opacity: 0; visibility: hidden; } }
+
+.ant-route-beam { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--primary) 85%, transparent) 48%, var(--primary) 65%, transparent 100%); transform-origin: left; animation: ant-beam-sweep .58s var(--ease-cine) forwards; }
+@keyframes ant-beam-sweep {
+  0% { transform: translateX(-100%) scaleX(0.35); opacity: 0; }
+  22% { opacity: 1; }
+  100% { transform: translateX(100%) scaleX(0.65); opacity: 0; }
+}
+
+.ant-view-stage { animation: ant-view-enter .54s var(--ease-cine) both; will-change: transform, opacity, filter; }
+@keyframes ant-view-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.994); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+.ant-stagger-1 { animation: ant-stagger-up .52s var(--ease-cine) .04s both; }
+.ant-stagger-2 { animation: ant-stagger-art .6s var(--ease-cine) .1s both; }
+.ant-stagger-3 { animation: ant-stagger-up .56s var(--ease-cine) .15s both; }
+@keyframes ant-stagger-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ant-stagger-art {
+  from { opacity: 0; transform: translateY(12px) scale(0.965); }
+  to { opacity: 1; transform: none; }
+}
 .gx-grain { position: absolute; inset: 0; z-index: 55; width: 100%; height: 100%; pointer-events: none; opacity: .028; mix-blend-mode: multiply; }
 
 .gx-book-row { display: grid; grid-template-columns: 1.4fr 64px 80px 56px; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; font-family: var(--font-mono); font-size: 13px; }
@@ -454,7 +479,8 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
   .ant-stage-pane, .ant-console-pane, .ant-timeline-stage, .ant-calc-left, .ant-calc-right { padding: 22px 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ant-opening { display: none; }
+  .ant-opening, .ant-route-beam { display: none; }
+  .ant-view-stage, .ant-stagger-1, .ant-stagger-2, .ant-stagger-3, .ac-tab-active::after { animation: none; opacity: 1; transform: none; filter: none; }
   .gx-char { opacity: 1; animation: none; }
   .gx-rise { opacity: 1; transform: none; }
   .hc-card, .hc-foil, .gx-live-dot, .gx-flow-line::before { animation: none; }
@@ -1377,6 +1403,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
   const openView = (next: View) => {
     setMenuOpen(false);
+    if (next === view) return;
     setView(next);
     setIntro((n) => n + 1);
     if (typeof window !== "undefined") {
@@ -1412,7 +1439,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
   return (
     <div className="gx-app min-h-screen">
       <style>{LOOK}</style>
-      <div key={intro} className="ant-opening" aria-hidden="true">
+      <div className="ant-opening" aria-hidden="true">
         <div className="ant-opening-inner">
           <AntLogo size="lg" />
           <span className="gx-kicker">ANTHROPIC POOL EDITION</span>
@@ -1450,16 +1477,17 @@ export default function Component({ initialView = "home" }: { initialView?: View
             </div>
           </nav>
           <div ref={progress} className="gx-reading-progress" aria-hidden="true" />
+          {intro > 0 && <div key={intro} className="ant-route-beam" aria-hidden="true" />}
         </header>
 
         {view === "home" && (
-          <main>
+          <main key="home" className="ant-view-stage">
             <section ref={hero} className="gx-container ant-hero">
-              <div className={`${rise} ant-masthead`}>
+              <div className={`${rise} ant-masthead ant-stagger-1`}>
                 <div className="min-w-0">
                   <span className="ant-hero-pill">
                     <span className="gx-live-dot" />
-                    <span>{t("hero.kicker")} · ANTHROPIC POOL</span>
+                    <span>{t("hero.kicker")}</span>
                   </span>
                   <h1 className="ant-hero-headline">
                     {t("hero.line1")} <em>{t("hero.line2")}</em>
@@ -1483,7 +1511,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
               </div>
 
-              <div className={`${rise} ant-workbench`}>
+              <div className={`${rise} ant-workbench ant-stagger-2`}>
                 <div className="ant-stage-pane">
                   <div className="ant-stage-head">
                     <p className="gx-kicker">{t("card.kicker")}</p>
@@ -1737,6 +1765,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
         {page && (
           <Shell
+            key={view}
             rise={rise}
             index={page[0]}
             code={page[1]}
@@ -2064,20 +2093,20 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
 function Shell({ rise, index, code, title, lead, seed, foot, children }: { rise: string; index: string; code: string; title: string; lead: string; seed: number; foot: string; children: ReactNode }) {
   return (
-    <main>
+    <main className="ant-view-stage">
       <section className="gx-container gx-page-hero">
-        <div className={`${rise} min-w-0`}>
+        <div className={`${rise} ant-stagger-1 min-w-0`}>
           <p className="gx-kicker">{index} / {code}</p>
           <h1 className="gx-page-title mt-4">{title}<span className="gx-pri">.</span></h1>
           <p className="gx-muted mt-5 max-w-xl text-base leading-8">{lead}</p>
         </div>
-        <div className={`${rise} gx-page-art`} aria-hidden="true">
+        <div className={`${rise} ant-stagger-2 gx-page-art`} aria-hidden="true">
           <GenerativeCard id={seed} kind="open" className="h-full w-full" />
           <span className="gx-page-index">{index}</span>
         </div>
       </section>
       <div className="gx-container gx-exhibit-caption"><span>ANT.AI / {code}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
-      <div className={`${rise} gx-container py-12`}>{children}</div>
+      <div className={`${rise} ant-stagger-3 gx-container py-12`}>{children}</div>
       <footer className="gx-footer gx-mono gx-muted px-6 py-8 text-center text-xs">{foot}</footer>
     </main>
   );
