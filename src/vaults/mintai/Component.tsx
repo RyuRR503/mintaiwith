@@ -395,71 +395,28 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 @media (min-width: 760px) { .gx-token-layout { grid-template-columns: minmax(220px, 42%) minmax(0, 1fr); } }
 .gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 
-/* Crisp Warm Paper Reveal (first load only) + Smooth Route Choreography */
-.ant-opening { position: absolute; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; background: var(--background); animation: gx-open-fade .5s var(--ease-cine) .52s forwards; }
-.ant-opening-inner { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: ant-open-rise .5s var(--ease-cine) both; }
-@keyframes ant-open-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@keyframes gx-open-fade { to { opacity: 0; visibility: hidden; } }
-
-.ant-route-beam { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--primary) 85%, transparent) 48%, var(--primary) 65%, transparent 100%); transform-origin: left; animation: ant-beam-sweep .58s var(--ease-cine) forwards; }
+/* Clean, instant route choreography (no blocking curtain) */
+.ant-route-beam { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--primary) 85%, transparent) 48%, var(--primary) 65%, transparent 100%); transform-origin: left; animation: ant-beam-sweep .46s var(--ease-cine) forwards; }
 @keyframes ant-beam-sweep {
   0% { transform: translateX(-100%) scaleX(0.35); opacity: 0; }
   22% { opacity: 1; }
   100% { transform: translateX(100%) scaleX(0.65); opacity: 0; }
 }
 
-/* Award-grade Editorial Folio Curtain Transition */
-.ant-folio { position: fixed; inset: 0; z-index: 80; pointer-events: none; overflow: hidden; }
-.ant-folio-under { position: absolute; inset: 0; background: var(--primary); transform: translateY(102%); animation: ant-folio-under .66s cubic-bezier(0.76, 0, 0.24, 1) forwards; }
-.ant-folio-sheet { position: absolute; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, #24201C 0%, #171512 72%); border-top: 1px solid color-mix(in oklab, var(--primary) 65%, transparent); transform: translateY(102%); animation: ant-folio-sheet .64s cubic-bezier(0.76, 0, 0.24, 1) .03s forwards; }
-.ant-folio-stamp { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #F4EFE6; animation: ant-folio-stamp .58s cubic-bezier(0.22, 1, 0.36, 1) .08s both; }
-.ant-folio-star { color: var(--primary); animation: ant-folio-spin .62s cubic-bezier(0.22, 1, 0.36, 1) .06s both; }
-.ant-folio-meta { font: 500 11px/1 var(--font-mono); letter-spacing: .22em; color: var(--primary); text-transform: uppercase; }
-.ant-folio-title { font-family: var(--font-display); font-size: clamp(2rem, 4.4vw, 3.3rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.08; color: #F4EFE6; }
-.ant-folio-rule { width: 72px; height: 1px; background: linear-gradient(90deg, transparent, var(--primary), transparent); animation: ant-folio-rule .5s var(--ease-cine) .12s both; }
-@keyframes ant-folio-under {
-  0% { transform: translateY(102%); }
-  34% { transform: translateY(0%); }
-  52% { transform: translateY(0%); }
-  100% { transform: translateY(-102%); }
-}
-@keyframes ant-folio-sheet {
-  0% { transform: translateY(102%); }
-  35% { transform: translateY(0%); }
-  50% { transform: translateY(0%); }
-  100% { transform: translateY(-102%); }
-}
-@keyframes ant-folio-stamp {
-  0% { opacity: 0; transform: translateY(18px) scale(0.96); }
-  35% { opacity: 1; transform: translateY(0) scale(1); }
-  68% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-16px) scale(1.02); }
-}
-@keyframes ant-folio-spin {
-  from { transform: rotate(-60deg) scale(0.7); opacity: 0; }
-  45% { transform: rotate(0deg) scale(1); opacity: 1; }
-  to { transform: rotate(35deg) scale(1); opacity: 0.9; }
-}
-@keyframes ant-folio-rule {
-  from { transform: scaleX(0); opacity: 0; }
-  50% { transform: scaleX(1); opacity: 1; }
-  to { transform: scaleX(1.3); opacity: 0; }
-}
-
-.ant-view-stage { animation: ant-view-enter .62s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: transform, opacity; }
+.ant-view-stage { animation: ant-view-enter .38s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: transform, opacity; }
 @keyframes ant-view-enter {
-  from { opacity: 0; transform: translateY(22px) scale(0.982); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
 }
-.ant-stagger-1 { animation: ant-stagger-up .58s cubic-bezier(0.22, 1, 0.36, 1) .08s both; }
-.ant-stagger-2 { animation: ant-stagger-art .66s cubic-bezier(0.22, 1, 0.36, 1) .14s both; }
-.ant-stagger-3 { animation: ant-stagger-up .62s cubic-bezier(0.22, 1, 0.36, 1) .2s both; }
+.ant-stagger-1 { animation: ant-stagger-up .36s cubic-bezier(0.22, 1, 0.36, 1) .02s both; }
+.ant-stagger-2 { animation: ant-stagger-art .44s cubic-bezier(0.22, 1, 0.36, 1) .06s both; }
+.ant-stagger-3 { animation: ant-stagger-up .42s cubic-bezier(0.22, 1, 0.36, 1) .1s both; }
 @keyframes ant-stagger-up {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes ant-stagger-art {
-  from { opacity: 0; transform: translateY(16px) scale(0.955); }
+  from { opacity: 0; transform: translateY(10px) scale(0.975); }
   to { opacity: 1; transform: none; }
 }
 .gx-grain { position: absolute; inset: 0; z-index: 55; width: 100%; height: 100%; pointer-events: none; opacity: .028; mix-blend-mode: multiply; }
@@ -517,7 +474,7 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
   .ant-stage-pane, .ant-console-pane, .ant-timeline-stage, .ant-calc-left, .ant-calc-right { padding: 22px 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ant-opening, .ant-route-beam, .ant-folio { display: none; }
+  .ant-route-beam { display: none; }
   .ant-view-stage, .ant-stagger-1, .ant-stagger-2, .ant-stagger-3, .ac-tab-active::after { animation: none; opacity: 1; transform: none; filter: none; }
   .gx-char { opacity: 1; animation: none; }
   .gx-rise { opacity: 1; transform: none; }
@@ -1143,8 +1100,6 @@ export default function Component({ initialView = "home" }: { initialView?: View
     return () => { stop = true; clearInterval(timer); };
   }, [sdk, view, live.launched]);
   const [intro, setIntro] = useState(0);
-  const [folio, setFolio] = useState<{ key: number; index: string; code: string; label: string } | null>(null);
-  const folioTimers = useRef<number[]>([]);
   const [cardId, setCardId] = useState(7777);
   const [phase, setPhase] = useState(0);
   const [mintPhase, setMintPhase] = useState<"presale" | "open">("presale");
@@ -1444,40 +1399,17 @@ export default function Component({ initialView = "home" }: { initialView?: View
   const openView = (next: View) => {
     setMenuOpen(false);
     if (next === view) return;
-    const apply = () => {
-      setView(next);
-      if (typeof window !== "undefined") {
-        const targetPath = VIEW_PATHS[next];
-        if (window.location.pathname !== targetPath) {
-          window.history.pushState(null, "", targetPath);
-        }
+    setView(next);
+    setIntro((n) => n + 1);
+    if (typeof window !== "undefined") {
+      const targetPath = VIEW_PATHS[next];
+      if (window.location.pathname !== targetPath) {
+        window.history.replaceState(null, "", targetPath);
       }
-      if (scroller.current) scroller.current.scrollTop = 0;
-      if (progress.current) progress.current.style.transform = "scaleX(0)";
-    };
-    if (typeof window === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      apply();
-      return;
     }
-    for (const id of folioTimers.current) window.clearTimeout(id);
-    folioTimers.current = [];
-    const nextKey = intro + 1;
-    setIntro(nextKey);
-    const info = next === "home"
-      ? { index: "01", code: "GENESIS", label: t("nav.home") }
-      : { index: pageMeta[next][0], code: pageMeta[next][1], label: t(pageMeta[next][2]) };
-    setFolio({ key: nextKey, ...info });
-    const tSwap = window.setTimeout(() => {
-      apply();
-    }, 220);
-    const tClear = window.setTimeout(() => {
-      setFolio((curr) => (curr?.key === nextKey ? null : curr));
-    }, 700);
-    folioTimers.current = [tSwap, tClear];
+    if (scroller.current) scroller.current.scrollTop = 0;
+    if (progress.current) progress.current.style.transform = "scaleX(0)";
   };
-  useEffect(() => () => {
-    for (const id of folioTimers.current) window.clearTimeout(id);
-  }, []);
 
   const onScroll = (event: UIEvent<HTMLDivElement>) => {
     const el = event.currentTarget;
@@ -1502,27 +1434,6 @@ export default function Component({ initialView = "home" }: { initialView?: View
   return (
     <div className="gx-app min-h-screen">
       <style>{LOOK}</style>
-      <div className="ant-opening" aria-hidden="true">
-        <div className="ant-opening-inner">
-          <AntLogo size="lg" />
-          <span className="gx-kicker">ANTHROPIC POOL EDITION</span>
-        </div>
-      </div>
-      {folio && (
-        <div key={folio.key} className="ant-folio" aria-hidden="true">
-          <div className="ant-folio-under" />
-          <div className="ant-folio-sheet">
-            <div className="ant-folio-stamp">
-              <svg className="ant-folio-star" width="26" height="26" viewBox="0 0 24 24" fill="none">
-                <path d="M12 1.8V22.2M1.8 12H22.2M4.8 4.8L19.2 19.2M19.2 4.8L4.8 19.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-              <span className="ant-folio-meta">{folio.index} / {folio.code}</span>
-              <p className="ant-folio-title">{folio.label}</p>
-              <span className="ant-folio-rule" />
-            </div>
-          </div>
-        </div>
-      )}
       <Grain />
       <div ref={scroller} className="gx-scroll" onScroll={onScroll}>
         <header className="gx-header">
