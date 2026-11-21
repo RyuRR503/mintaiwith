@@ -392,26 +392,24 @@ const LOOK = `
 .gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 
 /* ANT.AI route sweep — a single ink line draws, then tears open into the next page */
-.ant-sweep { position: absolute; inset: 0; z-index: 70; pointer-events: none; overflow: hidden; animation: ant-sweep-gone 0s linear 1.15s forwards; }
+.ant-sweep { position: absolute; inset: 0; z-index: 70; pointer-events: none; overflow: hidden; animation: ant-sweep-gone 0s linear 1.22s forwards; }
 .ant-sweep-panel { position: absolute; left: 0; right: 0; height: 50.2%; background: var(--background); }
-.ant-sweep-panel::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent) 20%, var(--primary) 50%, color-mix(in oklab, var(--primary) 70%, transparent) 80%, transparent); opacity: 0; animation: ant-seam-on .01s linear .42s forwards, ant-seam-off .5s ease .75s forwards; }
-.ant-sweep-top { top: 0; animation: ant-tear-up .7s cubic-bezier(0.76, 0, 0.18, 1) .42s forwards; }
+.ant-sweep-panel::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent) 20%, var(--primary) 50%, color-mix(in oklab, var(--primary) 70%, transparent) 80%, transparent); opacity: 0; animation: ant-seam-on .01s linear .5s forwards, ant-seam-off .5s ease .82s forwards; }
+.ant-sweep-top { top: 0; animation: ant-tear-up .7s cubic-bezier(0.76, 0, 0.18, 1) .5s forwards; }
 .ant-sweep-top::after { bottom: 0; }
-.ant-sweep-bottom { bottom: 0; animation: ant-tear-down .7s cubic-bezier(0.76, 0, 0.18, 1) .42s forwards; }
+.ant-sweep-bottom { bottom: 0; animation: ant-tear-down .7s cubic-bezier(0.76, 0, 0.18, 1) .5s forwards; }
 .ant-sweep-bottom::after { top: 0; }
-.ant-sweep-line { position: absolute; top: 50%; left: 8%; right: 8%; height: 1px; margin-top: -.5px; background: linear-gradient(90deg, transparent, var(--primary) 18%, var(--foreground) 50%, var(--primary) 82%, transparent); box-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent); transform: scaleX(0); animation: ant-line-draw .42s cubic-bezier(0.65, 0, 0.35, 1) forwards, ant-fade-out .12s linear .42s forwards; }
-.ant-sweep-spark { position: absolute; top: 50%; left: 50%; width: 120px; height: 3px; margin: -1.5px 0 0 -60px; border-radius: 3px; background: radial-gradient(ellipse at center, var(--card) 0%, var(--primary) 40%, transparent 72%); filter: blur(.5px); animation: ant-spark .42s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
-.ant-sweep-label { position: absolute; left: 50%; top: 50%; display: flex; align-items: baseline; gap: 14px; transform: translate(-50%, calc(-100% - 16px)); white-space: nowrap; color: var(--foreground); }
-.ant-sweep-label b { font: 500 11px/1 var(--font-mono); letter-spacing: .18em; color: var(--primary); }
-.ant-sweep-label span { font: 600 clamp(20px, 2.4vw, 30px)/1 var(--font-display); letter-spacing: -.01em; }
-.ant-sweep-label > * { opacity: 0; animation: ant-label-in .32s var(--ease-cine) .08s forwards, ant-fade-out .18s ease .4s forwards; }
-.ant-sweep-label > span { animation-delay: .13s, .4s; }
+.ant-sweep-line { position: absolute; top: 50%; left: 10%; right: 10%; height: 1px; margin-top: -.5px; background: linear-gradient(90deg, transparent, var(--primary) 18%, var(--foreground) 50%, var(--primary) 82%, transparent); box-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent); transform: scaleX(0); animation: ant-line-draw .48s cubic-bezier(0.65, 0, 0.35, 1) forwards, ant-fade-out .14s linear .48s forwards; }
+.ant-sweep-spark { position: absolute; top: 50%; left: 50%; width: 120px; height: 3px; margin: -1.5px 0 0 -60px; border-radius: 3px; background: radial-gradient(ellipse at center, var(--card) 0%, var(--primary) 40%, transparent 72%); filter: blur(.5px); animation: ant-spark .48s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+.ant-sweep-brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, calc(-100% - 20px)); font-size: clamp(28px, 4.2vw, 48px); white-space: nowrap; opacity: 0; animation: ant-brand-in .4s var(--ease-cine) .06s forwards, ant-fade-out .18s ease .46s forwards; }
+.ant-sweep-brand .gx-logo-lock { gap: .32em; }
+.ant-sweep-brand .gx-logo-mark { animation: ant-orbit-spin .52s var(--ease-cine) .06s both; }
 .gx-app .gx-menu, .gx-app .gx-lang button { white-space: nowrap; }
 @media (max-width: 479px) { .gx-header .gx-container { gap: 10px; } .gx-header .gx-container > div { gap: 6px; } .gx-app .gx-x { width: 32px; height: 32px; } .gx-app .gx-menu { padding: 0 10px; } .gx-app .gx-lang button { padding-inline: 8px; } }
-.ant-sweep-sub { position: absolute; left: 0; right: 0; top: calc(50% + 14px); text-align: center; font: 500 10px/1 var(--font-mono); letter-spacing: .32em; color: var(--muted-foreground); opacity: 0; animation: ant-label-in .32s var(--ease-cine) .16s forwards, ant-fade-out .18s ease .4s forwards; }
 @keyframes ant-line-draw { to { transform: scaleX(1); } }
 @keyframes ant-spark { 0% { transform: translateX(-42vw) scaleX(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateX(42vw) scaleX(1); opacity: 0; } }
-@keyframes ant-label-in { from { opacity: 0; transform: translateY(8px); letter-spacing: .3em; } to { opacity: 1; transform: none; } }
+@keyframes ant-brand-in { from { opacity: 0; filter: blur(10px); transform: translate(-50%, calc(-100% - 10px)) scale(.95); } to { opacity: 1; filter: blur(0); transform: translate(-50%, calc(-100% - 20px)) scale(1); } }
+@keyframes ant-orbit-spin { from { transform: rotate(-42deg) scale(.88); } to { transform: rotate(0deg) scale(1); } }
 @keyframes ant-fade-out { to { opacity: 0; } }
 @keyframes ant-seam-on { to { opacity: 1; } }
 @keyframes ant-seam-off { to { opacity: 0; } }
@@ -420,7 +418,7 @@ const LOOK = `
 @keyframes ant-sweep-gone { to { visibility: hidden; } }
 
 .ant-view-stage { animation: ant-view-enter .38s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: transform, opacity; }
-.ant-swept .ant-view-stage { animation: ant-view-emerge .9s cubic-bezier(0.22, 1, 0.36, 1) .4s both; }
+.ant-swept .ant-view-stage { animation: ant-view-emerge .9s cubic-bezier(0.22, 1, 0.36, 1) .48s both; }
 @keyframes ant-view-enter {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
@@ -1488,8 +1486,12 @@ export default function Component({ initialView = "home" }: { initialView?: View
           <span className="ant-sweep-panel ant-sweep-bottom" />
           <span className="ant-sweep-line" />
           <span className="ant-sweep-spark" />
-          <span className="ant-sweep-label"><b>{view === "home" ? "01" : pageMeta[view][0]}</b><span>{t(nav.find(([key]) => key === view)?.[1] ?? "nav.home")}</span></span>
-          <span className="ant-sweep-sub">ANT.AI · {view === "home" ? "HOME" : pageMeta[view][1]}</span>
+          <span className="ant-sweep-brand">
+            <span className="gx-logo-lock">
+              <AntMark />
+              <img src={wordmark} alt="" className="gx-logo" draggable={false} />
+            </span>
+          </span>
         </div>
       )}
       <Grain />
