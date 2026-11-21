@@ -134,7 +134,7 @@ export function GenerativeCard({ id, className, interactive = true, kind = "open
     return () => { cancelAnimationFrame(raf); ro.disconnect(); observer.disconnect(); };
   }, [id, kind]);
 
-  return <canvas ref={ref} className={className} aria-label={`MINT.AI #${id}`} role="img"
+  return <canvas ref={ref} className={className} aria-label={`ANT.AI #${id}`} role="img"
     onPointerMove={interactive ? e => { const r = e.currentTarget.getBoundingClientRect(); pointer.current = { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, active: true }; } : undefined}
     onPointerLeave={() => { pointer.current.active = false; }} />;
 }

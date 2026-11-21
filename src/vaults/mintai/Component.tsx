@@ -5,6 +5,7 @@ import { ArrowDownRight, Droplets, Flame, Gift, Shuffle } from "lucide-react";
 import { encodeFunctionData, formatEther, isAddress, parseAbi, parseUnits } from "viem";
 import { useFlapSdk } from "@/lib/flap-sdk";
 import { CopyButton } from "@/components/flap/CopyButton";
+import wordmark from "@/assets/logos/ant-ai-wordmark.png";
 
 const TOTAL_POOL_CARDS = 777_777;
 const PRESALE_CARDS = 20_000;
@@ -142,16 +143,8 @@ function paintPoster(ctx: CanvasRenderingContext2D, text: string, x: number, y: 
 }
 
 function AntLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const iconSize = size === "sm" ? 15 : size === "lg" ? 26 : 20;
   const textClass = size === "sm" ? "text-sm" : size === "lg" ? "text-3xl" : "text-xl";
-  return (
-    <span className={`ant-logo ${textClass}`}>
-      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" className="ant-logo-mark" aria-hidden="true">
-        <path d="M12 2L13.15 9.85L19.5 4.5L14.15 10.85L22 12L14.15 13.15L19.5 19.5L13.15 14.15L12 22L10.85 14.15L4.5 19.5L9.85 13.15L2 12L9.85 10.85L4.5 4.5L10.85 9.85L12 2Z" fill="currentColor" />
-      </svg>
-      <span><span className="ant-logo-main">ANT</span><span className="ant-logo-accent">.AI</span></span>
-    </span>
-  );
+  return <img src={wordmark} alt="ANT.AI" className={`gx-logo ${textClass}`} draggable={false} />;
 }
 
 const LOOK = `
@@ -193,12 +186,7 @@ const LOOK = `
 .gx-footer { border-top: 1px solid var(--border); background: var(--background); }
 .gx-container { width: min(1160px, calc(100% - 72px)); margin-inline: auto; }
 
-/* ANT.AI Logo */
-.ant-logo { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: var(--foreground); white-space: nowrap; }
-.ant-logo-mark { color: var(--primary); flex: none; transition: transform .5s var(--ease-cine); }
-button:hover .ant-logo-mark { transform: rotate(45deg); }
-.ant-logo-main { font-weight: 600; }
-.ant-logo-accent { color: var(--primary); font-style: italic; font-weight: 500; margin-left: 1px; }
+/* ANT.AI wordmark artwork is rendered by .gx-logo in the global stylesheet. */
 
 .gx-kicker { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--primary); }
 
@@ -1484,7 +1472,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <div className="ant-masthead-side">
                   <div className="ant-masthead-brand">
-                    <span className="ant-masthead-word">ANT<span>.AI</span></span>
+                    <span className="ant-masthead-word"><img src={wordmark} alt="ANT.AI" className="gx-logo" draggable={false} /></span>
                     <span className="gx-mono gx-muted text-[11px]">BNB CHAIN · 1 / 777,777</span>
                   </div>
                   <p className="ant-hero-sub">{t("hero.sub")}</p>

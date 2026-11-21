@@ -1,4 +1,5 @@
 import { useRef, type PointerEvent } from "react";
+import wordmark from "@/assets/logos/ant-ai-wordmark.png";
 import { GenerativeCard } from "./GenerativeCard";
 
 type Kind = "presale" | "open" | "team";
@@ -35,7 +36,7 @@ export function HoloCard({ id, kind }: { id: number; kind: Kind }) {
       <div ref={ref} className="hc-card" data-active="false">
         <div className="hc-inner">
           <header className="hc-head">
-            <span className="gx-wordmark text-sm">MINT<span className="gx-wordmark-seven">.AI</span></span>
+            <img src={wordmark} alt="ANT.AI" className="gx-logo text-sm" draggable={false} />
             <span className="hc-tier">{tier}</span>
           </header>
           <div className="hc-art">

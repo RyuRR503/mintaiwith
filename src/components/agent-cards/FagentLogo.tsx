@@ -1,8 +1,13 @@
-/** MINT.AI wordmark. `square` is kept for call-site compatibility; both variants render the same wordmark. */
+import wordmark from "@/assets/logos/ant-ai-wordmark.png";
+
+/** ANT.AI wordmark: sculptural serif lettering with a terracotta arc across the A. */
 export function FagentLogo({ className = "", square = true }: { className?: string; square?: boolean }) {
   return (
-    <span className={`gx-wordmark ${square ? "" : "gx-wordmark-wide"} ${className}`} aria-label="MINT.AI" role="img">
-      MINT<span className="gx-wordmark-seven">.AI</span>
-    </span>
+    <img
+      src={wordmark}
+      alt="ANT.AI"
+      className={`gx-logo ${square ? "" : "gx-logo-wide"} ${className}`}
+      draggable={false}
+    />
   );
 }
