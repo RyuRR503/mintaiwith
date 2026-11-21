@@ -6,6 +6,7 @@ import { encodeFunctionData, formatEther, isAddress, parseAbi, parseUnits } from
 import { useFlapSdk } from "@/lib/flap-sdk";
 import { CopyButton } from "@/components/flap/CopyButton";
 import wordmark from "@/assets/logos/ant-ai-wordmark.png";
+import { AntMark } from "@/components/agent-cards/AntMark";
 
 const TOTAL_POOL_CARDS = 777_777;
 const PRESALE_CARDS = 20_000;
@@ -144,7 +145,12 @@ function paintPoster(ctx: CanvasRenderingContext2D, text: string, x: number, y: 
 
 function AntLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const textClass = size === "sm" ? "text-sm" : size === "lg" ? "text-3xl" : "text-xl";
-  return <img src={wordmark} alt="ANT.AI" className={`gx-logo ${textClass}`} draggable={false} />;
+  return (
+    <span className={`gx-logo-lock ${textClass}`} role="img" aria-label="ANT.AI">
+      <AntMark />
+      <img src={wordmark} alt="" className="gx-logo" draggable={false} />
+    </span>
+  );
 }
 
 const LOOK = `
@@ -199,7 +205,7 @@ const LOOK = `
 .ant-masthead-side { display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; padding-left: 28px; border-left: 1px solid var(--border); }
 .ant-masthead-brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .ant-masthead-word { font-family: var(--font-display); font-size: 1.85rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
-.ant-masthead-word span { color: var(--primary); font-style: italic; font-weight: 500; }
+.ant-masthead-word .gx-logo-lock { gap: .26em; }
 .ant-hero-sub { font-size: 14px; line-height: 1.7; color: var(--muted-foreground); }
 .ant-masthead-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
@@ -1472,7 +1478,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <div className="ant-masthead-side">
                   <div className="ant-masthead-brand">
-                    <span className="ant-masthead-word"><img src={wordmark} alt="ANT.AI" className="gx-logo" draggable={false} /></span>
+                    <span className="ant-masthead-word"><span className="gx-logo-lock"><AntMark /><img src={wordmark} alt="ANT.AI" className="gx-logo" draggable={false} /></span></span>
                     <span className="gx-mono gx-muted text-[11px]">BNB CHAIN · 1 / 777,777</span>
                   </div>
                   <p className="ant-hero-sub">{t("hero.sub")}</p>

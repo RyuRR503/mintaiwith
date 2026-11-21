@@ -262,9 +262,13 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-container { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
 .gx-wordmark { display: inline-flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; line-height: 1; color: var(--foreground); white-space: nowrap; }
 .gx-wordmark-seven { color: var(--brand-violet); margin-left: .02em; text-shadow: 0 0 18px color-mix(in oklab, var(--brand-violet) 60%, transparent); }
-/* ANT.AI sculptural wordmark artwork. */
+/* ANT.AI lockup: spark mark in front of the wordmark artwork. */
 .gx-logo { display: inline-block; height: 1.15em; width: auto; vertical-align: middle; }
 .gx-logo-wide { height: 1.15em; }
+.gx-logo-lock { display: inline-flex; align-items: center; gap: .3em; line-height: 1; white-space: nowrap; }
+.gx-logo-mark { flex: none; height: .74em; width: .74em; color: var(--primary); transition: transform .55s var(--ease-cine, ease); }
+a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: none; } }
 .gx-intro { position: relative; padding-block: 30px 0; }
 .gx-rain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .5; pointer-events: auto; }
 .gx-intro .gx-title-row, .gx-intro .gx-exhibit, .gx-intro .gx-exhibit-caption { position: relative; z-index: 1; }
