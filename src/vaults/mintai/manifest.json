@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "mode": "mini-app",
+  "appModel": "standalone",
+  "slug": "mintai",
+  "artifactId": "vaultui_mintai_01M6KD4RY73D7SWK1N5YZAKBZ7",
+  "name": "MINT.AI",
+  "displayTitle": {
+    "en": "MINT.AI",
+    "zh": "MINT.AI 开池版"
+  },
+  "match": {
+    "bindings": []
+  },
+  "i18n": ["en", "zh", "ko"],
+  "walletChains": [56],
+  "walletContracts": [
+    {
+      "id": "launcher",
+      "chainId": 56,
+      "address": "0x2312DE6a1f6281c723F530b7E009F18c3c204BE9",
+      "read": ["function cards() view returns (address)"],
+      "resolvedContracts": [
+        {
+          "id": "cards",
+          "resolver": "function cards() view returns (address)",
+          "read": [
+            "function tokenName() view returns (string)",
+            "function tokenSymbol() view returns (string)",
+            "function paidMinted() view returns (uint256)",
+            "function presaleDeadline() view returns (uint256)",
+            "function presaleEscrow() view returns (uint256)",
+            "function launched() view returns (bool)",
+            "function totalDividendPaid() view returns (uint256)",
+            "function dividendLiability() view returns (uint256)",
+            "function streamRemaining() view returns (uint256)",
+            "function sideStreamRemaining() view returns (uint256)",
+            "function totalMarketFees() view returns (uint256)",
+            "function bidEscrow() view returns (uint256)",
+            "function launchedToken() view returns (address)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vault-factory",
+      "chainId": 56,
+      "address": "0x798D1a41C4EfEa013b1d293ae1134339b8CA31b6",
+      "read": [
+        "function vaultOf(address) view returns (address)",
+        "function duel() view returns (address)",
+        "function presaleBuyerCount() view returns (uint256)"
+      ],
+      "resolvedContracts": [
+        {
+          "id": "vault",
+          "resolver": "function vaultOf(address) view returns (address)",
+          "read": [
+            "function totalTaxRevenue() view returns (uint256)",
+            "function totalDividendForwarded() view returns (uint256)",
+            "function totalFloorForwarded() view returns (uint256)",
+            "function totalMintBurned() view returns (uint256)",
+            "function totalForfeitBurned() view returns (uint256)",
+            "function totalFloorBurned() view returns (uint256)",
+            "function ladderSold(uint256) view returns (uint256)",
+            "function twapPrice() view returns (uint256)",
+            "function duelFee() view returns (uint256)"
+          ],
+          "allow": ["function buyLadder(uint256 rung, uint256 amount) payable returns (uint256)"],
+          "maxValueWei": "20000000000000000000"
+        },
+        {
+          "id": "duel",
+          "resolver": "function duel() view returns (address)",
+          "read": ["function roomOf(uint256) view returns (address,uint256,uint256)"]
+        }
+      ]
+    },
+    {
+      "id": "agent-id",
+      "chainId": 56,
+      "address": "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F",
+      "read": ["function balanceOf(address) view returns (uint256)"]
+    },
+    {
+      "id": "lens",
+      "chainId": 56,
+      "address": "0x85b6CfD82a9B0589dc255cB47a1351181366Dba5",
+      "read": [
+        "function getActiveListings(address,uint256,uint256) view returns ((uint256,address,uint96)[],uint256,uint256)",
+        "function getActiveBids(address,uint256,uint256) view returns ((uint256,address,uint96,uint32)[],uint256,uint256)"
+      ]
+    }
+  ]
+}

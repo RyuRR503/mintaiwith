@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRouteWithContext, useRouter, HeadContent, Scripts, type ErrorComponentProps } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import appCss from "../styles.css?url";
 import { LanguageProvider, useLanguage } from "@/components/agent-cards/LanguageProvider";
@@ -49,5 +50,5 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  return <QueryClientProvider client={queryClient}><LanguageMetadata /><Outlet /></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><LanguageMetadata /><Toaster /><Outlet /></QueryClientProvider>;
 }

@@ -1,11 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowUpRight, Flame, Gift, Droplets } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SiteShell } from "@/components/agent-cards/SiteShell";
-import { PoolStats } from "@/components/agent-cards/PoolStats";
-import { useLanguage } from "@/components/agent-cards/LanguageProvider";
-import { ALLOCATION, POOL_EDITION as P } from "@/lib/fagent/pool-edition";
+import { createFileRoute } from "@tanstack/react-router";
+import MintAiApp from "@/vaults/mintai/Component";
 
 export const Route = createFileRoute("/tokenomics")({
   head: () => ({ meta: [
@@ -16,83 +10,9 @@ export const Route = createFileRoute("/tokenomics")({
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
-  component: TokenomicsPage,
+  component: Page,
 });
 
-const fmt = (n: number) => n.toLocaleString("en-US");
-const OPACITY = [1, 0.75, 0.55, 0.35, 0.2];
-
-function Donut({ active, onHover, lockedLabel, label }: { active: number; onHover: (i: number) => void; lockedLabel: string; label: string }) {
-  const r = 80, c = 2 * Math.PI * r;
-  let offset = 0;
-  const arcs = ALLOCATION.map((a, i) => {
-    const len = (a.amount / P.totalTokens) * c;
-    const arc = { a, i, len, start: offset };
-    offset += len;
-    return arc;
-  });
-  const team = arcs.find(x => x.a.key === "team") ?? arcs[0];
-  if (!team) return null;
-  const alpha = ((team.start + team.len / 2) / c) * Math.PI * 2;
-  const lx = 100 + 58 * Math.cos(alpha);
-  const ly = 100 + 58 * Math.sin(alpha);
-  const DASHES = 26;
-  const step = team.len / DASHES;
-  const dash = step * 0.5;
-  return <svg viewBox="0 0 200 200" className="gx-donut" role="img" aria-label={label}>
-    {arcs.map(({ a, i, len, start }) => {
-      if (a.key === "team") return <g key={a.key}>
-        {Array.from({ length: DASHES }, (_, k) => <circle key={k} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={0.22} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${dash} ${c - dash}`} strokeDashoffset={-(start + k * step)} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />)}
-        <text x={lx} y={ly} transform={`rotate(90 ${lx} ${ly})`} textAnchor="middle" dominantBaseline="middle" fontSize="12" fontWeight="700" fill="var(--primary)" style={{ pointerEvents: "none" }}>{lockedLabel}</text>
-      </g>;
-      return <circle key={a.key} cx="100" cy="100" r={r} fill="none" stroke="var(--primary)" strokeOpacity={OPACITY[i]} strokeWidth={active === i ? 30 : 22} strokeDasharray={`${len - 2} ${c - len + 2}`} strokeDashoffset={-start} onMouseEnter={() => onHover(i)} style={{ transition: "stroke-width .3s", cursor: "pointer" }} />;
-    })}
-  </svg>;
-}
-
-function TokenomicsPage() {
-  const { t } = useLanguage();
-  const [active, setActive] = useState(0);
-  const a = ALLOCATION[active] ?? ALLOCATION[0];
-  if (!a) return null;
-  const flows = [
-    { icon: Gift, title: "分红", items: ["每笔交易 2% 税，其中 50% 按卡平均分给持卡人", "阶梯卖单卖币所得 BNB 100% 分给持卡人，7 天匀速发放"] },
-    { icon: Flame, title: "销毁", items: ["开池时 97,479,938 枚打入黑洞，LP 同时销毁", "开池后铸造买到的代币，10% 当场销毁", "地板基金收走的卡直接销毁，开池后卡未领的代币一起销毁"] },
-    { icon: Droplets, title: "进池", items: [`只在开池时进一次：${P.poolBnb} BNB + ${fmt(P.poolTokens)} 枚`] },
-  ];
-  return <SiteShell index="06" code="TOKENOMICS" title="代币经济" lead={`总量 ${fmt(P.totalTokens)} 枚，合约写死，不能增发。每一枚去了哪里，都在下面。`} seed={606}>
-    <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,420px)_1fr]">
-      <div className="relative mx-auto w-full max-w-[420px]">
-        <Donut active={active} onHover={setActive} lockedLabel={t("锁仓")} label={t("代币分配")} />
-        <div key={active} className="gx-swap pointer-events-none absolute inset-0 grid place-content-center text-center">
-          <p className="font-mono text-4xl font-bold text-primary">{a.key === "team" ? "5%" : `${((a.amount / P.totalTokens) * 100).toFixed(1)}%`}</p>{a.key === "team" && <p className="text-xs text-muted-foreground">{t("占全部卡牌")}</p>}
-          {a.key === "team" && <p className="mt-2 justify-self-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{t("代币锁在合约里")}</p>}
-          <p className="mt-1 text-sm">{t(a.label)}</p>
-        </div>
-        <p className="mt-3 text-center text-xs text-muted-foreground">{t("虚线一段是团队卡代币，锁在合约里，逐张解锁")}</p>
-      </div>
-      <ul className="space-y-2">{ALLOCATION.map((x, i) => <li key={x.key}>
-        <button type="button" onMouseEnter={() => setActive(i)} onFocus={() => setActive(i)} onClick={() => setActive(i)} className={`gx-alloc ${active === i ? "gx-alloc-active" : ""}`}>
-          <span className="size-3 rounded-full bg-primary" style={{ opacity: OPACITY[i] }} />
-          <span className="min-w-0 flex-1 text-left"><span className="flex flex-wrap items-center gap-2"><span className="font-medium">{t(x.label)}</span>{x.key === "team" && <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">{t("锁仓中")}</span>}</span><span className="block text-xs text-muted-foreground">{t(x.note)}</span></span>
-          {x.key === "team" ? <span className="text-right font-mono text-sm">5%<span className="block text-xs text-muted-foreground">{t("占全部卡牌")}</span></span> : <span className="text-right font-mono text-sm">{fmt(x.amount)}<span className="block text-xs text-muted-foreground">{((x.amount / P.totalTokens) * 100).toFixed(1)}%</span></span>}
-        </button>
-      </li>)}</ul>
-    </div>
-
-    <div className="gx-callout mt-10">
-      <p className="text-base font-bold text-foreground">{t("团队卡的代币是锁住的，不是团队一次拿走")}</p>
-      <p className="mt-2 font-normal text-muted-foreground">{t("团队卡只占全部卡牌的 5%，而且不能自己放出来：大家每铸出 19 张付费卡，才解锁 1 张团队卡。没人铸造，团队卡就一张也解锁不了，对应的代币一直锁在合约里，相当于锁仓。团队卡和普通卡同权，没有额外权益。")}</p>
-    </div>
-
-    <h2 className="mt-20 mb-6 text-2xl font-bold">{t("钱和币的去向")}</h2>
-    <div className="grid gap-5 md:grid-cols-3">{flows.map(f => <section key={f.title} className="gx-panel p-6">
-      <f.icon className="size-6 text-primary" aria-hidden="true" />
-      <h3 className="mt-4 text-xl font-bold">{t(f.title)}</h3>
-      <ul className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">{f.items.map(i => <li key={i}>{t(i)}</li>)}</ul>
-    </section>)}</div>
-
-    <div className="mt-16"><PoolStats /></div>
-    <Button asChild variant="outline" className="mt-10"><Link to="/rules">{t("查看完整规则")}<ArrowUpRight /></Link></Button>
-  </SiteShell>;
+function Page() {
+  return <MintAiApp initialView="tokenomics" />;
 }

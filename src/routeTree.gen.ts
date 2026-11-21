@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommandsRouteImport } from './routes/commands'
+import { Route as DuelRouteImport } from './routes/duel'
+import { Route as LadderRouteImport } from './routes/ladder'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as TokenomicsRouteImport } from './routes/tokenomics'
@@ -25,6 +27,16 @@ const IndexRoute = IndexRouteImport.update({
 const CommandsRoute = CommandsRouteImport.update({
   id: '/commands',
   path: '/commands',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DuelRoute = DuelRouteImport.update({
+  id: '/duel',
+  path: '/duel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LadderRoute = LadderRouteImport.update({
+  id: '/ladder',
+  path: '/ladder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -56,6 +68,8 @@ const VideoRoute = VideoRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
+  '/duel': typeof DuelRoute
+  '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -65,6 +79,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
+  '/duel': typeof DuelRoute
+  '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -75,6 +91,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/commands': typeof CommandsRoute
+  '/duel': typeof DuelRoute
+  '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -86,6 +104,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/commands'
+    | '/duel'
+    | '/ladder'
     | '/market'
     | '/rules'
     | '/tokenomics'
@@ -95,6 +115,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/commands'
+    | '/duel'
+    | '/ladder'
     | '/market'
     | '/rules'
     | '/tokenomics'
@@ -104,6 +126,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/commands'
+    | '/duel'
+    | '/ladder'
     | '/market'
     | '/rules'
     | '/tokenomics'
@@ -114,6 +138,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CommandsRoute: typeof CommandsRoute
+  DuelRoute: typeof DuelRoute
+  LadderRoute: typeof LadderRoute
   MarketRoute: typeof MarketRoute
   RulesRoute: typeof RulesRoute
   TokenomicsRoute: typeof TokenomicsRoute
@@ -135,6 +161,20 @@ declare module '@tanstack/react-router' {
       path: '/commands'
       fullPath: '/commands'
       preLoaderRoute: typeof CommandsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/duel': {
+      id: '/duel'
+      path: '/duel'
+      fullPath: '/duel'
+      preLoaderRoute: typeof DuelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ladder': {
+      id: '/ladder'
+      path: '/ladder'
+      fullPath: '/ladder'
+      preLoaderRoute: typeof LadderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -178,6 +218,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CommandsRoute: CommandsRoute,
+  DuelRoute: DuelRoute,
+  LadderRoute: LadderRoute,
   MarketRoute: MarketRoute,
   RulesRoute: RulesRoute,
   TokenomicsRoute: TokenomicsRoute,

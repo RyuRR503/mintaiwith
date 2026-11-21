@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { snapshotOptions, marketOptions } from "@/lib/fagent/queries";
-import { CardExperience } from "@/components/agent-cards/CardExperience";
+import MintAiApp from "@/vaults/mintai/Component";
 
 export const Route = createFileRoute("/market")({
-  loader: ({ context }) => Promise.all([context.queryClient.ensureQueryData(snapshotOptions()), context.queryClient.ensureQueryData(marketOptions())]),
   head: () => ({ meta: [
     { title: "MINT.AI — 卡牌市场" },
     { name: "description", content: "MINT.AI 卡牌卖单、买单、求购与交易记录。" },
@@ -14,4 +12,4 @@ export const Route = createFileRoute("/market")({
   ] }),
   component: Page,
 });
-function Page() { return <CardExperience page="market" />; }
+function Page() { return <MintAiApp initialView="market" />; }
