@@ -202,49 +202,76 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 
 .gx-kicker { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--primary); }
 
-/* Editorial Hero — Left Copy + Right Framed Art */
-.ant-hero { position: relative; padding-block: 44px 56px; --hp: 0; }
-.ant-hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr); gap: 48px; align-items: start; position: relative; z-index: 1; }
-.ant-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font: 500 11px/1 var(--font-mono); letter-spacing: .08em; color: var(--muted-foreground); }
-.ant-hero-title { margin-top: 22px; font-family: var(--font-display); font-size: clamp(3.4rem, 6.2vw, 5.4rem); font-weight: 600; line-height: .96; letter-spacing: -0.03em; color: var(--foreground); }
-.ant-hero-title-ai { color: var(--primary); font-style: italic; font-weight: 500; }
-.ant-hero-tagline { margin-top: 20px; font-family: var(--font-display); font-size: clamp(1.35rem, 2.2vw, 1.75rem); font-weight: 500; line-height: 1.4; color: var(--foreground); max-width: 30rem; }
-.ant-hero-sub { margin-top: 10px; font-size: 14px; color: var(--muted-foreground); }
-.ant-hero-fair { margin-top: 28px; padding: 20px 22px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); box-shadow: 0 10px 30px -22px oklch(0.2 0.02 55 / 0.14); }
-.ant-hero-fair-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.ant-hero-fair-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
-.ant-hero-fair-body { margin-top: 12px; font-size: 14px; line-height: 1.75; color: var(--muted-foreground); }
-.ant-hero-cmd { margin-top: 18px; }
+/* ===== Swiss Broadsheet Cover Hero ===== */
+.ant-cover { padding-block: 32px 44px; }
+.ant-masthead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px; border-top: 2px solid var(--foreground); border-bottom: 1px solid var(--border); font: 500 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted-foreground); }
+.ant-cover-center { max-width: 820px; margin-inline: auto; text-align: center; padding-block: 44px 36px; }
+.ant-cover-title { font-family: var(--font-display); font-size: clamp(3.2rem, 7.6vw, 6.8rem); font-weight: 600; line-height: .94; letter-spacing: -0.035em; color: var(--foreground); }
+.ant-cover-title-ai { color: var(--primary); font-style: italic; font-weight: 500; }
+.ant-cover-lead { margin: 22px auto 0; max-width: 38rem; font-family: var(--font-display); font-size: clamp(1.25rem, 2.2vw, 1.75rem); font-weight: 500; line-height: 1.45; color: var(--foreground); }
+.ant-cover-sub { margin-top: 10px; font-size: 14px; color: var(--muted-foreground); }
+.ant-cover-actions { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.ant-action-primary { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 24px; border-radius: 999px; background: var(--foreground); color: var(--card); font-size: 14px; font-weight: 600; transition: background .2s, transform .2s; }
+.ant-action-primary:hover { background: var(--primary); transform: translateY(-1px); }
+.ant-action-ghost { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 22px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--foreground); font-size: 14px; font-weight: 600; transition: border-color .2s, color .2s; }
+.ant-action-ghost:hover { border-color: var(--primary); color: var(--primary); }
 
-/* Right Gallery Mat Frame */
-.ant-frame { position: sticky; top: 84px; padding: 24px 24px 20px; border: 1px solid var(--border); border-radius: 24px; background: var(--background-deep); box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5); }
-.ant-frame-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-.ant-frame-controls { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-.ant-frame-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+/* ===== Dark Charcoal Archival 3-Card Gallery Strip ===== */
+.ant-gallery-band { background: #1C1916; color: #F4EFE6; padding-block: 44px 48px; border-block: 1px solid rgba(25,23,21,0.18); }
+.ant-gallery-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+.ant-gallery-trio { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.16fr) minmax(0, .82fr); gap: 22px; align-items: center; }
+.ant-print-card { position: relative; display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; border: 1px solid rgba(244, 239, 230, 0.14); background: #26221E; text-align: left; transition: transform .45s var(--ease-cine), border-color .3s, opacity .3s; }
+.ant-print-card-side { opacity: .68; transform: scale(.96); cursor: pointer; }
+.ant-print-card-side:hover { opacity: 1; transform: scale(.99) translateY(-4px); border-color: #D4623F; }
+.ant-print-card-center { border-color: rgba(212, 98, 63, 0.72); box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.75); }
+.ant-print-canvas { aspect-ratio: 4 / 3; width: 100%; overflow: hidden; background: #141210; }
+.ant-print-canvas canvas { display: block; width: 100%; height: 100%; }
+.ant-print-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-top: 1px solid rgba(244, 239, 230, 0.1); }
+.ant-print-id { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: #F4EFE6; line-height: 1; }
+.ant-print-tag { font: 500 10px/1 var(--font-mono); letter-spacing: .14em; color: #D4623F; text-transform: uppercase; }
+.ant-gallery-rail { margin-top: 26px; padding-top: 20px; border-top: 1px solid rgba(244, 239, 230, 0.12); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px; align-items: center; }
+.ant-gallery-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(244, 239, 230, 0.22); color: #F4EFE6; font-size: 12px; font-weight: 600; transition: border-color .2s, background .2s; }
+.ant-gallery-btn:hover { border-color: #D4623F; background: rgba(212, 98, 63, 0.14); }
 
-/* Ledger Band */
-.ant-ledger-grid { display: grid; grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr); gap: 36px; align-items: stretch; }
-.ant-ledger-lead { display: flex; flex-direction: column; justify-content: space-between; padding: 26px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); }
-.ant-ledger-pct { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 4.4rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; color: var(--primary); }
-.ant-ledger-table { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: 20px; background: var(--card); overflow: hidden; }
-.ant-ledger-cell { padding: 22px 24px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
-.ant-ledger-cell:nth-child(2n) { border-right: 0; }
-.ant-ledger-cell:nth-last-child(-n+2) { border-bottom: 0; }
-.ant-ledger-num { margin-top: 8px; font-family: var(--font-display); font-size: clamp(1.7rem, 2.5vw, 2.25rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: var(--foreground); }
+/* ===== Broadsheet Ticker & Ruler Ledger ===== */
+.ant-broadsheet { padding-block: 56px; border-bottom: 1px solid var(--border); }
+.ant-broadsheet-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; border-bottom: 2px solid var(--foreground); }
+.ant-stat-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--border); }
+.ant-stat-col { padding: 26px 22px 26px 0; border-right: 1px solid var(--border); }
+.ant-stat-col:not(:first-child) { padding-left: 22px; }
+.ant-stat-col:last-child { border-right: 0; padding-right: 0; }
+.ant-stat-big { margin-top: 10px; font-family: var(--font-display); font-size: clamp(1.9rem, 3vw, 2.75rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.025em; color: var(--foreground); }
+.ant-ruler-wrap { padding-block: 24px 28px; border-bottom: 1px solid var(--border); }
+.ant-ruler-bar { position: relative; height: 12px; border-radius: 2px; background: var(--background-deep); overflow: hidden; border: 1px solid var(--border); }
+.ant-ruler-fill { height: 100%; background: var(--primary); transition: width .8s var(--ease-cine); }
+.ant-ruler-ticks { margin-top: 8px; display: flex; justify-content: space-between; font: 500 10px/1 var(--font-mono); color: var(--muted-foreground); }
+.ant-ledger-split { margin-top: 32px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 36px; align-items: start; }
+.ant-fair-sheet { padding: 26px 28px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); }
+.ant-pool-list { border-top: 2px solid var(--foreground); }
+.ant-pool-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 16px 4px; border-bottom: 1px solid var(--border); }
+.ant-pool-val { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--foreground); }
 
-/* Vertical Editorial Lifecycle */
-.ant-story-grid { display: grid; grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr); gap: 32px; margin-top: 32px; align-items: start; }
-.ant-story-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
-.ant-story-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 18px 16px; border-bottom: 1px solid var(--border); text-align: left; color: var(--muted-foreground); transition: background .25s, color .25s, padding-left .3s var(--ease-cine); }
-.ant-story-item:hover { color: var(--foreground); background: color-mix(in oklab, var(--card) 60%, transparent); }
-.ant-story-item-active { color: var(--foreground); background: var(--card); padding-left: 22px; border-left: 3px solid var(--primary); }
-.ant-story-card { position: relative; padding: 32px; border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: 0 16px 40px -28px oklch(0.2 0.02 55 / 0.16); }
-.ant-story-card-grid { display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 28px; align-items: center; }
-.ant-story-art { aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: #1C1916; }
+/* ===== 5-Column Full-Open Architectural Story Wall ===== */
+.ant-five-wall { margin-top: 28px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 2px solid var(--foreground); border-bottom: 1px solid var(--border); }
+.ant-five-col { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 18px 26px; border-right: 1px solid var(--border); background: transparent; transition: background .3s var(--ease-cine); }
+.ant-five-col:last-child { border-right: 0; }
+.ant-five-col::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--ease-cine); }
+.ant-five-col:hover { background: var(--card); }
+.ant-five-col:hover::before { transform: scaleX(1); }
+.ant-five-no { font-family: var(--font-display); font-size: 38px; font-weight: 600; line-height: 1; color: color-mix(in oklab, var(--primary) 75%, var(--foreground)); }
 
-/* Paper Desk Calculator */
-.ant-desk-shell { margin-top: 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.ant-desk-card { padding: 28px; border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: 0 12px 32px -24px oklch(0.2 0.02 55 / 0.14); }
+/* ===== Unified Yield & Release Studio (SVG Curve) ===== */
+.ant-studio { margin-top: 28px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); overflow: hidden; box-shadow: 0 18px 44px -30px oklch(0.2 0.03 50 / 0.18); }
+.ant-studio-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 26px; border-bottom: 1px solid var(--border); background: var(--background-deep); }
+.ant-qty-pills { display: inline-flex; align-items: center; gap: 6px; }
+.ant-qty-pill { height: 34px; min-width: 42px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font: 600 12px/1 var(--font-mono); color: var(--muted-foreground); transition: all .2s; }
+.ant-qty-pill[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.ant-studio-body { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); }
+.ant-studio-left { padding: 28px; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; gap: 22px; }
+.ant-studio-right { padding: 28px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+.ant-bill-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-block: 12px; border-bottom: 1px dashed var(--border); }
+.ant-bill-row:last-child { border-bottom: 0; }
+.ant-curve-box { width: 100%; height: 170px; border: 1px solid var(--border); border-radius: 14px; background: var(--background); padding: 12px 14px 8px; }
 
 .gx-char { display: inline-block; opacity: 0; animation: gx-char-in .65s var(--ease-cine) forwards; }
 @keyframes gx-char-in { from { opacity: 0; transform: translateY(.22em); } to { opacity: 1; transform: none; } }
@@ -343,8 +370,7 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 .gx-tiles > div { padding: 20px 22px; }
 .gx-rule { position: relative; overflow: hidden; padding: 28px; }
 .gx-rule-no { position: absolute; top: -12px; right: 16px; font-family: var(--font-display); font-size: 6rem; font-weight: 600; line-height: 1; color: color-mix(in oklab, var(--primary) 12%, transparent); pointer-events: none; }
-.gx-term { position: relative; display: flex; flex-direction: column; padding: 40px 22px 22px; }
-.gx-term::before { content: ""; position: absolute; top: 18px; left: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 14px 0 0 color-mix(in oklab, var(--foreground) 16%, transparent), 28px 0 0 color-mix(in oklab, var(--foreground) 16%, transparent); }
+.gx-term { position: relative; display: flex; flex-direction: column; padding: 22px 22px 22px 26px; border-left: 3px solid var(--primary); }
 .gx-term-fn { margin-top: 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--background); font-size: 11px; color: var(--primary); word-break: break-all; }
 .gx-cmd-group { margin-bottom: 48px; }
 .gx-cmd-label { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; }
@@ -411,17 +437,22 @@ button:hover .ant-logo-mark { transform: rotate(45deg); }
 }
 @media (max-width: 1023px) {
   .gx-container { width: calc(100% - 40px); }
-  .ant-hero-grid, .ant-ledger-grid, .ant-story-grid, .ant-desk-shell, .gx-page-hero { grid-template-columns: minmax(0, 1fr); }
-  .ant-frame { position: static; }
-  .ant-story-card-grid { grid-template-columns: minmax(0, 1fr); }
-  .ant-story-art { max-width: 220px; }
+  .ant-gallery-trio { grid-template-columns: minmax(0, 1fr); }
+  .ant-print-card-side { display: none; }
+  .ant-gallery-rail { grid-template-columns: minmax(0, 1fr); }
+  .ant-stat-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ant-stat-col { border-right: 0; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .ant-stat-col:not(:first-child) { padding-left: 0; }
+  .ant-ledger-split, .ant-studio-body, .gx-page-hero { grid-template-columns: minmax(0, 1fr); }
+  .ant-studio-left { border-right: 0; border-bottom: 1px solid var(--border); }
+  .ant-five-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ant-five-col { border-bottom: 1px solid var(--border); }
   .gx-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 639px) {
   .gx-container { width: calc(100% - 32px); }
-  .ant-ledger-table { grid-template-columns: minmax(0, 1fr); }
-  .ant-ledger-cell { border-right: 0; border-bottom: 1px solid var(--border); }
-  .ant-ledger-cell:last-child { border-bottom: 0; }
+  .ant-stat-strip, .ant-five-wall { grid-template-columns: minmax(0, 1fr); }
+  .ant-five-col { border-right: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ant-opening { display: none; }
@@ -602,17 +633,19 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
     let raf = 0;
     let visible = true;
     let last = 0;
-    const rand = rng(id + 13);
-    const rays = (kind === "team" ? 16 : 10) + Math.floor(rand() * 8);
-    const rings = 3 + Math.floor(rand() * 3);
-    const tiltBase = rand() * Math.PI * 2;
-    const sweepSpeed = 0.16 + rand() * 0.08;
-    const nodes = Array.from({ length: 18 }, () => ({
-      a: rand() * Math.PI * 2,
-      r: 0.24 + rand() * 0.56,
-      s: 1.2 + rand() * 2.2,
-      sp: (rand() - 0.5) * 0.22,
-    }));
+    const rand = rng(id + 29);
+    const palettes = [
+      { bg: "#F0E7D8", block: "#D4623F", ink: "#1C1916", accent: "#E4C7A8" },
+      { bg: "#1E1B18", block: "#D4623F", ink: "#F4EFE6", accent: "#3B342E" },
+      { bg: "#E6DDD0", block: "#2B2622", ink: "#D4623F", accent: "#C9B7A2" },
+      { bg: "#D4623F", block: "#1C1916", ink: "#F4EFE6", accent: "#E78C6E" },
+    ] as const;
+    const pal = palettes[id % palettes.length] ?? palettes[0];
+    const archSide = rand() > 0.5 ? 1 : -1;
+    const stripeCount = 4 + Math.floor(rand() * 5);
+    const orbRatio = 0.22 + rand() * 0.16;
+    const splitX = 0.38 + rand() * 0.24;
+    const splitY = 0.42 + rand() * 0.2;
     let t = rand() * 100;
     let ox = 0;
     let oy = 0;
@@ -624,77 +657,66 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = INK;
+      ctx.fillStyle = pal.bg;
       ctx.fillRect(0, 0, w, h);
       const p = pointer.current;
-      const tx = p.active ? p.x - 0.5 : Math.sin(t * 0.32) * 0.18;
-      const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.24) * 0.12;
+      const tx = p.active ? p.x - 0.5 : Math.sin(t * 0.28) * 0.14;
+      const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.22) * 0.1;
       ox += (tx - ox) * 0.07;
       oy += (ty - oy) * 0.07;
-      const cx = w * 0.5 + ox * w * 0.05;
-      const cy = h * 0.5 + oy * h * 0.04;
-      const unit = Math.min(w, h) * 0.44;
+      const unit = Math.min(w, h);
 
-      const wash = ctx.createRadialGradient(cx, cy, unit * 0.05, cx, cy, unit * 1.25);
-      wash.addColorStop(0, "rgba(212, 98, 63, 0.24)");
-      wash.addColorStop(0.55, "rgba(212, 98, 63, 0.06)");
-      wash.addColorStop(1, "transparent");
-      ctx.fillStyle = wash;
-      ctx.fillRect(0, 0, w, h);
+      // Architectural Bauhaus color-block composition
+      ctx.fillStyle = pal.accent;
+      ctx.fillRect(0, h * splitY + oy * h * 0.03, w * splitX, h * (1 - splitY) + h * 0.05);
 
-      ctx.strokeStyle = SAND;
-      ctx.lineWidth = dpr * 0.75;
-      for (let i = 1; i <= rings; i += 1) {
-        const rr = unit * (0.28 + (i / rings) * 0.72);
-        ctx.globalAlpha = 0.12 + (i === rings ? 0.08 : 0);
-        ctx.beginPath();
-        ctx.arc(cx, cy, rr, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      for (let i = 0; i < rays; i += 1) {
-        const angle = tiltBase + (i / rays) * Math.PI * 2 + Math.sin(t * sweepSpeed + i * 0.4) * 0.04;
-        const len = unit * (0.48 + 0.46 * ((i * 7 + id) % 5) / 4);
-        const inner = unit * 0.14;
-        const isAccent = i % 2 === 0;
-        ctx.strokeStyle = isAccent ? FLOW : PAPER;
-        ctx.lineWidth = isAccent ? dpr * 2.1 : dpr * 1.1;
-        ctx.globalAlpha = isAccent ? 0.85 : 0.32;
-        ctx.beginPath();
-        ctx.moveTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
-        ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
-        ctx.stroke();
-      }
-
-      for (const node of nodes) {
-        const ang = node.a + t * node.sp;
-        const nx = cx + Math.cos(ang) * unit * node.r;
-        const ny = cy + Math.sin(ang) * unit * node.r;
-        ctx.globalAlpha = 0.55;
-        ctx.fillStyle = node.r > 0.55 ? PAPER : FLOW;
-        ctx.beginPath();
-        ctx.arc(nx, ny, node.s * dpr * 0.55, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = INK;
+      // Sweeping geometric arch
+      const archX = w * (archSide > 0 ? 0.62 : 0.38) + ox * w * 0.04;
+      const archY = h * 0.56 + oy * h * 0.04;
+      ctx.fillStyle = pal.block;
       ctx.beginPath();
-      ctx.arc(cx, cy, unit * 0.15, 0, Math.PI * 2);
+      ctx.arc(archX, archY, unit * (orbRatio + 0.16), Math.PI, 0);
+      ctx.lineTo(archX + unit * (orbRatio + 0.16), h);
+      ctx.lineTo(archX - unit * (orbRatio + 0.16), h);
+      ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = FLOW;
-      ctx.lineWidth = dpr * 1.5;
+
+      // Counter-poised circle stamp
+      const orbX = w * (archSide > 0 ? 0.3 : 0.7) - ox * w * 0.05;
+      const orbY = h * 0.34 - oy * h * 0.04;
+      ctx.fillStyle = pal.ink;
+      ctx.beginPath();
+      ctx.arc(orbX, orbY, unit * orbRatio * 0.68, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Parallel editorial ruled lines
+      ctx.strokeStyle = pal.ink;
+      ctx.lineWidth = dpr * 1.1;
+      ctx.globalAlpha = 0.28;
+      for (let i = 0; i < stripeCount; i += 1) {
+        const y = h * (0.14 + i * 0.065);
+        ctx.beginPath();
+        ctx.moveTo(w * 0.08, y);
+        ctx.lineTo(w * (0.44 + (i % 2) * 0.14), y);
+        ctx.stroke();
+      }
+
+      // Subtle orbital hairline
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = pal.ink;
+      ctx.lineWidth = dpr * 0.9;
+      ctx.beginPath();
+      ctx.arc(w * 0.5, h * 0.5, unit * 0.38, t * 0.2, t * 0.2 + Math.PI * 1.35);
       ctx.stroke();
-      ctx.fillStyle = FLOW;
-      ctx.beginPath();
-      ctx.arc(cx, cy, unit * 0.055, 0, Math.PI * 2);
-      ctx.fill();
 
-      ctx.globalAlpha = 0.45;
-      ctx.fillStyle = PAPER;
-      ctx.font = `500 ${Math.round(9 * dpr)}px "IBM Plex Mono", monospace`;
-      ctx.textAlign = "center";
-      ctx.fillText(`ANT // ${String(id).padStart(6, "0")}`, w * 0.5, h - 14 * dpr);
+      // Corner catalog imprint
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = pal.ink;
+      ctx.font = `600 ${Math.round(9.5 * dpr)}px "IBM Plex Mono", monospace`;
+      ctx.textAlign = "left";
+      ctx.fillText(`ANT.AI / ${kind.toUpperCase()}`, 14 * dpr, 22 * dpr);
+      ctx.textAlign = "right";
+      ctx.fillText(`NO.${String(id).padStart(6, "0")}`, w - 14 * dpr, h - 14 * dpr);
       ctx.globalAlpha = 1;
     };
     resize();
@@ -1387,117 +1409,146 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
         {view === "home" && (
           <main>
-            <section ref={hero} className="gx-container ant-hero">
-              <div className="ant-hero-grid">
-                <div className={`${rise} min-w-0`}>
-                  <span className="ant-hero-pill">
-                    <span className="gx-live-dot" />
-                    <span>{t("hero.kicker")} · ANTHROPIC POOL</span>
-                  </span>
-                  <h1 className="ant-hero-title" aria-label="ANT.AI">
-                    {"ANT".split("").map((ch, index) => (
-                      <span key={`${ch}-${index}`} aria-hidden="true" className="gx-char" style={{ animationDelay: `${0.08 + index * 0.05}s` }}>{ch}</span>
-                    ))}
-                    <span className="ant-hero-title-ai gx-char" aria-hidden="true" style={{ animationDelay: "0.26s" }}>.AI</span>
-                  </h1>
-                  <p className="ant-hero-tagline">{t("hero.line1")} {t("hero.line2")}</p>
-                  <p className="ant-hero-sub">{t("hero.sub")}</p>
-
-                  <div className="ant-hero-fair">
-                    <div className="ant-hero-fair-head">
-                      <p className="ant-hero-fair-title">{t("hero.fairLabel")}</p>
-                      <span className="gx-kicker">Fair Mint</span>
-                    </div>
-                    <p className="ant-hero-fair-body">{t("hero.fair")}</p>
-                    <div className="ant-hero-cmd">{commandCard(salePhase === "refund" ? "refund" : "mint")}</div>
-                  </div>
+            <section ref={hero} className="gx-container ant-cover">
+              <div className="ant-masthead">
+                <span className="flex items-center gap-2"><span className="gx-live-dot" /><span>ANTHROPIC POOL · BNB CHAIN</span></span>
+                <span>{t(!live.cards ? "cards.pending" : salePhase === "open" ? "demo.launched" : salePhase === "refund" ? "demo.refund" : "demo.presale")}</span>
+              </div>
+              <div className={`${rise} ant-cover-center`}>
+                <h1 className="ant-cover-title" aria-label="ANT.AI">
+                  {"ANT".split("").map((ch, index) => (
+                    <span key={`${ch}-${index}`} aria-hidden="true" className="gx-char" style={{ animationDelay: `${0.06 + index * 0.05}s` }}>{ch}</span>
+                  ))}
+                  <span className="ant-cover-title-ai gx-char" aria-hidden="true" style={{ animationDelay: "0.24s" }}>.AI</span>
+                </h1>
+                <p className="ant-cover-lead">{t("hero.line1")} {t("hero.line2")}</p>
+                <p className="ant-cover-sub">{t("hero.sub")}</p>
+                <div className="ant-cover-actions">
+                  <button
+                    type="button"
+                    className="ant-action-primary"
+                    onClick={() => document.getElementById("ant-primary-action")?.scrollIntoView({ behavior: "smooth" })}
+                  >
+                    <span>{t(salePhase === "refund" ? "cmd.refund.title" : "cmd.mint.title")}</span>
+                    <ArrowDownRight size={16} aria-hidden="true" />
+                  </button>
+                  <button type="button" className="ant-action-ghost" onClick={() => openView("commands")}>
+                    <span>{t("nav.commands")}</span>
+                  </button>
                 </div>
-
-                <aside className={`${rise} ant-frame`}>
-                  <div className="ant-frame-top">
-                    <p className="gx-kicker">{t("card.kicker")}</p>
-                    <span className="gx-mono gx-muted text-xs">#{String(cardId).padStart(6, "0")}</span>
-                  </div>
-                  <div className="hc-stage">
-                    <div ref={stage} className="gx-parallax"><HoloCard id={cardId} kind={kind} /></div>
-                  </div>
-                  <div className="ant-frame-controls">
-                    <p className="text-base font-semibold">{t("card.title1")} · {t("card.title2")}</p>
-                    <p className="gx-muted mt-1 text-xs leading-6">{t("card.body")}</p>
-                    <label className="gx-mono gx-muted mt-4 mb-2 flex justify-between text-xs"><span>{t("card.id")}</span><span>{fmtInt(cardId)} / {fmtInt(TOTAL_POOL_CARDS)}</span></label>
-                    <input type="range" min={1} max={TOTAL_POOL_CARDS} value={cardId} aria-label={t("card.id")} style={{ ["--fill" as string]: `${((cardId - 1) / (TOTAL_POOL_CARDS - 1)) * 100}%` }} onChange={(event) => setCardId(Number(event.target.value))} />
-                    <div className="ant-frame-bar">
-                      <span className="gx-mono gx-muted text-[11px]">{t("card.caption")}</span>
-                      <button type="button" className="gx-btn gx-btn-outline text-xs" onClick={() => setCardId(1 + Math.floor(Math.random() * TOTAL_POOL_CARDS))}>
-                        <span>{t("card.random")}</span>
-                        <Shuffle size={14} />
-                      </button>
-                    </div>
-                  </div>
-                </aside>
               </div>
             </section>
 
-            <section className="gx-band">
-              <div className="gx-container py-12">
-                <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <section className="ant-gallery-band">
+              <div className="gx-container">
+                <div className="ant-gallery-head">
+                  <div>
+                    <p className="gx-kicker">{t("card.kicker")} · ARCHIVE</p>
+                    <h2 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("card.title1")} · {t("card.title2")}</h2>
+                  </div>
+                  <p className="text-xs opacity-70">{t("card.body")}</p>
+                </div>
+                <div ref={stage} className="ant-gallery-trio">
+                  {[
+                    Math.max(1, cardId - 127),
+                    cardId,
+                    Math.min(TOTAL_POOL_CARDS, cardId + 127),
+                  ].map((displayId, idx) => {
+                    const isCenter = idx === 1;
+                    const cardKind: Kind = displayId <= PRESALE_CARDS ? "presale" : "open";
+                    return (
+                      <button
+                        key={`${idx}-${displayId}`}
+                        type="button"
+                        className={`ant-print-card ${isCenter ? "ant-print-card-center" : "ant-print-card-side"}`}
+                        onClick={() => setCardId(displayId)}
+                      >
+                        <div className="ant-print-canvas">
+                          <GenerativeCard id={displayId} kind={cardKind} className="h-full w-full" />
+                        </div>
+                        <div className="ant-print-meta">
+                          <span className="ant-print-id">#{String(displayId).padStart(6, "0")}</span>
+                          <span className="ant-print-tag">{cardKind === "presale" ? "PRESALE · 1/1" : "OPEN · 1/1"}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="ant-gallery-rail">
+                  <span className="gx-mono text-xs opacity-75">{t("card.id")} #{fmtInt(cardId)} / {fmtInt(TOTAL_POOL_CARDS)}</span>
+                  <input type="range" min={1} max={TOTAL_POOL_CARDS} value={cardId} aria-label={t("card.id")} style={{ ["--fill" as string]: `${((cardId - 1) / (TOTAL_POOL_CARDS - 1)) * 100}%` }} onChange={(event) => setCardId(Number(event.target.value))} />
+                  <button type="button" className="ant-gallery-btn" onClick={() => setCardId(1 + Math.floor(Math.random() * TOTAL_POOL_CARDS))}>
+                    <Shuffle size={14} />
+                    <span>{t("card.random")}</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section id="ant-primary-action" className="ant-broadsheet">
+              <div className="gx-container">
+                <div className="ant-broadsheet-top">
                   <p className="gx-mono gx-pri flex items-center gap-2 text-xs"><span className="gx-live-dot" />{t(!live.cards ? "cards.pending" : salePhase === "open" ? "demo.launched" : salePhase === "refund" ? "demo.refund" : "demo.presale")}</p>
                   {!live.launched && live.presaleDeadline > 0 && (
                     <p className="gx-mono text-xs">{t("metric.deadline")}<span className="gx-pri ml-2">{fmtDeadline(live.presaleDeadline, language)} UTC+8</span>{salePhase === "refund" ? <span className="gx-pri ml-2">{t("metric.deadlinePassed")}</span> : null}</p>
                   )}
                 </div>
-                <div className="ant-ledger-grid">
-                  <div className="ant-ledger-lead">
-                    <div>
-                      <p className="gx-kicker">{t(salePhase === "refund" ? "metric.refundProgress" : "progress")}</p>
-                      <p className="ant-ledger-pct mt-4"><CountUp value={salePhase === "refund" ? refundPct : presalePct} digits={progressDigits} suffix="%" /></p>
+                <dl className="ant-stat-strip">
+                  {(salePhase === "refund" ? [
+                    [mintedLive, 0, "", t("metric.minted"), t("metric.mintedRefundNote")],
+                    [escrowBnb, 5, " BNB", t("metric.escrow"), t("metric.escrowNote")],
+                    [refundedCards, 0, "", t("metric.refunded"), t("metric.refundedNote")],
+                    [refundedBnb, 5, " BNB", t("metric.refundedBnb"), t("metric.refundedBnbNote")],
+                  ] : [
+                    [mintedLive, 0, "", t("metric.minted"), t("metric.mintedNote", undefined, { n: fmtInt(TOTAL_POOL_CARDS) })],
+                    [raisedBnb, raisedDigits, " BNB", t("metric.raised"), t("metric.raisedNote")],
+                    [live.minters, 0, "", t("metric.minters"), t("metric.mintersNote", undefined, { n: MAX_MINT })],
+                    [presaleLeft, 0, "", t("metric.left"), t("metric.leftNote", undefined, { n: fmtInt(PRESALE_CARDS) })],
+                  ]).map(([value, digits, suffix, label, note]) => (
+                    <div key={String(label)} className="ant-stat-col">
+                      <dt className="gx-mono gx-muted text-xs">{label}</dt>
+                      <dd className="ant-stat-big"><CountUp value={Number(value)} digits={Number(digits)} suffix={String(suffix)} /></dd>
+                      <dd className="gx-muted mt-2 text-xs">{note}</dd>
                     </div>
-                    <div className="mt-6">
-                      <div className="gx-track"><div className="gx-live-bar" style={{ width: `${salePhase === "refund" ? refundPct : presalePct}%` }} /></div>
-                      <p className="gx-mono gx-muted mt-3 text-[11px]">{t(salePhase === "open" ? "pool.live" : salePhase === "refund" ? "pool.refund" : "pool.presale")}</p>
-                    </div>
+                  ))}
+                </dl>
+                <div className="ant-ruler-wrap">
+                  <div className="mb-2 flex items-baseline justify-between">
+                    <span className="gx-mono gx-muted text-xs">{t(salePhase === "refund" ? "metric.refundProgress" : "progress")}</span>
+                    <span className="gx-display gx-pri text-2xl"><CountUp value={salePhase === "refund" ? refundPct : presalePct} digits={progressDigits} suffix="%" /></span>
                   </div>
-                  <dl className="ant-ledger-table">
-                    {(salePhase === "refund" ? [
-                      [mintedLive, 0, "", t("metric.minted"), t("metric.mintedRefundNote")],
-                      [escrowBnb, 5, " BNB", t("metric.escrow"), t("metric.escrowNote")],
-                      [refundedCards, 0, "", t("metric.refunded"), t("metric.refundedNote")],
-                      [refundedBnb, 5, " BNB", t("metric.refundedBnb"), t("metric.refundedBnbNote")],
-                    ] : [
-                      [mintedLive, 0, "", t("metric.minted"), t("metric.mintedNote", undefined, { n: fmtInt(TOTAL_POOL_CARDS) })],
-                      [raisedBnb, raisedDigits, " BNB", t("metric.raised"), t("metric.raisedNote")],
-                      [live.minters, 0, "", t("metric.minters"), t("metric.mintersNote", undefined, { n: MAX_MINT })],
-                      [presaleLeft, 0, "", t("metric.left"), t("metric.leftNote", undefined, { n: fmtInt(PRESALE_CARDS) })],
-                    ]).map(([value, digits, suffix, label, note]) => (
-                      <div key={String(label)} className="ant-ledger-cell">
-                        <dt className="gx-muted text-xs">{label}</dt>
-                        <dd className="ant-ledger-num"><CountUp value={Number(value)} digits={Number(digits)} suffix={String(suffix)} /></dd>
-                        <dd className="gx-muted mt-2 text-xs">{note}</dd>
-                      </div>
-                    ))}
-                  </dl>
+                  <div className="ant-ruler-bar"><div className="ant-ruler-fill" style={{ width: `${salePhase === "refund" ? refundPct : presalePct}%` }} /></div>
+                  <div className="ant-ruler-ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
                 </div>
-                <div className="mt-10">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <p className="gx-mono gx-pri text-xs">{t("pool.kicker")}</p>
-                    <span className="gx-chip">{t(salePhase === "open" ? "pool.live" : salePhase === "refund" ? "pool.refund" : "pool.presale")}</span>
+
+                <div className="ant-ledger-split">
+                  <div className="ant-fair-sheet">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h2 className="text-xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("hero.fairLabel")}</h2>
+                      <span className="gx-kicker">FAIR MINT</span>
+                    </div>
+                    <p className="gx-muted mt-3 text-sm leading-7">{t("hero.fair")}</p>
+                    <div className="mt-5">{commandCard(salePhase === "refund" ? "refund" : "mint")}</div>
                   </div>
-                  <dl className="gx-tiles">
-                    {[
-                      [fmtBnb(tokenBurned, 0), t("pool.burnedTokens"), t("unit.token")],
-                      [floorCards, t("pool.burnedCards"), t("unit.card")],
-                      [fmtBnb(live.dividendFwd), t("pool.dividend"), "BNB"],
-                      [fmtBnb(live.floorFwd), t("pool.floor"), "BNB"],
-                    ].map(([value, label, unit], idx) => (
-                      <div key={label}>
-                        <div className="flex items-center justify-between">
-                          <dt className="gx-muted text-xs">{label}</dt>
-                          <span className="gx-tile-no">0{idx + 1}</span>
+                  <div>
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="gx-kicker">{t("pool.kicker")}</p>
+                      <span className="gx-chip">{t(salePhase === "open" ? "pool.live" : salePhase === "refund" ? "pool.refund" : "pool.presale")}</span>
+                    </div>
+                    <dl className="ant-pool-list">
+                      {[
+                        [fmtBnb(tokenBurned, 0), t("pool.burnedTokens"), t("unit.token")],
+                        [floorCards, t("pool.burnedCards"), t("unit.card")],
+                        [fmtBnb(live.dividendFwd), t("pool.dividend"), "BNB"],
+                        [fmtBnb(live.floorFwd), t("pool.floor"), "BNB"],
+                      ].map(([value, label, unit]) => (
+                        <div key={label} className="ant-pool-row">
+                          <dt className="gx-muted text-sm">{label}</dt>
+                          <dd className="ant-pool-val">{value}<span className="gx-mono gx-muted ml-2 text-xs">{unit}</span></dd>
                         </div>
-                        <dd className="gx-tile-value">{value}<span>{unit}</span></dd>
-                      </div>
-                    ))}
-                  </dl>
+                      ))}
+                    </dl>
+                  </div>
                 </div>
               </div>
             </section>
@@ -1510,30 +1561,17 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <span className="gx-chapter-note">{t("life.note")}</span>
               </div>
-              <div className="ant-story-grid">
-                <ol className="ant-story-list">
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <li key={item}>
-                      <button type="button" aria-pressed={phase === item - 1} className={`ant-story-item ${phase === item - 1 ? "ant-story-item-active" : ""}`} onClick={() => setPhase(item - 1)}>
-                        <span className="flex items-center gap-4">
-                          <span className="gx-mono gx-pri text-xs">0{item}</span>
-                          <span className="text-base font-semibold">{phases[item - 1]?.title}</span>
-                        </span>
-                        <ArrowDownRight size={15} className={phase === item - 1 ? "gx-pri" : "gx-muted"} aria-hidden="true" />
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-                <div key={phase} className="gx-swap ant-story-card">
-                  <div className="ant-story-card-grid">
+              <div className="ant-five-wall">
+                {phases.map((item, idx) => (
+                  <article key={item.title} className="ant-five-col" onMouseEnter={() => setPhase(idx)}>
                     <div>
-                      <p className="gx-kicker">STAGE 0{phase + 1} / 05</p>
-                      <h3 className="mt-3 text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{phases[phase]?.title}</h3>
-                      <p className="gx-muted mt-4 text-base leading-8">{phases[phase]?.body}</p>
+                      <span className="ant-five-no">0{idx + 1}</span>
+                      <h3 className="mt-5 text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>{item.title}</h3>
+                      <p className="gx-muted mt-3 text-xs leading-6">{item.body}</p>
                     </div>
-                    <div className="ant-story-art"><GenerativeCard id={phase * 131071 + 19} kind={phase === 0 ? "presale" : "open"} className="h-full w-full" /></div>
-                  </div>
-                </div>
+                    <span className="gx-mono gx-pri mt-6 text-[10px]">STEP 0{idx + 1} / 05</span>
+                  </article>
+                ))}
               </div>
             </section>
 
@@ -1545,45 +1583,76 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <span className="gx-chapter-note">{t("calc.note")}</span>
               </div>
-              <div className="ant-desk-shell">
-                <div className={`${rise} ant-desk-card`}>
-                  <p className="gx-kicker">A / MINT</p>
-                  <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("mint.title")}</h3>
-                  <div className="gx-seg mt-5">
+              <div className="ant-studio">
+                <div className="ant-studio-top">
+                  <div className="gx-seg">
                     {(["presale", "open"] as const).map((item) => (
                       <button key={item} type="button" aria-pressed={mintPhase === item} onClick={() => setMintPhase(item)}>{t(item === "presale" ? "mint.presale" : "mint.open")}</button>
                     ))}
                   </div>
-                  <div className="mt-6 flex items-end justify-between"><span className="gx-muted text-sm">{t("mint.count")}</span><span className="gx-display text-5xl">{count}</span></div>
-                  <input className="mt-3" type="range" min={1} max={MAX_MINT} value={count} aria-label={t("mint.count")} style={{ ["--fill" as string]: `${((count - 1) / (MAX_MINT - 1)) * 100}%` }} onChange={(event) => setCount(Number(event.target.value))} />
-                  <div className="mt-6 grid h-10 grid-cols-10 gap-1.5" aria-hidden="true">
-                    {Array.from({ length: MAX_MINT }, (_, index) => <div key={index} className={`gx-mint-mark ${index < count ? "gx-mint-mark-active" : ""}`} />)}
+                  <div className="ant-qty-pills" role="group" aria-label={t("mint.count")}>
+                    {[1, 2, 3, 5, 10].map((preset) => (
+                      <button key={preset} type="button" className="ant-qty-pill" aria-pressed={count === preset} onClick={() => setCount(preset)}>×{preset}</button>
+                    ))}
                   </div>
-                  <dl className="gx-mono mt-6 grid grid-cols-2 gap-4 text-sm">
-                    <div><dt className="gx-muted">{t("mint.pay")}</dt><dd className="text-2xl font-medium">{quoteBnb.toFixed(5)} BNB</dd></div>
-                    {mintPhase === "presale" ? (
-                      <div><dt className="gx-muted">{t("mint.tokens")}</dt><dd className="gx-pri text-2xl font-medium">{fmtInt(quoteTokens)}</dd></div>
-                    ) : (
-                      <>
-                        <div><dt className="gx-muted">{t("mint.ops")}</dt><dd className="text-2xl font-medium">{(quoteBnb * 0.25).toFixed(5)}</dd></div>
-                        <div className="col-span-2"><dt className="gx-muted">{t("mint.swap")}</dt><dd className="gx-pri text-xl font-medium">{(quoteBnb * 0.75).toFixed(5)} BNB · {t("mint.swapNote")}</dd></div>
-                      </>
-                    )}
-                  </dl>
-                  {mintPhase === "open" && <p className="gx-muted mt-3 text-xs">{t("mint.openNote")}</p>}
                 </div>
-                <div className={`${rise} ant-desk-card`}>
-                  <p className="gx-kicker">B / VESTING</p>
-                  <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("vest.title")}</h3>
-                  <p className="gx-muted mt-2 text-sm">{t("vest.example", undefined, { n: count, tokens: fmtInt(grant) })}</p>
-                  <div className="mt-8 flex h-40 items-end gap-1">
-                    {Array.from({ length: 40 }, (_, index) => {
-                      const on = index / 40 < releasedShare;
-                      return <div key={index} className={`gx-vest ${on ? "gx-vest-on" : "gx-vest-off"}`} style={{ height: `${20 + (index / 40) * 80}%`, transitionDelay: `${index * 8}ms` }} />;
-                    })}
+                <div className="ant-studio-body">
+                  <div className="ant-studio-left">
+                    <div>
+                      <div className="flex items-baseline justify-between">
+                        <span className="gx-muted text-sm">{t("mint.count")}</span>
+                        <span className="gx-display text-4xl">{count}</span>
+                      </div>
+                      <input className="mt-3" type="range" min={1} max={MAX_MINT} value={count} aria-label={t("mint.count")} style={{ ["--fill" as string]: `${((count - 1) / (MAX_MINT - 1)) * 100}%` }} onChange={(event) => setCount(Number(event.target.value))} />
+                    </div>
+                    <div>
+                      <div className="ant-bill-row">
+                        <span className="gx-muted text-sm">{t("mint.pay")}</span>
+                        <span className="gx-mono text-xl font-semibold">{quoteBnb.toFixed(5)} BNB</span>
+                      </div>
+                      {mintPhase === "presale" ? (
+                        <div className="ant-bill-row">
+                          <span className="gx-muted text-sm">{t("mint.tokens")}</span>
+                          <span className="gx-mono gx-pri text-xl font-semibold">{fmtInt(quoteTokens)}</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="ant-bill-row">
+                            <span className="gx-muted text-sm">{t("mint.ops")}</span>
+                            <span className="gx-mono text-lg font-medium">{(quoteBnb * 0.25).toFixed(5)} BNB</span>
+                          </div>
+                          <div className="ant-bill-row">
+                            <span className="gx-muted text-sm">{t("mint.swap")}</span>
+                            <span className="gx-mono gx-pri text-base font-medium">{(quoteBnb * 0.75).toFixed(5)} BNB</span>
+                          </div>
+                        </>
+                      )}
+                      <div className="ant-bill-row">
+                        <span className="gx-muted text-sm">{t("vest.day", undefined, { n: day.toFixed(1) })}</span>
+                        <span className="gx-display gx-pri text-3xl">{fmtInt(vested)}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-6 flex items-end justify-between"><span className="gx-muted text-sm">{t("vest.day", undefined, { n: day.toFixed(1) })}</span><span className="gx-display gx-pri text-5xl">{fmtInt(vested)}</span></div>
-                  <input className="mt-3" type="range" min={0} max={5} step={0.1} value={day} aria-label={t("vest.title")} style={{ ["--fill" as string]: `${releasedShare * 100}%` }} onChange={(event) => setDay(Number(event.target.value))} />
+                  <div className="ant-studio-right">
+                    <div>
+                      <p className="gx-kicker">{t("vest.title")} · 20% + 5D LINEAR</p>
+                      <p className="gx-muted mt-1 text-xs">{t("vest.example", undefined, { n: count, tokens: fmtInt(grant) })}</p>
+                    </div>
+                    <div className="ant-curve-box">
+                      <svg viewBox="0 0 360 130" className="h-full w-full" aria-hidden="true">
+                        <line x1="16" y1="112" x2="344" y2="112" stroke="currentColor" strokeOpacity="0.18" />
+                        <line x1="16" y1="16" x2="16" y2="112" stroke="currentColor" strokeOpacity="0.18" />
+                        <polygon points={`16,112 16,92 ${(16 + (day / 5) * 328).toFixed(1)},${(112 - releasedShare * 96).toFixed(1)} ${(16 + (day / 5) * 328).toFixed(1)},112`} fill="#D4623F" fillOpacity="0.18" />
+                        <polyline points="16,92 344,16" fill="none" stroke="currentColor" strokeOpacity="0.24" strokeDasharray="4 4" strokeWidth="1.5" />
+                        <polyline points={`16,92 ${(16 + (day / 5) * 328).toFixed(1)},${(112 - releasedShare * 96).toFixed(1)}`} fill="none" stroke="#D4623F" strokeWidth="3" strokeLinecap="round" />
+                        <circle cx={16 + (day / 5) * 328} cy={112 - releasedShare * 96} r="6" fill="#D4623F" stroke="#FBF8F3" strokeWidth="2.5" />
+                        <text x="16" y="126" fontSize="9" fill="currentColor" fillOpacity="0.55" fontFamily="var(--font-mono)">D0 (20%)</text>
+                        <text x="172" y="126" fontSize="9" fill="currentColor" fillOpacity="0.55" fontFamily="var(--font-mono)" textAnchor="middle">D2.5</text>
+                        <text x="344" y="126" fontSize="9" fill="currentColor" fillOpacity="0.55" fontFamily="var(--font-mono)" textAnchor="end">D5 (100%)</text>
+                      </svg>
+                    </div>
+                    <input type="range" min={0} max={5} step={0.1} value={day} aria-label={t("vest.title")} style={{ ["--fill" as string]: `${releasedShare * 100}%` }} onChange={(event) => setDay(Number(event.target.value))} />
+                  </div>
                 </div>
               </div>
             </section>
