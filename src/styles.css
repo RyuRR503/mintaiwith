@@ -266,7 +266,7 @@ html[lang^="zh"] .ac-title { line-height: .87 !important; }
 .gx-logo { display: inline-block; height: 1.15em; width: auto; vertical-align: middle; }
 .gx-logo-wide { height: 1.15em; }
 .gx-logo-lock { display: inline-flex; align-items: center; gap: .3em; line-height: 1; white-space: nowrap; }
-.gx-logo-mark { flex: none; height: 1.08em; width: 1.08em; color: var(--primary); transition: transform .55s var(--ease-cine, ease); }
+.gx-logo-mark { flex: none; height: 1.32em; width: 1.32em; color: var(--primary); transition: transform .55s var(--ease-cine, ease); }
 a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: rotate(45deg); }
 @media (prefers-reduced-motion: reduce) { a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: none; } }
 .gx-intro { position: relative; padding-block: 30px 0; }
