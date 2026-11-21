@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent, type ReactNode, type UIEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent, type ReactNode, type UIEvent } from "react";
 import { ArrowDownRight, Droplets, Flame, Gift, Shuffle } from "lucide-react";
 import { encodeFunctionData, formatEther, isAddress, parseAbi, parseUnits } from "viem";
 import { useFlapSdk } from "@/lib/flap-sdk";
@@ -152,6 +152,8 @@ function AntLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
     </span>
   );
 }
+
+let pendingSweep = false;
 
 const LOOK = `
 .gx-app {
@@ -389,18 +391,43 @@ const LOOK = `
 @media (min-width: 760px) { .gx-token-layout { grid-template-columns: minmax(220px, 42%) minmax(0, 1fr); } }
 .gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 
-/* Clean, instant route choreography (no blocking curtain) */
-.ant-route-beam { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--primary) 85%, transparent) 48%, var(--primary) 65%, transparent 100%); transform-origin: left; animation: ant-beam-sweep .46s var(--ease-cine) forwards; }
-@keyframes ant-beam-sweep {
-  0% { transform: translateX(-100%) scaleX(0.35); opacity: 0; }
-  22% { opacity: 1; }
-  100% { transform: translateX(100%) scaleX(0.65); opacity: 0; }
-}
+/* ANT.AI route sweep — a single ink line draws, then tears open into the next page */
+.ant-sweep { position: absolute; inset: 0; z-index: 70; pointer-events: none; overflow: hidden; animation: ant-sweep-gone 0s linear 1.15s forwards; }
+.ant-sweep-panel { position: absolute; left: 0; right: 0; height: 50.2%; background: var(--background); }
+.ant-sweep-panel::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent) 20%, var(--primary) 50%, color-mix(in oklab, var(--primary) 70%, transparent) 80%, transparent); opacity: 0; animation: ant-seam-on .01s linear .42s forwards, ant-seam-off .5s ease .75s forwards; }
+.ant-sweep-top { top: 0; animation: ant-tear-up .7s cubic-bezier(0.76, 0, 0.18, 1) .42s forwards; }
+.ant-sweep-top::after { bottom: 0; }
+.ant-sweep-bottom { bottom: 0; animation: ant-tear-down .7s cubic-bezier(0.76, 0, 0.18, 1) .42s forwards; }
+.ant-sweep-bottom::after { top: 0; }
+.ant-sweep-line { position: absolute; top: 50%; left: 8%; right: 8%; height: 1px; margin-top: -.5px; background: linear-gradient(90deg, transparent, var(--primary) 18%, var(--foreground) 50%, var(--primary) 82%, transparent); box-shadow: 0 0 14px color-mix(in oklab, var(--primary) 60%, transparent); transform: scaleX(0); animation: ant-line-draw .42s cubic-bezier(0.65, 0, 0.35, 1) forwards, ant-fade-out .12s linear .42s forwards; }
+.ant-sweep-spark { position: absolute; top: 50%; left: 50%; width: 120px; height: 3px; margin: -1.5px 0 0 -60px; border-radius: 3px; background: radial-gradient(ellipse at center, var(--card) 0%, var(--primary) 40%, transparent 72%); filter: blur(.5px); animation: ant-spark .42s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
+.ant-sweep-label { position: absolute; left: 50%; top: 50%; display: flex; align-items: baseline; gap: 14px; transform: translate(-50%, calc(-100% - 16px)); white-space: nowrap; color: var(--foreground); }
+.ant-sweep-label b { font: 500 11px/1 var(--font-mono); letter-spacing: .18em; color: var(--primary); }
+.ant-sweep-label span { font: 600 clamp(20px, 2.4vw, 30px)/1 var(--font-display); letter-spacing: -.01em; }
+.ant-sweep-label > * { opacity: 0; animation: ant-label-in .32s var(--ease-cine) .08s forwards, ant-fade-out .18s ease .4s forwards; }
+.ant-sweep-label > span { animation-delay: .13s, .4s; }
+.gx-app .gx-menu, .gx-app .gx-lang button { white-space: nowrap; }
+@media (max-width: 479px) { .gx-header .gx-container { gap: 10px; } .gx-header .gx-container > div { gap: 6px; } .gx-app .gx-x { width: 32px; height: 32px; } .gx-app .gx-menu { padding: 0 10px; } .gx-app .gx-lang button { padding-inline: 8px; } }
+.ant-sweep-sub { position: absolute; left: 0; right: 0; top: calc(50% + 14px); text-align: center; font: 500 10px/1 var(--font-mono); letter-spacing: .32em; color: var(--muted-foreground); opacity: 0; animation: ant-label-in .32s var(--ease-cine) .16s forwards, ant-fade-out .18s ease .4s forwards; }
+@keyframes ant-line-draw { to { transform: scaleX(1); } }
+@keyframes ant-spark { 0% { transform: translateX(-42vw) scaleX(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateX(42vw) scaleX(1); opacity: 0; } }
+@keyframes ant-label-in { from { opacity: 0; transform: translateY(8px); letter-spacing: .3em; } to { opacity: 1; transform: none; } }
+@keyframes ant-fade-out { to { opacity: 0; } }
+@keyframes ant-seam-on { to { opacity: 1; } }
+@keyframes ant-seam-off { to { opacity: 0; } }
+@keyframes ant-tear-up { to { transform: translateY(-101%); } }
+@keyframes ant-tear-down { to { transform: translateY(101%); } }
+@keyframes ant-sweep-gone { to { visibility: hidden; } }
 
 .ant-view-stage { animation: ant-view-enter .38s cubic-bezier(0.22, 1, 0.36, 1) both; will-change: transform, opacity; }
+.ant-swept .ant-view-stage { animation: ant-view-emerge .9s cubic-bezier(0.22, 1, 0.36, 1) .4s both; }
 @keyframes ant-view-enter {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: none; }
+}
+@keyframes ant-view-emerge {
+  from { opacity: .35; transform: scale(.985); filter: blur(3px); }
+  to { opacity: 1; transform: none; filter: none; }
 }
 .ant-stagger-1 { animation: ant-stagger-up .36s cubic-bezier(0.22, 1, 0.36, 1) .02s both; }
 .ant-stagger-2 { animation: ant-stagger-art .44s cubic-bezier(0.22, 1, 0.36, 1) .06s both; }
@@ -413,7 +440,26 @@ const LOOK = `
   from { opacity: 0; transform: translateY(10px) scale(0.975); }
   to { opacity: 1; transform: none; }
 }
-.gx-grain { position: absolute; inset: 0; z-index: 55; width: 100%; height: 100%; pointer-events: none; opacity: .028; mix-blend-mode: multiply; }
+
+/* Homepage motion: masked headline lines, drawn ink underline, card spotlight */
+.ant-mask { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+.ant-mask > span { display: inline-block; transform: translateY(105%); animation: ant-mask-up .9s var(--ease-cine) forwards; }
+.ant-mask:nth-child(2) > span { animation-delay: .12s; }
+.ant-hero-headline em.ant-mask { padding-bottom: .28em; margin-bottom: -.2em; }
+.ant-swept .ant-mask > span { animation-delay: .5s; }
+.ant-swept .ant-mask:nth-child(2) > span { animation-delay: .62s; }
+@keyframes ant-mask-up { to { transform: none; } }
+.ant-ink { position: relative; display: inline-block; }
+.ant-ink svg { position: absolute; left: -2%; bottom: -.16em; width: 104%; height: .32em; overflow: visible; color: var(--primary); }
+.ant-ink path { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 420; stroke-dashoffset: 420; animation: ant-ink-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) .7s forwards; }
+.ant-swept .ant-ink path { animation-delay: 1.1s; }
+@keyframes ant-ink-draw { to { stroke-dashoffset: 0; } }
+.ant-spot { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .5s; background: radial-gradient(260px circle at var(--sx, 50%) var(--sy, 40%), color-mix(in oklab, var(--primary) 16%, transparent), transparent 70%); }
+.ant-stage-pane:hover .ant-spot { opacity: 1; }
+.gx-app .ant-step-tab { overflow: hidden; }
+.gx-app .ant-step-tab::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, color-mix(in oklab, var(--primary) 12%, transparent) 50%, transparent 65%); transform: translateX(-110%); transition: transform .7s var(--ease-cine); pointer-events: none; }
+.gx-app .ant-step-tab:hover::after { transform: translateX(110%); }
+.gx-grain { position: absolute; inset: -6%; z-index: 55; width: 112%; height: 112%; pointer-events: none; opacity: .028; mix-blend-mode: multiply; }
 
 .gx-book-row { display: grid; grid-template-columns: 1.4fr 64px 80px 56px; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; font-family: var(--font-mono); font-size: 13px; }
 .gx-book-row span:not(:first-child) { text-align: right; }
@@ -422,7 +468,7 @@ const LOOK = `
 .gx-segment button { height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--muted-foreground); font: 600 14px/1 var(--font-sans); cursor: pointer; }
 .gx-segment button[aria-pressed="true"] { color: var(--primary-foreground); background: var(--foreground); }
 .gx-bento { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-.gx-tile-no { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--primary); }
+.gx-app .gx-tile-no { position: static; display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--primary); }
 .gx-bento .gx-tile-hero { background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 14%, var(--card)) 0%, var(--card) 75%); border-color: color-mix(in oklab, var(--primary) 38%, var(--border)); }
 .gx-tile-value { margin-top: 16px; font-family: var(--font-display); font-size: clamp(1.75rem, 2.4vw, 2.1rem); font-weight: 600; letter-spacing: -.02em; line-height: 1; color: var(--foreground); }
 .gx-tile-value span { margin-left: 6px; font-size: 12px; font-weight: 400; letter-spacing: .04em; color: var(--muted-foreground); }
@@ -468,7 +514,9 @@ const LOOK = `
   .ant-stage-pane, .ant-console-pane, .ant-timeline-stage, .ant-calc-left, .ant-calc-right { padding: 22px 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ant-route-beam { display: none; }
+  .ant-sweep { display: none; }
+  .ant-swept .ant-view-stage { animation: none; }
+  .ant-mask > span, .ant-ink path { animation: none; transform: none; stroke-dashoffset: 0; }
   .ant-view-stage, .ant-stagger-1, .ant-stagger-2, .ant-stagger-3, .ac-tab-active::after { animation: none; opacity: 1; transform: none; filter: none; }
   .gx-char { opacity: 1; animation: none; }
   .gx-rise { opacity: 1; transform: none; }
@@ -1094,6 +1142,10 @@ export default function Component({ initialView = "home" }: { initialView?: View
     return () => { stop = true; clearInterval(timer); };
   }, [sdk, view, live.launched]);
   const [intro, setIntro] = useState(0);
+  // Each route mounts its own instance; carry the page sweep across that remount.
+  useLayoutEffect(() => {
+    if (pendingSweep) { pendingSweep = false; setIntro((n) => n + 1); }
+  }, []);
   const [cardId, setCardId] = useState(7777);
   const [phase, setPhase] = useState(0);
   const [mintPhase, setMintPhase] = useState<"presale" | "open">("presale");
@@ -1393,6 +1445,8 @@ export default function Component({ initialView = "home" }: { initialView?: View
   const openView = (next: View) => {
     setMenuOpen(false);
     if (next === view) return;
+    pendingSweep = true;
+    window.setTimeout(() => { pendingSweep = false; }, 400);
     setView(next);
     setIntro((n) => n + 1);
     if (typeof window !== "undefined") {
@@ -1428,8 +1482,18 @@ export default function Component({ initialView = "home" }: { initialView?: View
   return (
     <div className="gx-app min-h-screen">
       <style>{LOOK}</style>
+      {intro > 0 && (
+        <div key={intro} className="ant-sweep" aria-hidden="true">
+          <span className="ant-sweep-panel ant-sweep-top" />
+          <span className="ant-sweep-panel ant-sweep-bottom" />
+          <span className="ant-sweep-line" />
+          <span className="ant-sweep-spark" />
+          <span className="ant-sweep-label"><b>{view === "home" ? "01" : pageMeta[view][0]}</b><span>{t(nav.find(([key]) => key === view)?.[1] ?? "nav.home")}</span></span>
+          <span className="ant-sweep-sub">ANT.AI · {view === "home" ? "HOME" : pageMeta[view][1]}</span>
+        </div>
+      )}
       <Grain />
-      <div ref={scroller} className="gx-scroll" onScroll={onScroll}>
+      <div ref={scroller} className={`gx-scroll ${intro > 0 ? "ant-swept" : ""}`} onScroll={onScroll}>
         <header className="gx-header">
           <div className="gx-container flex items-center justify-between gap-5 py-3">
             <button type="button" onClick={() => openView("home")} aria-label={t("brand")}><AntLogo size="md" /></button>
@@ -1460,7 +1524,6 @@ export default function Component({ initialView = "home" }: { initialView?: View
             </div>
           </nav>
           <div ref={progress} className="gx-reading-progress" aria-hidden="true" />
-          {intro > 0 && <div key={intro} className="ant-route-beam" aria-hidden="true" />}
         </header>
 
         {view === "home" && (
@@ -1473,7 +1536,8 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     <span>{t("hero.kicker")}</span>
                   </span>
                   <h1 className="ant-hero-headline">
-                    {t("hero.line1")} <em>{t("hero.line2")}</em>
+                    <span className="ant-mask"><span>{t("hero.line1")}</span></span>
+                    <em className="ant-mask"><span className="ant-ink">{t("hero.line2")}<svg viewBox="0 0 400 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 C 80 4, 160 18, 240 9 S 360 6, 396 11" /></svg></span></em>
                   </h1>
                 </div>
                 <div className="ant-masthead-side">
@@ -1495,7 +1559,8 @@ export default function Component({ initialView = "home" }: { initialView?: View
               </div>
 
               <div className={`${rise} ant-workbench ant-stagger-2`}>
-                <div className="ant-stage-pane">
+                <div className="ant-stage-pane" onPointerMove={(event) => { const r = event.currentTarget.getBoundingClientRect(); event.currentTarget.style.setProperty("--sx", `${event.clientX - r.left}px`); event.currentTarget.style.setProperty("--sy", `${event.clientY - r.top}px`); }}>
+                  <span className="ant-spot" aria-hidden="true" />
                   <div className="ant-stage-head">
                     <p className="gx-kicker">{t("card.kicker")}</p>
                     <span className="gx-mono gx-muted text-xs">SPECIMEN #{String(cardId).padStart(6, "0")}</span>
