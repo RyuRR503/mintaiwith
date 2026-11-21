@@ -70,9 +70,10 @@ const ALLOC = [
 const TEAM_TOKENS = 777_777_777 - ALLOC.reduce((sum, item) => sum + item.amount, 0);
 const SLICES = [...ALLOC, { key: "team", amount: TEAM_TOKENS }] as const;
 const SLICE_ALPHA = [1, 0.75, 0.55, 0.35, 0.2];
-const FLOW = "oklch(0.62 0.24 285)";
-const INK = "#000000";
-const PAPER = "oklch(0.985 0 0)";
+const FLOW = "#D4623F";
+const INK = "#1C1916";
+const PAPER = "#F4EFE6";
+const SAND = "#C8B9A6";
 const POSTER_EM = 1000;
 const POSTER: Record<string, { w: number; d: string }> = {
   "M": { w: 538, d: "M41 200H198L268 701H270L340 200H497V900H393V370H391L311 900H219L139 370H137V900H41Z" },
@@ -140,25 +141,38 @@ function paintPoster(ctx: CanvasRenderingContext2D, text: string, x: number, y: 
   ctx.restore();
 }
 
+function AntLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
+  const iconSize = size === "sm" ? 15 : size === "lg" ? 26 : 20;
+  const textClass = size === "sm" ? "text-sm" : size === "lg" ? "text-3xl" : "text-xl";
+  return (
+    <span className={`ant-logo ${textClass}`}>
+      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" className="ant-logo-mark" aria-hidden="true">
+        <path d="M12 2L13.15 9.85L19.5 4.5L14.15 10.85L22 12L14.15 13.15L19.5 19.5L13.15 14.15L12 22L10.85 14.15L4.5 19.5L9.85 13.15L2 12L9.85 10.85L4.5 4.5L10.85 9.85L12 2Z" fill="currentColor" />
+      </svg>
+      <span><span className="ant-logo-main">ANT</span><span className="ant-logo-accent">.AI</span></span>
+    </span>
+  );
+}
+
 const LOOK = `
 .gx-app {
-  --background: oklch(0.12 0 0);
-  --background-deep: oklch(0.09 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0.002 88);
-  --primary: oklch(0.62 0.24 285);
-  --primary-foreground: oklch(0.97 0.02 285);
-  --secondary: oklch(0.24 0.003 88);
-  --muted: oklch(0.25 0.005 250);
-  --muted-foreground: oklch(0.74 0.008 88);
-  --border: oklch(1 0 0 / 12%);
-  --gold: oklch(0.804 0.135 84);
-  --font-display: "Bebas Neue", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Barlow", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
-  --font-poster: "Bebas Neue", "Noto Sans SC", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --background: oklch(0.955 0.014 82);
+  --background-deep: oklch(0.918 0.018 78);
+  --foreground: oklch(0.19 0.01 58);
+  --card: oklch(0.985 0.008 82);
+  --primary: oklch(0.60 0.145 38);
+  --primary-foreground: oklch(0.985 0.008 82);
+  --secondary: oklch(0.905 0.016 78);
+  --muted: oklch(0.895 0.016 78);
+  --muted-foreground: oklch(0.47 0.018 65);
+  --border: oklch(0.22 0.014 60 / 14%);
+  --gold: oklch(0.66 0.12 68);
+  --font-display: "Fraunces", "Noto Serif SC", Georgia, serif;
+  --font-sans: "DM Sans", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-poster: "Fraunces", "Noto Serif SC", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --ease-cine: cubic-bezier(0.16, 1, 0.3, 1);
-  --shadow-pop: 0 30px 60px -30px oklch(0 0 0 / 0.85);
+  --shadow-pop: 0 28px 60px -28px oklch(0.2 0.02 55 / 0.24);
   position: relative; height: 100vh; overflow: hidden;
   background: var(--background); color: var(--foreground);
   font-family: var(--font-sans); letter-spacing: 0;
@@ -169,190 +183,211 @@ const LOOK = `
 .gx-pri { color: var(--primary); }
 .gx-muted { color: var(--muted-foreground); }
 .gx-mono { font-family: var(--font-mono); }
-.gx-display { font-family: var(--font-display); font-weight: 400; letter-spacing: 0; line-height: .9; }
+.gx-display { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
 .gx-poster { display: inline-block; overflow: visible; vertical-align: -0.06em; }
 .gx-fill { background: var(--primary); color: var(--primary-foreground); }
 .gx-soft { background: var(--muted); }
 .gx-line { border-color: var(--border); }
-.gx-header { position: sticky; top: 0; z-index: 30; border-bottom: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); background: color-mix(in oklab, var(--background) 82%, transparent); backdrop-filter: blur(16px); }
-.gx-band { border-block: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); }
-.gx-footer { border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); }
-.gx-container { width: min(1120px, calc(100% - 80px)); margin-inline: auto; }
-.gx-wordmark { display: inline-flex; align-items: baseline; font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; line-height: 1; color: var(--foreground); white-space: nowrap; }
-.gx-wordmark-seven { color: var(--primary); margin-left: .02em; text-shadow: 0 0 18px color-mix(in oklab, var(--primary) 60%, transparent); }
-.gx-kicker { font: 10px var(--font-mono); color: var(--primary); }
-.gx-heading { font-size: 112px; line-height: .9; letter-spacing: 0; font-weight: 400; font-family: var(--font-display); }
-.gx-heading-seven { color: var(--primary); text-shadow: 0 0 28px color-mix(in oklab, var(--primary) 55%, transparent); }
-.gx-char { display: inline-block; opacity: 0; animation: gx-char-in .9s var(--ease-cine) forwards; }
-@keyframes gx-char-in { from { opacity: 0; transform: translateY(.35em); filter: blur(10px); } to { opacity: 1; transform: none; filter: none; } }
-.gx-intro { position: relative; padding-block: 30px 0; --hp: 0; }
-.gx-ambient { position: absolute; inset: -10% -20%; z-index: 0; pointer-events: none; background: radial-gradient(42% 38% at var(--ax, 30%) var(--ay, 20%), color-mix(in oklab, var(--primary) 13%, transparent), transparent 70%); animation: gx-breathe 7s ease-in-out infinite; }
-@keyframes gx-breathe { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
-.gx-title-row { display: grid; grid-template-columns: 1.6fr 1fr; align-items: end; gap: 48px; padding-bottom: 26px; position: relative; z-index: 1; transform: translateY(calc(var(--hp) * -40px)) scale(calc(1 - var(--hp) * .06)); opacity: calc(1 - var(--hp) * .7); filter: blur(calc(var(--hp) * 4px)); transform-origin: 0 100%; }
-.gx-manifesto { position: relative; z-index: 1; }
-.gx-fair { padding: 22px 0 30px; border-top: 1px solid var(--border); }
-.gx-fair-title { font: 650 28px/1.25 var(--font-sans); letter-spacing: -0.02em; }
-.gx-fair-title span { margin-left: 14px; color: var(--primary); font-weight: 560; }
-.gx-fair-body { max-width: 48rem; margin-top: 12px; font-size: 17px; line-height: 1.75; }
-.gx-exhibit { display: grid; grid-template-columns: minmax(0, 1fr) 240px; border-block: 1px solid var(--border); position: relative; z-index: 1; transform: scale(calc(1 - var(--hp) * .04)); transform-origin: 50% 0; }
-.gx-art-stage { position: relative; min-height: 310px; overflow: hidden; background: #000; }
-.gx-exhibit-rail { display: flex; flex-direction: column; justify-content: space-between; gap: 22px; padding: 22px 0 22px 28px; border-left: 1px solid var(--border); }
-.gx-exhibit-caption { display: flex; justify-content: space-between; padding: 14px 0; font: 9px var(--font-mono); color: var(--muted-foreground); position: relative; z-index: 1; }
-.gx-parallax { transform: translateY(calc(var(--par, 0px) * -1)); }
-.gx-rise { opacity: .15; transform: translateY(18px); transition: opacity 1s var(--ease-cine), transform 1.2s var(--ease-cine); }
+.gx-header { position: sticky; top: 0; z-index: 30; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--background) 88%, transparent); backdrop-filter: blur(14px); }
+.gx-band { border-block: 1px solid var(--border); background: var(--background-deep); }
+.gx-footer { border-top: 1px solid var(--border); background: var(--background); }
+.gx-container { width: min(1160px, calc(100% - 72px)); margin-inline: auto; }
+
+/* ANT.AI Logo */
+.ant-logo { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: var(--foreground); white-space: nowrap; }
+.ant-logo-mark { color: var(--primary); flex: none; transition: transform .5s var(--ease-cine); }
+button:hover .ant-logo-mark { transform: rotate(45deg); }
+.ant-logo-main { font-weight: 600; }
+.ant-logo-accent { color: var(--primary); font-style: italic; font-weight: 500; margin-left: 1px; }
+
+.gx-kicker { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--primary); }
+
+/* Editorial Hero — Left Copy + Right Framed Art */
+.ant-hero { position: relative; padding-block: 44px 56px; --hp: 0; }
+.ant-hero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr); gap: 48px; align-items: start; position: relative; z-index: 1; }
+.ant-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font: 500 11px/1 var(--font-mono); letter-spacing: .08em; color: var(--muted-foreground); }
+.ant-hero-title { margin-top: 22px; font-family: var(--font-display); font-size: clamp(3.4rem, 6.2vw, 5.4rem); font-weight: 600; line-height: .96; letter-spacing: -0.03em; color: var(--foreground); }
+.ant-hero-title-ai { color: var(--primary); font-style: italic; font-weight: 500; }
+.ant-hero-tagline { margin-top: 20px; font-family: var(--font-display); font-size: clamp(1.35rem, 2.2vw, 1.75rem); font-weight: 500; line-height: 1.4; color: var(--foreground); max-width: 30rem; }
+.ant-hero-sub { margin-top: 10px; font-size: 14px; color: var(--muted-foreground); }
+.ant-hero-fair { margin-top: 28px; padding: 20px 22px; border: 1px solid var(--border); border-radius: 16px; background: var(--card); box-shadow: 0 10px 30px -22px oklch(0.2 0.02 55 / 0.14); }
+.ant-hero-fair-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.ant-hero-fair-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
+.ant-hero-fair-body { margin-top: 12px; font-size: 14px; line-height: 1.75; color: var(--muted-foreground); }
+.ant-hero-cmd { margin-top: 18px; }
+
+/* Right Gallery Mat Frame */
+.ant-frame { position: sticky; top: 84px; padding: 24px 24px 20px; border: 1px solid var(--border); border-radius: 24px; background: var(--background-deep); box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.5); }
+.ant-frame-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.ant-frame-controls { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.ant-frame-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+
+/* Ledger Band */
+.ant-ledger-grid { display: grid; grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr); gap: 36px; align-items: stretch; }
+.ant-ledger-lead { display: flex; flex-direction: column; justify-content: space-between; padding: 26px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); }
+.ant-ledger-pct { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 4.4rem); font-weight: 600; line-height: 1; letter-spacing: -0.03em; color: var(--primary); }
+.ant-ledger-table { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: 20px; background: var(--card); overflow: hidden; }
+.ant-ledger-cell { padding: 22px 24px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+.ant-ledger-cell:nth-child(2n) { border-right: 0; }
+.ant-ledger-cell:nth-last-child(-n+2) { border-bottom: 0; }
+.ant-ledger-num { margin-top: 8px; font-family: var(--font-display); font-size: clamp(1.7rem, 2.5vw, 2.25rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; color: var(--foreground); }
+
+/* Vertical Editorial Lifecycle */
+.ant-story-grid { display: grid; grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr); gap: 32px; margin-top: 32px; align-items: start; }
+.ant-story-list { display: flex; flex-direction: column; border-top: 1px solid var(--border); }
+.ant-story-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; padding: 18px 16px; border-bottom: 1px solid var(--border); text-align: left; color: var(--muted-foreground); transition: background .25s, color .25s, padding-left .3s var(--ease-cine); }
+.ant-story-item:hover { color: var(--foreground); background: color-mix(in oklab, var(--card) 60%, transparent); }
+.ant-story-item-active { color: var(--foreground); background: var(--card); padding-left: 22px; border-left: 3px solid var(--primary); }
+.ant-story-card { position: relative; padding: 32px; border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: 0 16px 40px -28px oklch(0.2 0.02 55 / 0.16); }
+.ant-story-card-grid { display: grid; grid-template-columns: minmax(0, 1fr) 176px; gap: 28px; align-items: center; }
+.ant-story-art { aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); background: #1C1916; }
+
+/* Paper Desk Calculator */
+.ant-desk-shell { margin-top: 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.ant-desk-card { padding: 28px; border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: 0 12px 32px -24px oklch(0.2 0.02 55 / 0.14); }
+
+.gx-char { display: inline-block; opacity: 0; animation: gx-char-in .65s var(--ease-cine) forwards; }
+@keyframes gx-char-in { from { opacity: 0; transform: translateY(.22em); } to { opacity: 1; transform: none; } }
+.gx-parallax { transform: translateY(calc(var(--par, 0px) * -0.45)); }
+.gx-rise { opacity: .2; transform: translateY(14px); transition: opacity .75s var(--ease-cine), transform .85s var(--ease-cine); }
 .gx-rise.gx-in { opacity: 1; transform: none; }
-.gx-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.gx-metrics > div { padding: 24px; border-left: 1px solid var(--border); }
-.gx-metrics > div:first-child { padding-left: 0; border-left: 0; }
-.gx-chapter { padding-block: 60px; }
-.gx-chapter-heading { position: relative; display: grid; grid-template-columns: 160px minmax(0, 1fr) auto; align-items: center; gap: 24px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
-.gx-chapter-heading h2 { font: 700 32px var(--font-sans); line-height: 1.3; }
-.gx-chapter-note { font-size: 12px; color: var(--muted-foreground); }
-.gx-chapter-heading::after { content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; background: linear-gradient(90deg, transparent, var(--primary), transparent); transform: scaleX(0); transform-origin: left; }
-.gx-chapter-heading.gx-in::after { animation: gx-underline 1.6s var(--ease-cine) .25s forwards; }
-@keyframes gx-underline { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: .25; } }
-.gx-phase-nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-bottom: 1px solid var(--border); }
-.gx-phase-button { position: relative; width: 100%; height: 58px; display: flex; align-items: center; justify-content: flex-start; gap: 14px; padding: 0 12px; color: var(--muted-foreground); }
-.gx-phase-button::after { content: ""; position: absolute; bottom: -1px; left: 12px; right: 12px; height: 2px; background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease-cine); }
-.gx-phase-active { color: var(--primary); }
-.gx-phase-active::after { transform: scaleX(1); }
-.gx-phase-detail { display: grid; grid-template-columns: 160px minmax(0, 1fr) 190px; gap: 32px; align-items: center; min-height: 260px; padding-top: 28px; }
-.gx-phase-number { font: 150px var(--font-display); color: color-mix(in oklab, var(--primary) 28%, var(--background)); line-height: 1; }
-.gx-phase-art { height: 190px; overflow: hidden; }
-.gx-workspace { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding-bottom: 64px; }
-.gx-mint-tool { min-width: 0; padding: 32px 40px 32px 0; }
-.gx-vesting-tool { min-width: 0; padding: 32px 0 32px 40px; border-left: 1px solid var(--border); }
-.gx-mint-mark { border: 1px solid var(--border); transition: background .4s, border-color .4s, transform .5s var(--ease-cine); }
-.gx-mint-mark-active { background: color-mix(in oklab, var(--primary) 18%, var(--background)); border-color: var(--primary); transform: translateY(-3px); }
-.gx-swap { animation: gx-swap .55s cubic-bezier(.2,.7,.2,1); }
-@keyframes gx-swap { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-.gx-live-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 60%, transparent); animation: gx-live-pulse 1.8s ease-out infinite; }
-@keyframes gx-live-pulse { to { box-shadow: 0 0 0 10px transparent; } }
-.gx-live-bar { transform-origin: left; animation: gx-live-grow 1.4s cubic-bezier(.2,.8,.2,1) both; }
+.gx-chapter { padding-block: 68px; }
+.gx-chapter-heading { position: relative; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.gx-chapter-heading h2 { font: 600 32px/1.2 var(--font-display); letter-spacing: -0.02em; }
+.gx-chapter-note { font-size: 13px; color: var(--muted-foreground); }
+.gx-exhibit-caption { display: flex; justify-content: space-between; padding: 14px 0; font: 10px var(--font-mono); color: var(--muted-foreground); border-bottom: 1px solid var(--border); }
+.gx-mint-mark { border-radius: 6px; border: 1px solid var(--border); background: var(--background); transition: background .3s, border-color .3s, transform .35s var(--ease-cine); }
+.gx-mint-mark-active { background: var(--primary); border-color: var(--primary); transform: translateY(-3px); }
+.gx-swap { animation: gx-swap .45s var(--ease-cine); }
+@keyframes gx-swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.gx-live-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 50%, transparent); animation: gx-live-pulse 2.2s ease-out infinite; }
+@keyframes gx-live-pulse { to { box-shadow: 0 0 0 9px transparent; } }
+.gx-live-bar { transform-origin: left; animation: gx-live-grow 1.2s var(--ease-cine) both; }
 @keyframes gx-live-grow { from { transform: scaleX(0); } }
-.gx-app .ac-tab { position: relative; height: 40px; padding: 0 2px; border: 0; background: transparent; color: var(--muted-foreground); white-space: nowrap; cursor: pointer; }
+
+/* Navigation — same 8 tabs, warm editorial styling */
+.gx-app .ac-tab { position: relative; height: 40px; padding: 0 2px; border: 0; background: transparent; color: var(--muted-foreground); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: color .2s; }
 .gx-app .ac-tab:hover, .gx-app .ac-tab-active { color: var(--foreground); }
-.ac-tab-active::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 18px; height: 2px; border-radius: 2px; background: var(--primary); box-shadow: 0 0 10px var(--primary); transform: translateX(-50%); }
-.gx-x { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--primary) 34%, transparent); background: linear-gradient(180deg, color-mix(in oklab, white 8%, transparent), transparent 46%), color-mix(in oklab, var(--card) 62%, black); color: var(--foreground); }
+.ac-tab-active::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 16px; height: 2px; border-radius: 2px; background: var(--primary); transform: translateX(-50%); }
+.gx-x { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--foreground); transition: border-color .2s, color .2s, transform .2s; }
 .gx-x svg { width: 15px; height: 15px; fill: currentColor; }
-.gx-x:hover { color: white; border-color: var(--primary); }
-.gx-lang { display: inline-flex; align-items: center; height: 40px; padding: 3px; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--primary) 34%, transparent); background: linear-gradient(180deg, color-mix(in oklab, white 8%, transparent), transparent 46%), color-mix(in oklab, var(--card) 62%, black); box-shadow: inset 0 1px 0 color-mix(in oklab, white 14%, transparent), 0 10px 24px color-mix(in oklab, black 40%, transparent); }
-.gx-lang button { height: 32px; min-width: 52px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: color-mix(in oklab, var(--foreground) 88%, transparent); font: 600 14px/1 var(--font-sans); letter-spacing: 0; cursor: pointer; }
-.gx-lang button[aria-pressed="true"] { color: white; background: linear-gradient(180deg, color-mix(in oklab, white 22%, var(--primary)), var(--primary)); box-shadow: 0 0 0 1px color-mix(in oklab, white 28%, var(--primary)), 0 0 16px color-mix(in oklab, var(--primary) 58%, transparent); }
-.gx-menu { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent); border-radius: 999px; background: transparent; color: var(--foreground); font: 500 11px var(--font-mono); letter-spacing: .16em; cursor: pointer; }
-.gx-menu[aria-expanded="true"] { color: var(--primary); border-color: color-mix(in oklab, var(--primary) 55%, transparent); }
-.gx-fold { border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); }
-.gx-fold button { display: flex; align-items: center; gap: 16px; width: 100%; height: 48px; border: 0; border-bottom: 1px solid color-mix(in oklab, var(--foreground) 8%, transparent); background: transparent; color: var(--muted-foreground); text-align: left; cursor: pointer; }
+.gx-x:hover { color: var(--primary); border-color: var(--primary); transform: translateY(-1px); }
+.gx-lang { display: inline-flex; align-items: center; height: 38px; padding: 3px; border-radius: 999px; border: 1px solid var(--border); background: var(--background-deep); }
+.gx-lang button { height: 30px; min-width: 48px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--muted-foreground); font: 600 13px/1 var(--font-sans); cursor: pointer; transition: background .2s, color .2s; }
+.gx-lang button[aria-pressed="true"] { color: var(--primary-foreground); background: var(--foreground); }
+.gx-menu { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--foreground); font: 500 11px var(--font-mono); letter-spacing: .12em; cursor: pointer; }
+.gx-menu[aria-expanded="true"] { color: var(--primary); border-color: var(--primary); }
+.gx-fold { border-top: 1px solid var(--border); background: var(--card); }
+.gx-fold button { display: flex; align-items: center; gap: 16px; width: 100%; height: 48px; border: 0; border-bottom: 1px solid var(--border); background: transparent; color: var(--muted-foreground); text-align: left; cursor: pointer; }
 .gx-fold button[aria-pressed="true"] { color: var(--foreground); }
 .gx-fold-no { width: 1.6em; font: 11px var(--font-mono); color: var(--primary); }
-.gx-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 6px; font-weight: 600; }
-.gx-btn-lg { height: 44px; width: 100%; padding: 0 16px; justify-content: center; }
+
+/* Buttons & Inputs */
+.gx-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px; font-weight: 600; transition: background .2s, border-color .2s, transform .2s; }
+.gx-btn:active { transform: scale(.98); }
+.gx-btn-lg { height: 42px; width: 100%; padding: 0 18px; justify-content: center; }
 .gx-btn-split { justify-content: space-between; }
-.gx-app input[type="range"] { width: 100%; height: 6px; border-radius: 999px; appearance: none; background: linear-gradient(90deg, var(--primary) var(--fill, 0%), color-mix(in oklab, var(--primary) 20%, transparent) var(--fill, 0%)); accent-color: var(--primary); cursor: pointer; }
-.gx-app input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); background: var(--background); }
-.gx-app input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); border-radius: 999px; background: var(--background); }
+.gx-app input[type="range"] { width: 100%; height: 6px; border-radius: 999px; appearance: none; background: linear-gradient(90deg, var(--primary) var(--fill, 0%), color-mix(in oklab, var(--foreground) 14%, transparent) var(--fill, 0%)); accent-color: var(--primary); cursor: pointer; }
+.gx-app input[type="range"]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; border-radius: 999px; border: 2px solid var(--primary); background: var(--card); box-shadow: 0 2px 6px oklch(0.2 0.02 55 / 0.2); }
+.gx-app input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 2px solid var(--primary); border-radius: 999px; background: var(--card); }
 .gx-btn-solid { background: var(--primary); color: var(--primary-foreground); }
+.gx-btn-solid:hover { background: color-mix(in oklab, var(--primary) 88%, var(--foreground)); }
 .gx-btn-outline { border: 1px solid var(--border); }
-.gx-app .gx-btn-outline { border: 1px solid var(--border); background: transparent; color: var(--foreground); }
+.gx-app .gx-btn-outline { border: 1px solid var(--border); background: var(--card); color: var(--foreground); }
+.gx-app .gx-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 .gx-app button.gx-pri { color: var(--primary); }
-.gx-app .gx-btn-on { background: var(--primary); color: white; }
-.gx-seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 10px; }
-.gx-app .gx-seg button { height: 40px; min-width: 96px; padding: 0 18px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: color-mix(in oklab, var(--foreground) 58%, transparent); font: 600 15px/1 var(--font-sans); }
-.gx-app .gx-seg button[aria-pressed="true"] { border-color: transparent; background: var(--primary); color: white; box-shadow: 0 0 0 1px color-mix(in oklab, white 30%, var(--primary)), 0 0 20px color-mix(in oklab, var(--primary) 62%, transparent); }
+.gx-app .gx-btn-on { background: var(--primary); color: var(--primary-foreground); }
+.gx-seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--background); }
+.gx-app .gx-seg button { height: 36px; min-width: 88px; padding: 0 16px; border: 1px solid transparent; border-radius: 999px; background: transparent; color: var(--muted-foreground); font: 600 14px/1 var(--font-sans); }
+.gx-app .gx-seg button[aria-pressed="true"] { background: var(--foreground); color: var(--card); }
 .gx-count { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; }
-.gx-count button { height: 32px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--muted-foreground); font: 600 12px var(--font-mono); cursor: pointer; }
-.gx-count button[aria-pressed="true"] { color: white; border-color: var(--primary); background: color-mix(in oklab, var(--primary) 28%, transparent); }
-.gx-chip { border: 1px solid var(--border); padding: 4px 8px; font: 11px var(--font-mono); color: var(--muted-foreground); }
+.gx-count button { height: 32px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--muted-foreground); font: 600 12px var(--font-mono); cursor: pointer; }
+.gx-count button[aria-pressed="true"] { color: var(--primary-foreground); border-color: var(--primary); background: var(--primary); }
+.gx-chip { border: 1px solid var(--border); border-radius: 999px; background: var(--card); padding: 4px 10px; font: 500 11px var(--font-mono); color: var(--muted-foreground); }
 .gx-track { height: 8px; overflow: hidden; border-radius: 999px; background: var(--muted); }
-.gx-track > div { height: 100%; background: var(--primary); }
-.hc-stage { display: grid; place-items: center; padding: 3rem 1rem; background: #000; }
-.hc-scene { position: relative; perspective: 1100px; width: min(300px, 72vw); }
-.hc-shadow { position: absolute; inset: 12% 8% -6%; border-radius: 24px; background: transparent; }
-.hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 20px; padding: 6px; background: linear-gradient(140deg, color-mix(in oklab, var(--primary) 90%, var(--foreground)), color-mix(in oklab, var(--primary) 35%, var(--background)) 40%, var(--primary) 70%, color-mix(in oklab, var(--primary) 30%, var(--background))); transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .6s var(--ease-cine); box-shadow: var(--shadow-pop); animation: hc-float 6s ease-in-out infinite; }
+.gx-track > div { height: 100%; border-radius: 999px; background: var(--primary); }
+
+/* Framed Collectible Card — Warm Parchment Mat + Charcoal Print */
+.hc-stage { display: grid; place-items: center; padding: 1.25rem .5rem; background: transparent; }
+.hc-scene { position: relative; perspective: 1100px; width: min(306px, 78vw); }
+.hc-shadow { position: absolute; inset: 14% 10% -6%; border-radius: 26px; background: oklch(0.2 0.03 50 / 0.22); filter: blur(28px); opacity: .7; }
+.hc-card { --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 30%; position: relative; aspect-ratio: 5 / 7; border-radius: 22px; padding: 8px; background: var(--card); border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent); transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform .55s var(--ease-cine); box-shadow: 0 22px 46px -22px oklch(0.2 0.03 50 / 0.28); animation: hc-float 7s ease-in-out infinite; }
 .hc-card[data-active="true"] { transition: transform .08s linear; animation-play-state: paused; }
-.hc-inner { position: relative; height: 100%; border-radius: 15px; background: #000; display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); }
-.hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; }
-.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em; color: var(--primary); border: 1px solid color-mix(in oklab, var(--primary) 50%, transparent); padding: .15rem .45rem; border-radius: 999px; }
-.hc-art { position: relative; flex: 1; margin: 0 .6rem; border-radius: 10px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent); }
-.hc-art canvas, .gx-phase-art canvas, .gx-page-art canvas { display: block; width: 100%; height: 100%; }
-.hc-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .2em; color: var(--muted-foreground); }
-.hc-serial { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; }
-.hc-edition { font-family: var(--font-display); font-size: 1.2rem; line-height: 1; color: var(--primary); text-align: right; }
-.hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; }
-.hc-foil { opacity: .1; background: linear-gradient(115deg, transparent 25%, color-mix(in oklab, var(--primary) 35%, transparent) 45%, color-mix(in oklab, var(--foreground) 20%, transparent) 50%, transparent 65%); background-size: 300% 300%; background-position: var(--mx) var(--my); animation: hc-foil 9s linear infinite; }
-.hc-card[data-active="true"] .hc-foil { opacity: .18; animation: none; }
-.hc-glare { background: radial-gradient(circle at var(--mx) var(--my), color-mix(in oklab, var(--foreground) 35%, transparent), transparent 45%); mix-blend-mode: overlay; opacity: 0; }
-.hc-card[data-active="true"] .hc-glare { opacity: .4; }
-@keyframes hc-float { 0%,100% { transform: rotateX(4deg) rotateY(-8deg) translateY(0); } 50% { transform: rotateX(-3deg) rotateY(8deg) translateY(-10px); } }
-@keyframes hc-foil { to { background-position: 300% 0; } }
-@keyframes hc-pulse { 50% { opacity: .7; transform: scale(1.05); } }
-.gx-page-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; align-items: end; padding-block: 56px 28px; }
-.gx-page-title { font-family: var(--font-display); font-size: 76px; line-height: 1; font-weight: 700; }
-.gx-page-art { position: relative; aspect-ratio: 4 / 3; border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); border-radius: 18px; overflow: hidden; background: #000; }
-.gx-page-index { position: absolute; right: 14px; bottom: 6px; font: 400 64px var(--font-mono); color: color-mix(in oklab, var(--primary) 70%, transparent); line-height: 1; }
+.hc-inner { position: relative; height: 100%; border-radius: 15px; background: var(--card); display: flex; flex-direction: column; overflow: hidden; border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent); }
+.hc-head, .hc-foot { display: flex; justify-content: space-between; align-items: center; padding: .7rem .85rem; }
+.hc-tier { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .16em; color: var(--primary); border: 1px solid color-mix(in oklab, var(--primary) 45%, transparent); background: color-mix(in oklab, var(--primary) 8%, var(--card)); padding: .18rem .5rem; border-radius: 999px; }
+.hc-art { position: relative; flex: 1; margin: 0 .65rem; border-radius: 11px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent); background: #1C1916; }
+.hc-art canvas, .ant-story-art canvas, .gx-page-art canvas { display: block; width: 100%; height: 100%; }
+.hc-label { font-family: var(--font-mono); font-size: .56rem; letter-spacing: .16em; color: var(--muted-foreground); }
+.hc-serial { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; line-height: 1.05; color: var(--foreground); }
+.hc-edition { font-family: var(--font-mono); font-size: .9rem; font-weight: 600; line-height: 1.2; color: var(--primary); text-align: right; }
+.hc-foil, .hc-glare { position: absolute; inset: 0; border-radius: 22px; pointer-events: none; }
+.hc-foil { opacity: .14; background: linear-gradient(120deg, transparent 25%, color-mix(in oklab, var(--primary) 26%, transparent) 46%, oklch(1 0 0 / 0.35) 52%, transparent 68%); background-size: 280% 280%; background-position: var(--mx) var(--my); animation: hc-foil 10s linear infinite; }
+.hc-card[data-active="true"] .hc-foil { opacity: .24; animation: none; }
+.hc-glare { background: radial-gradient(circle at var(--mx) var(--my), oklch(1 0 0 / 0.45), transparent 46%); opacity: 0; transition: opacity .35s; }
+.hc-card[data-active="true"] .hc-glare { opacity: .35; }
+@keyframes hc-float { 0%,100% { transform: rotateX(2.5deg) rotateY(-4deg) translateY(0); } 50% { transform: rotateX(-2deg) rotateY(4deg) translateY(-6px); } }
+@keyframes hc-foil { to { background-position: 280% 0; } }
+
+/* Inner Pages — Warm Paper Surfaces */
+.gx-page-hero { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 44px; align-items: end; padding-block: 48px 28px; }
+.gx-page-title { font-family: var(--font-display); font-size: clamp(2.8rem, 5.2vw, 4.4rem); line-height: 1.02; font-weight: 600; letter-spacing: -0.02em; }
+.gx-page-art { position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; background: #1C1916; }
+.gx-page-index { position: absolute; right: 14px; bottom: 8px; font: 500 52px var(--font-mono); color: color-mix(in oklab, var(--primary) 85%, #F4EFE6); line-height: 1; }
 .gx-app ::selection { background: var(--primary); color: var(--primary-foreground); }
-.gx-panel, .gx-tiles > div, .gx-rule, .gx-term, .gx-alloc { position: relative; overflow: hidden; border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); border-radius: 18px; background: color-mix(in oklab, var(--card) 86%, black); transition: border-color .35s, box-shadow .35s, transform .4s var(--ease-cine); }
-.gx-panel:hover, .gx-rule:hover, .gx-term:hover, .gx-tiles > div:hover, .gx-alloc:hover { border-color: var(--primary); box-shadow: 0 0 0 1px color-mix(in oklab, var(--primary) 55%, transparent), 0 18px 42px -28px color-mix(in oklab, var(--primary) 80%, transparent); }
-.gx-tiles > div:hover, .gx-term:hover, .gx-panel:hover { transform: translateY(-4px); }
-.gx-tiles > div::after, .gx-panel::after { content: ""; position: absolute; z-index: 0; inset: auto -30% -60% auto; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--primary) 28%, transparent), transparent 70%); pointer-events: none; }
+.gx-panel, .gx-tiles > div, .gx-rule, .gx-term, .gx-alloc { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 18px; background: var(--card); transition: border-color .3s, box-shadow .3s, transform .35s var(--ease-cine); }
+.gx-panel:hover, .gx-rule:hover, .gx-term:hover, .gx-tiles > div:hover, .gx-alloc:hover { border-color: color-mix(in oklab, var(--primary) 60%, var(--border)); box-shadow: 0 14px 32px -22px oklch(0.2 0.03 50 / 0.18); }
+.gx-tiles > div:hover, .gx-term:hover, .gx-panel:hover { transform: translateY(-2px); }
 .gx-tiles > div > *, .gx-panel > * { position: relative; z-index: 1; }
-.gx-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.gx-tiles > div { padding: 22px; }
+.gx-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.gx-tiles > div { padding: 20px 22px; }
 .gx-rule { position: relative; overflow: hidden; padding: 28px; }
-.gx-rule-no { position: absolute; top: -18px; right: 14px; font-size: 7rem; font-weight: 800; line-height: 1; color: color-mix(in oklab, var(--primary) 12%, transparent); }
-.gx-term { position: relative; display: flex; flex-direction: column; padding: 46px 22px 22px; }
-.gx-term::before { content: ""; position: absolute; top: 18px; left: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 14px 0 0 var(--border), 28px 0 0 var(--border); }
-.gx-term-fn { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: var(--background); font-size: 11px; color: var(--primary); word-break: break-all; }
+.gx-rule-no { position: absolute; top: -12px; right: 16px; font-family: var(--font-display); font-size: 6rem; font-weight: 600; line-height: 1; color: color-mix(in oklab, var(--primary) 12%, transparent); pointer-events: none; }
+.gx-term { position: relative; display: flex; flex-direction: column; padding: 40px 22px 22px; }
+.gx-term::before { content: ""; position: absolute; top: 18px; left: 22px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 14px 0 0 color-mix(in oklab, var(--foreground) 16%, transparent), 28px 0 0 color-mix(in oklab, var(--foreground) 16%, transparent); }
+.gx-term-fn { margin-top: 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--background); font-size: 11px; color: var(--primary); word-break: break-all; }
 .gx-cmd-group { margin-bottom: 48px; }
-.gx-cmd-label { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-size: 1.4rem; font-weight: 700; }
-.gx-cmd-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--primary), transparent); }
-.gx-field { height: 40px; width: 100%; max-width: 32rem; border: 1px solid var(--border); border-radius: 8px; background: var(--background); padding: 0 12px; color: var(--foreground); font: 12px var(--font-mono); }
-.gx-alert { color: oklch(0.72 0.17 25); }
+.gx-cmd-label { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; }
+.gx-cmd-label::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, color-mix(in oklab, var(--primary) 55%, transparent), transparent); }
+.gx-field { height: 40px; width: 100%; max-width: 32rem; border: 1px solid var(--border); border-radius: 10px; background: var(--background); padding: 0 12px; color: var(--foreground); font: 12px var(--font-mono); }
+.gx-alert { color: oklch(0.54 0.18 25); }
 .gx-alloc { display: flex; width: 100%; align-items: center; gap: 14px; padding: 14px 16px; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: border-color .3s, transform .3s; }
 .gx-alloc-active, .gx-alloc:hover { border-color: var(--primary); transform: translateX(6px); }
 .gx-dot { width: 12px; height: 12px; flex: none; border-radius: 999px; background: var(--primary); }
-.gx-chip-pri { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); border-radius: 999px; }
+.gx-chip-pri { border-color: color-mix(in oklab, var(--primary) 40%, transparent); background: color-mix(in oklab, var(--primary) 10%, var(--card)); color: var(--primary); border-radius: 999px; }
 .gx-token-layout { display: grid; align-items: center; gap: 40px; }
 .gx-donut-wrap { position: relative; width: 100%; max-width: 420px; margin-inline: auto; }
-.gx-donut { width: 100%; display: block; transform: rotate(-90deg); filter: drop-shadow(0 0 30px color-mix(in oklab, var(--primary) 35%, transparent)); }
+.gx-donut { width: 100%; display: block; transform: rotate(-90deg); }
 .gx-donut-lock { position: absolute; z-index: 2; color: var(--primary); font-size: 12px; font-weight: 700; line-height: 1; pointer-events: none; transform: translate(-50%, -50%); }
 .gx-donut-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
-.gx-callout { border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; background: color-mix(in oklab, var(--primary) 16%, transparent); padding: 12px 16px; color: var(--foreground); font-size: .875rem; font-weight: 500; line-height: 1.75rem; }
-.gx-vest { flex: 1; min-width: 0; border-radius: 2px 2px 0 0; transition: height .5s, background-color .5s; }
+.gx-callout { border-left: 3px solid var(--primary); border-radius: 0 12px 12px 0; background: color-mix(in oklab, var(--primary) 10%, var(--card)); padding: 12px 16px; color: var(--foreground); font-size: .875rem; font-weight: 500; line-height: 1.75rem; }
+.gx-vest { flex: 1; min-width: 0; border-radius: 3px 3px 0 0; transition: height .45s, background-color .35s; }
 .gx-vest-on { background: var(--primary); }
 .gx-vest-off { background: var(--muted); }
 @media (min-width: 760px) { .gx-token-layout { grid-template-columns: minmax(220px, 42%) minmax(0, 1fr); } }
-.gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 1px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
-.gx-opening { position: absolute; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; background: var(--background); animation: gx-open-fade .9s var(--ease-cine) 1.55s forwards; }
-.gx-opening-bar { position: absolute; left: 0; right: 0; height: 50%; background: var(--background); }
-.gx-opening-bar-top { top: 0; animation: gx-open-up 1.1s var(--ease-cine) 1.35s forwards; }
-.gx-opening-bar-bottom { bottom: 0; animation: gx-open-down 1.1s var(--ease-cine) 1.35s forwards; }
-.gx-opening-line { position: absolute; top: 50%; left: 15%; width: 70%; height: 1px; background: linear-gradient(90deg, transparent, var(--primary), var(--foreground), var(--primary), transparent); box-shadow: 0 0 24px var(--primary), 0 0 80px var(--primary); transform: scaleX(0); animation: gx-open-line 1.2s var(--ease-cine) .15s forwards, gx-open-fade .5s ease 1.3s forwards; }
-.gx-opening-mark { position: relative; font: 700 clamp(28px, 4vw, 52px) var(--font-display); letter-spacing: .5em; padding-left: .5em; opacity: 0; filter: blur(12px); animation: gx-open-mark 1s var(--ease-cine) .45s forwards, gx-open-fade .45s ease 1.25s forwards; }
-@keyframes gx-open-line { to { transform: scaleX(1); } }
-@keyframes gx-open-mark { to { opacity: 1; filter: blur(0); letter-spacing: .28em; } }
-@keyframes gx-open-up { to { transform: translateY(-100%); } }
-@keyframes gx-open-down { to { transform: translateY(100%); } }
+.gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
+
+/* Crisp Warm Paper Reveal (no dark curtain or laser streak) */
+.ant-opening { position: absolute; inset: 0; z-index: 60; pointer-events: none; display: grid; place-items: center; background: var(--background); animation: gx-open-fade .55s var(--ease-cine) .6s forwards; }
+.ant-opening-inner { display: flex; flex-direction: column; align-items: center; gap: 10px; animation: ant-open-rise .55s var(--ease-cine) both; }
+@keyframes ant-open-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes gx-open-fade { to { opacity: 0; visibility: hidden; } }
-.gx-grain { position: absolute; inset: 0; z-index: 55; width: 100%; height: 100%; pointer-events: none; opacity: .045; mix-blend-mode: overlay; }
-.gx-vignette { position: absolute; inset: 0; z-index: 54; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 55%, color-mix(in oklab, var(--background) 70%, transparent) 100%); }
-.gx-streak { position: absolute; left: -20%; right: -20%; top: 42%; height: 2px; z-index: 8; pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent) 40%, var(--foreground) 50%, color-mix(in oklab, var(--primary) 70%, transparent) 60%, transparent); filter: blur(1px); box-shadow: 0 0 30px var(--primary), 0 0 80px var(--primary); opacity: 0; transform: translateX(-60%) scaleY(.6); animation: gx-streak 9s var(--ease-cine) 2.4s infinite; }
-@keyframes gx-streak { 0% { opacity: 0; transform: translateX(-60%) scaleY(.6); } 8% { opacity: .8; } 22% { opacity: 0; transform: translateX(60%) scaleY(1.4); } 100% { opacity: 0; transform: translateX(60%); } }
+.gx-grain { position: absolute; inset: 0; z-index: 55; width: 100%; height: 100%; pointer-events: none; opacity: .028; mix-blend-mode: multiply; }
+
 .gx-book-row { display: grid; grid-template-columns: 1.4fr 64px 80px 56px; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); padding: 12px 0; font-family: var(--font-mono); font-size: 13px; }
 .gx-book-row span:not(:first-child) { text-align: right; }
 .gx-market { display: grid; gap: 32px; }
-.gx-segment { display: inline-flex; align-items: center; height: 40px; padding: 3px; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--primary) 34%, transparent); background: linear-gradient(180deg, color-mix(in oklab, white 8%, transparent), transparent 46%), color-mix(in oklab, var(--card) 62%, black); box-shadow: inset 0 1px 0 color-mix(in oklab, white 14%, transparent); }
-.gx-segment button { height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: color-mix(in oklab, var(--foreground) 88%, transparent); font: 600 14px/1 var(--font-sans); letter-spacing: 0; cursor: pointer; }
-.gx-segment button[aria-pressed="true"] { color: white; background: linear-gradient(180deg, color-mix(in oklab, white 22%, var(--primary)), var(--primary)); box-shadow: 0 0 0 1px color-mix(in oklab, white 28%, var(--primary)), 0 0 16px color-mix(in oklab, var(--primary) 58%, transparent); }
+.gx-segment { display: inline-flex; align-items: center; height: 40px; padding: 3px; border-radius: 999px; border: 1px solid var(--border); background: var(--background-deep); }
+.gx-segment button { height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--muted-foreground); font: 600 14px/1 var(--font-sans); cursor: pointer; }
+.gx-segment button[aria-pressed="true"] { color: var(--primary-foreground); background: var(--foreground); }
 .gx-bento { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
 .gx-tile-no { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; color: var(--primary); }
-.gx-bento .gx-tile-hero { background: linear-gradient(165deg, color-mix(in oklab, var(--primary) 46%, var(--card)) 0%, color-mix(in oklab, var(--primary) 18%, black) 46%, color-mix(in oklab, var(--card) 40%, black) 100%); border-color: color-mix(in oklab, var(--primary) 34%, transparent); }
-.gx-tile-value { margin-top: 18px; font-family: var(--font-mono); font-size: clamp(1.85rem, 2.6vw, 2.15rem); font-weight: 500; letter-spacing: -.04em; line-height: 1; color: var(--foreground); }
+.gx-bento .gx-tile-hero { background: linear-gradient(160deg, color-mix(in oklab, var(--primary) 14%, var(--card)) 0%, var(--card) 75%); border-color: color-mix(in oklab, var(--primary) 38%, var(--border)); }
+.gx-tile-value { margin-top: 16px; font-family: var(--font-display); font-size: clamp(1.75rem, 2.4vw, 2.1rem); font-weight: 600; letter-spacing: -.02em; line-height: 1; color: var(--foreground); }
 .gx-tile-value span { margin-left: 6px; font-size: 12px; font-weight: 400; letter-spacing: .04em; color: var(--muted-foreground); }
-.gx-flow-line { position: relative; display: flex; justify-content: space-between; gap: 8px; margin-top: 56px; padding-top: 18px; border-top: 1px dashed color-mix(in oklab, var(--primary) 40%, var(--border)); }
-.gx-flow-line::before { content: ""; position: absolute; top: -2px; left: 0; width: 12%; height: 3px; border-radius: 3px; background: var(--primary); box-shadow: 0 0 16px var(--primary); animation: gx-flow 4s linear infinite; }
-.gx-flow-line span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--muted-foreground); animation: gx-blink 1.6s ease-in-out infinite alternate; }
-@keyframes gx-blink { to { color: var(--primary); } }
+.gx-flow-line { position: relative; display: flex; justify-content: space-between; gap: 8px; margin-top: 48px; padding-top: 18px; border-top: 1px dashed color-mix(in oklab, var(--primary) 45%, var(--border)); }
+.gx-flow-line::before { content: ""; position: absolute; top: -2px; left: 0; width: 12%; height: 3px; border-radius: 3px; background: var(--primary); animation: gx-flow 4.5s linear infinite; }
+.gx-flow-line span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; color: var(--muted-foreground); }
 @keyframes gx-flow { from { left: 0; } to { left: 88%; } }
 .gx-toc { display: flex; flex-direction: column; gap: 2px; border-left: 1px solid var(--border); }
 .gx-toc button { display: flex; gap: 12px; width: 100%; padding: 7px 14px; margin-left: -1px; border: 0; border-left: 2px solid transparent; background: transparent; color: var(--muted-foreground); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
@@ -360,8 +395,8 @@ const LOOK = `
 .gx-toc span { font-family: var(--font-mono); color: var(--primary); }
 .gx-rules { display: grid; gap: 40px; }
 .gx-rungs { display: grid; gap: 16px; }
-.gx-rung { width: 100%; padding: 22px; border: 1px solid var(--border); background: color-mix(in oklab, var(--card) 72%, transparent); color: inherit; text-align: left; cursor: pointer; }
-.gx-rung[aria-pressed="true"] { border-color: var(--primary); }
+.gx-rung { width: 100%; padding: 22px; border: 1px solid var(--border); border-radius: 18px; background: var(--card); color: inherit; text-align: left; cursor: pointer; transition: border-color .2s; }
+.gx-rung[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
 @media (min-width: 900px) {
   .gx-rungs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .gx-bento { grid-template-columns: 1.6fr 1fr 1fr; }
@@ -375,25 +410,24 @@ const LOOK = `
   .gx-menu, .gx-fold { display: none; }
 }
 @media (max-width: 1023px) {
-  .gx-container { width: calc(100% - 48px); }
-  .gx-heading { font-size: 86px; }
-  .gx-title-row, .gx-exhibit, .gx-page-hero, .gx-workspace, .gx-phase-detail { grid-template-columns: minmax(0, 1fr); }
-  .gx-exhibit-rail, .gx-vesting-tool { border-left: 0; padding-left: 0; }
-  .gx-vesting-tool { border-top: 1px solid var(--border); padding-top: 28px; }
-  .gx-tiles, .gx-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gx-phase-nav { display: flex; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
-  .gx-phase-nav::-webkit-scrollbar { display: none; }
-  .gx-phase-nav > li { flex: none; }
-  .gx-phase-button { width: auto; }
-  .gx-phase-art, .gx-chapter-note { display: none; }
-  .gx-fair-title { font-size: 24px; }
+  .gx-container { width: calc(100% - 40px); }
+  .ant-hero-grid, .ant-ledger-grid, .ant-story-grid, .ant-desk-shell, .gx-page-hero { grid-template-columns: minmax(0, 1fr); }
+  .ant-frame { position: static; }
+  .ant-story-card-grid { grid-template-columns: minmax(0, 1fr); }
+  .ant-story-art { max-width: 220px; }
+  .gx-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .gx-container { width: calc(100% - 32px); }
+  .ant-ledger-table { grid-template-columns: minmax(0, 1fr); }
+  .ant-ledger-cell { border-right: 0; border-bottom: 1px solid var(--border); }
+  .ant-ledger-cell:last-child { border-bottom: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .gx-opening { display: none; }
+  .ant-opening { display: none; }
   .gx-char { opacity: 1; animation: none; }
   .gx-rise { opacity: 1; transform: none; }
-  .gx-streak, .hc-card, .hc-foil, .hc-shadow, .gx-ambient, .gx-live-dot, .gx-flow-line::before { animation: none; }
-  .gx-title-row, .gx-exhibit { transform: none; opacity: 1; filter: none; }
+  .hc-card, .hc-foil, .gx-live-dot, .gx-flow-line::before { animation: none; }
 }
 `;
 
@@ -429,7 +463,7 @@ function fmtBnb(value: bigint, digits = 4) {
 }
 
 const BOOK_SAMPLE = {
-  symbol: "MINT.AI",
+  symbol: "ANT.AI",
   asks: [] as Ask[],
   bids: [] as Bid[],
   fees: 0n,
@@ -568,11 +602,17 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
     let raf = 0;
     let visible = true;
     let last = 0;
-    const rand = rng(id + 7);
-    const echoes = (kind === "team" ? 5 : 3) + Math.floor(rand() * 3);
-    const sweepSpeed = 0.22 + rand() * 0.12;
-    const sweepAngle = 0.5 + rand() * 0.6;
-    const sparks = Array.from({ length: 30 }, () => ({ x: rand(), ph: rand(), sp: 0.08 + rand() * 0.12 }));
+    const rand = rng(id + 13);
+    const rays = (kind === "team" ? 16 : 10) + Math.floor(rand() * 8);
+    const rings = 3 + Math.floor(rand() * 3);
+    const tiltBase = rand() * Math.PI * 2;
+    const sweepSpeed = 0.16 + rand() * 0.08;
+    const nodes = Array.from({ length: 18 }, () => ({
+      a: rand() * Math.PI * 2,
+      r: 0.24 + rand() * 0.56,
+      s: 1.2 + rand() * 2.2,
+      sp: (rand() - 0.5) * 0.22,
+    }));
     let t = rand() * 100;
     let ox = 0;
     let oy = 0;
@@ -587,78 +627,74 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
       ctx.fillStyle = INK;
       ctx.fillRect(0, 0, w, h);
       const p = pointer.current;
-      const tx = p.active ? p.x - 0.5 : Math.sin(t * 0.4) * 0.25;
-      const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.3) * 0.15;
-      ox += (tx - ox) * 0.08;
-      oy += (ty - oy) * 0.08;
-      let fs = Math.min(h * 0.72, w * 1.2);
-      const cx = w / 2;
-      const cy = h * 0.53;
-      const aiUnits = (POSTER["A"]?.w ?? 401) + (POSTER["I"]?.w ?? 192);
-      let glyphWidth = aiUnits * (fs / POSTER_EM);
-      if (glyphWidth > w * 0.5) {
-        fs *= (w * 0.5) / glyphWidth;
-        glyphWidth = w * 0.5;
-      }
-      const glow = ctx.createRadialGradient(cx, cy, fs * 0.2, cx, cy, fs * 0.55);
-      glow.addColorStop(0, FLOW);
-      glow.addColorStop(1, "transparent");
-      ctx.globalAlpha = 0.16;
-      ctx.fillStyle = glow;
+      const tx = p.active ? p.x - 0.5 : Math.sin(t * 0.32) * 0.18;
+      const ty = p.active ? p.y - 0.5 : Math.cos(t * 0.24) * 0.12;
+      ox += (tx - ox) * 0.07;
+      oy += (ty - oy) * 0.07;
+      const cx = w * 0.5 + ox * w * 0.05;
+      const cy = h * 0.5 + oy * h * 0.04;
+      const unit = Math.min(w, h) * 0.44;
+
+      const wash = ctx.createRadialGradient(cx, cy, unit * 0.05, cx, cy, unit * 1.25);
+      wash.addColorStop(0, "rgba(212, 98, 63, 0.24)");
+      wash.addColorStop(0.55, "rgba(212, 98, 63, 0.06)");
+      wash.addColorStop(1, "transparent");
+      ctx.fillStyle = wash;
       ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = SAND;
+      ctx.lineWidth = dpr * 0.75;
+      for (let i = 1; i <= rings; i += 1) {
+        const rr = unit * (0.28 + (i / rings) * 0.72);
+        ctx.globalAlpha = 0.12 + (i === rings ? 0.08 : 0);
+        ctx.beginPath();
+        ctx.arc(cx, cy, rr, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      for (let i = 0; i < rays; i += 1) {
+        const angle = tiltBase + (i / rays) * Math.PI * 2 + Math.sin(t * sweepSpeed + i * 0.4) * 0.04;
+        const len = unit * (0.48 + 0.46 * ((i * 7 + id) % 5) / 4);
+        const inner = unit * 0.14;
+        const isAccent = i % 2 === 0;
+        ctx.strokeStyle = isAccent ? FLOW : PAPER;
+        ctx.lineWidth = isAccent ? dpr * 2.1 : dpr * 1.1;
+        ctx.globalAlpha = isAccent ? 0.85 : 0.32;
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
+        ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+        ctx.stroke();
+      }
+
+      for (const node of nodes) {
+        const ang = node.a + t * node.sp;
+        const nx = cx + Math.cos(ang) * unit * node.r;
+        const ny = cy + Math.sin(ang) * unit * node.r;
+        ctx.globalAlpha = 0.55;
+        ctx.fillStyle = node.r > 0.55 ? PAPER : FLOW;
+        ctx.beginPath();
+        ctx.arc(nx, ny, node.s * dpr * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.arc(cx, cy, unit * 0.15, 0, Math.PI * 2);
+      ctx.fill();
       ctx.strokeStyle = FLOW;
-      ctx.lineWidth = dpr * 1.2;
-      for (let echo = echoes; echo >= 1; echo -= 1) {
-        ctx.globalAlpha = (0.08 + 0.16 * (1 - echo / (echoes + 1))) * (0.7 + 0.3 * Math.sin(t * 1.3 - echo * 0.7));
-        paintPoster(ctx, "AI", cx - ox * echo * w * 0.035, cy - oy * echo * h * 0.03, fs, "stroke");
-      }
-      const fx = cx + ox * w * 0.02;
-      const fy = cy + oy * h * 0.015;
-      ctx.globalAlpha = 1;
-      ctx.shadowColor = FLOW;
-      ctx.shadowBlur = fs * 0.08;
+      ctx.lineWidth = dpr * 1.5;
+      ctx.stroke();
       ctx.fillStyle = FLOW;
-      paintPoster(ctx, "AI", fx, fy, fs, "fill");
-      ctx.shadowBlur = 0;
-      const pos = ((t * sweepSpeed) % 1.6) - 0.3;
-      const dx = Math.cos(sweepAngle) * w;
-      const dy = Math.sin(sweepAngle) * h;
-      const band = ctx.createLinearGradient(cx - dx / 2, cy - dy / 2, cx + dx / 2, cy + dy / 2);
-      const clamp = (v: number) => Math.min(1, Math.max(0, v));
-      band.addColorStop(0, "transparent");
-      band.addColorStop(clamp(pos - 0.12), "transparent");
-      band.addColorStop(clamp(pos), PAPER);
-      band.addColorStop(clamp(pos + 0.12), "transparent");
-      band.addColorStop(1, "transparent");
-      ctx.globalCompositeOperation = "lighter";
-      ctx.globalAlpha = 0.75;
-      ctx.fillStyle = band;
-      paintPoster(ctx, "AI", fx, fy, fs, "fill");
-      ctx.globalAlpha = 0.35;
-      ctx.strokeStyle = PAPER;
-      ctx.lineWidth = dpr;
-      paintPoster(ctx, "AI", fx, fy, fs, "stroke");
-      const dot = fs * 0.04;
-      const dotX = fx - glyphWidth / 2 - dot * 2.2;
-      const dotY = fy + fs * 0.35 - dot;
-      ctx.globalCompositeOperation = "source-over";
-      ctx.globalAlpha = 1;
-      ctx.shadowColor = FLOW;
-      ctx.shadowBlur = dot * 3 * (0.8 + 0.4 * Math.sin(t * 2));
-      ctx.fillStyle = FLOW;
-      ctx.fillRect(dotX - dot, dotY - dot, dot * 2, dot * 2);
-      ctx.shadowBlur = 0;
-      ctx.globalCompositeOperation = "lighter";
-      ctx.globalAlpha = 0.25 + 0.25 * Math.sin(t * 2);
+      ctx.beginPath();
+      ctx.arc(cx, cy, unit * 0.055, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.45;
       ctx.fillStyle = PAPER;
-      ctx.fillRect(dotX - dot, dotY - dot, dot * 2, dot * 2);
-      ctx.fillStyle = PAPER;
-      for (const spark of sparks) {
-        const life = (t * spark.sp + spark.ph) % 1;
-        ctx.globalAlpha = Math.sin(life * Math.PI) * 0.5;
-        ctx.fillRect(spark.x * w, h * (1 - life), dpr * 1.2, dpr * 1.2);
-      }
-      ctx.globalCompositeOperation = "source-over";
+      ctx.font = `500 ${Math.round(9 * dpr)}px "IBM Plex Mono", monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText(`ANT // ${String(id).padStart(6, "0")}`, w * 0.5, h - 14 * dpr);
       ctx.globalAlpha = 1;
     };
     resize();
@@ -688,7 +724,7 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
       ref={ref}
       className={className}
       role="img"
-      aria-label={`MINT.AI #${id}`}
+      aria-label={`ANT.AI #${id}`}
       onPointerMove={(event) => {
         const r = event.currentTarget.getBoundingClientRect();
         pointer.current = { x: (event.clientX - r.left) / r.width, y: (event.clientY - r.top) / r.height, active: true };
@@ -729,7 +765,7 @@ function HoloCard({ id, kind }: { id: number; kind: Kind }) {
       <div ref={ref} className="hc-card" data-active="false">
         <div className="hc-inner">
           <header className="hc-head">
-            <span className="gx-wordmark"><Poster text="MINT" em={1} track={0.04} /><Poster text=".AI" em={1} track={0.04} className="gx-wordmark-seven" /></span>
+            <AntLogo size="sm" />
             <span className="hc-tier">{tier}</span>
           </header>
           <div className="hc-art">
@@ -738,11 +774,11 @@ function HoloCard({ id, kind }: { id: number; kind: Kind }) {
           <footer className="hc-foot">
             <div>
               <p className="hc-label">AGENT ID</p>
-              <p className="hc-serial"><Poster text={`#${serial}`} em={1} /></p>
+              <p className="hc-serial">#{serial}</p>
             </div>
             <div>
               <p className="hc-label">EDITION</p>
-              <p className="hc-edition"><Poster text="1 / 1" em={1} /></p>
+              <p className="hc-edition">1 / 1</p>
             </div>
           </footer>
         </div>
@@ -1309,19 +1345,17 @@ export default function Component({ initialView = "home" }: { initialView?: View
   return (
     <div className="gx-app min-h-screen">
       <style>{LOOK}</style>
-      <div key={intro} className="gx-opening" aria-hidden="true">
-        <span className="gx-opening-bar gx-opening-bar-top" />
-        <span className="gx-opening-bar gx-opening-bar-bottom" />
-        <span className="gx-opening-line" />
-        <span className="gx-opening-mark"><Poster text="MINT" em={1} track={0.5} /><Poster text=".AI" em={1} track={0.5} className="gx-pri" /></span>
+      <div key={intro} className="ant-opening" aria-hidden="true">
+        <div className="ant-opening-inner">
+          <AntLogo size="lg" />
+          <span className="gx-kicker">ANTHROPIC POOL EDITION</span>
+        </div>
       </div>
       <Grain />
-      <div className="gx-vignette" aria-hidden="true" />
-      <div className="gx-streak" aria-hidden="true" />
       <div ref={scroller} className="gx-scroll" onScroll={onScroll}>
         <header className="gx-header">
           <div className="gx-container flex items-center justify-between gap-5 py-3">
-            <button type="button" onClick={() => openView("home")} aria-label={t("brand")}><span className="gx-wordmark text-xl"><Poster text="MINT" em={1} track={0.04} /><Poster text=".AI" em={1} track={0.04} className="gx-wordmark-seven" /></span></button>
+            <button type="button" onClick={() => openView("home")} aria-label={t("brand")}><AntLogo size="md" /></button>
             <nav className="hidden gap-6 lg:flex" aria-label={t("brand")}>
               {nav.map(([key, label]) => (
                 <button key={key} type="button" className={`ac-tab ${view === key ? "ac-tab-active" : ""}`} aria-pressed={view === key} onClick={() => openView(key)}>{t(label)}</button>
@@ -1353,85 +1387,95 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
         {view === "home" && (
           <main>
-            <section
-              ref={hero}
-              className="gx-container gx-intro"
-              onPointerMove={(event) => {
-                const r = event.currentTarget.getBoundingClientRect();
-                event.currentTarget.style.setProperty("--ax", `${((event.clientX - r.left) / r.width) * 100}%`);
-                event.currentTarget.style.setProperty("--ay", `${((event.clientY - r.top) / r.height) * 100}%`);
-              }}
-            >
-              <div className="gx-ambient" aria-hidden="true" />
-              <div className="gx-title-row">
+            <section ref={hero} className="gx-container ant-hero">
+              <div className="ant-hero-grid">
                 <div className={`${rise} min-w-0`}>
-                  <p className="gx-kicker">{t("hero.kicker")}</p>
-                  <h1 className="gx-heading mt-3" aria-label="MINT.AI">
-                    {"MINT.AI".split("").map((ch, index) => (
-                      <span key={`${ch}-${index}`} aria-hidden="true" className="gx-char" style={{ animationDelay: `${0.15 + index * 0.07}s` }}><Poster text={ch} className={index >= 4 ? "gx-heading-seven" : undefined} /></span>
+                  <span className="ant-hero-pill">
+                    <span className="gx-live-dot" />
+                    <span>{t("hero.kicker")} · ANTHROPIC POOL</span>
+                  </span>
+                  <h1 className="ant-hero-title" aria-label="ANT.AI">
+                    {"ANT".split("").map((ch, index) => (
+                      <span key={`${ch}-${index}`} aria-hidden="true" className="gx-char" style={{ animationDelay: `${0.08 + index * 0.05}s` }}>{ch}</span>
                     ))}
+                    <span className="ant-hero-title-ai gx-char" aria-hidden="true" style={{ animationDelay: "0.26s" }}>.AI</span>
                   </h1>
-                </div>
-                <div className={`${rise} gx-manifesto`}>
-                  <p className="text-2xl font-semibold leading-relaxed">{t("hero.line1")}<br className="hidden md:block" />{t("hero.line2")}</p>
-                  <p className="gx-muted mt-3 text-sm">{t("hero.sub")}</p>
-                </div>
-              </div>
-              <div className="gx-exhibit">
-                <div className={`${rise} gx-art-stage hc-stage`}>
-                  <div ref={stage} className="gx-parallax"><HoloCard id={cardId} kind={kind} /></div>
-                </div>
-                <aside className={`${rise} gx-exhibit-rail`}>
-                  <div>
-                    <p className="gx-kicker">{t("card.kicker")}</p>
-                    <p className="mt-4 text-xl font-medium">{t("card.title1")}<br />{t("card.title2")}</p>
-                    <p className="gx-muted mt-3 text-sm">{t("card.body")}</p>
+                  <p className="ant-hero-tagline">{t("hero.line1")} {t("hero.line2")}</p>
+                  <p className="ant-hero-sub">{t("hero.sub")}</p>
+
+                  <div className="ant-hero-fair">
+                    <div className="ant-hero-fair-head">
+                      <p className="ant-hero-fair-title">{t("hero.fairLabel")}</p>
+                      <span className="gx-kicker">Fair Mint</span>
+                    </div>
+                    <p className="ant-hero-fair-body">{t("hero.fair")}</p>
+                    <div className="ant-hero-cmd">{commandCard(salePhase === "refund" ? "refund" : "mint")}</div>
                   </div>
-                  <div>
-                    <label className="gx-mono gx-muted mb-4 flex justify-between text-xs"><span>{t("card.id")}</span><span>{fmtInt(cardId)}</span></label>
+                </div>
+
+                <aside className={`${rise} ant-frame`}>
+                  <div className="ant-frame-top">
+                    <p className="gx-kicker">{t("card.kicker")}</p>
+                    <span className="gx-mono gx-muted text-xs">#{String(cardId).padStart(6, "0")}</span>
+                  </div>
+                  <div className="hc-stage">
+                    <div ref={stage} className="gx-parallax"><HoloCard id={cardId} kind={kind} /></div>
+                  </div>
+                  <div className="ant-frame-controls">
+                    <p className="text-base font-semibold">{t("card.title1")} · {t("card.title2")}</p>
+                    <p className="gx-muted mt-1 text-xs leading-6">{t("card.body")}</p>
+                    <label className="gx-mono gx-muted mt-4 mb-2 flex justify-between text-xs"><span>{t("card.id")}</span><span>{fmtInt(cardId)} / {fmtInt(TOTAL_POOL_CARDS)}</span></label>
                     <input type="range" min={1} max={TOTAL_POOL_CARDS} value={cardId} aria-label={t("card.id")} style={{ ["--fill" as string]: `${((cardId - 1) / (TOTAL_POOL_CARDS - 1)) * 100}%` }} onChange={(event) => setCardId(Number(event.target.value))} />
-                    <button type="button" className="gx-btn gx-btn-lg gx-btn-outline gx-btn-split mt-5" onClick={() => setCardId(1 + Math.floor(Math.random() * TOTAL_POOL_CARDS))}>{t("card.random")}<Shuffle size={16} /></button>
+                    <div className="ant-frame-bar">
+                      <span className="gx-mono gx-muted text-[11px]">{t("card.caption")}</span>
+                      <button type="button" className="gx-btn gx-btn-outline text-xs" onClick={() => setCardId(1 + Math.floor(Math.random() * TOTAL_POOL_CARDS))}>
+                        <span>{t("card.random")}</span>
+                        <Shuffle size={14} />
+                      </button>
+                    </div>
                   </div>
                 </aside>
-              </div>
-              <div className="gx-exhibit-caption"><span>{t("card.caption")}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
-              <div className="gx-fair">
-                <p className="gx-fair-title">{t("hero.fairLabel")}<span>Fair Mint</span></p>
-                <p className="gx-fair-body">{t("hero.fair")}</p>
-                <div className="mt-6 max-w-3xl">{commandCard(salePhase === "refund" ? "refund" : "mint")}</div>
               </div>
             </section>
 
             <section className="gx-band">
-              <div className="gx-container py-8">
+              <div className="gx-container py-12">
                 <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                   <p className="gx-mono gx-pri flex items-center gap-2 text-xs"><span className="gx-live-dot" />{t(!live.cards ? "cards.pending" : salePhase === "open" ? "demo.launched" : salePhase === "refund" ? "demo.refund" : "demo.presale")}</p>
                   {!live.launched && live.presaleDeadline > 0 && (
                     <p className="gx-mono text-xs">{t("metric.deadline")}<span className="gx-pri ml-2">{fmtDeadline(live.presaleDeadline, language)} UTC+8</span>{salePhase === "refund" ? <span className="gx-pri ml-2">{t("metric.deadlinePassed")}</span> : null}</p>
                   )}
                 </div>
-                <dl className="gx-metrics">
-                  {(salePhase === "refund" ? [
-                    [mintedLive, 0, "", t("metric.minted"), t("metric.mintedRefundNote")],
-                    [escrowBnb, 5, " BNB", t("metric.escrow"), t("metric.escrowNote")],
-                    [refundedCards, 0, "", t("metric.refunded"), t("metric.refundedNote")],
-                    [refundedBnb, 5, " BNB", t("metric.refundedBnb"), t("metric.refundedBnbNote")],
-                  ] : [
-                    [mintedLive, 0, "", t("metric.minted"), t("metric.mintedNote", undefined, { n: fmtInt(TOTAL_POOL_CARDS) })],
-                    [raisedBnb, raisedDigits, " BNB", t("metric.raised"), t("metric.raisedNote")],
-                    [live.minters, 0, "", t("metric.minters"), t("metric.mintersNote", undefined, { n: MAX_MINT })],
-                    [presaleLeft, 0, "", t("metric.left"), t("metric.leftNote", undefined, { n: fmtInt(PRESALE_CARDS) })],
-                  ]).map(([value, digits, suffix, label, note]) => (
-                    <div key={String(label)}>
-                      <dt className="gx-muted text-xs">{label}</dt>
-                      <dd className="gx-display mt-2 text-4xl"><CountUp value={Number(value)} digits={Number(digits)} suffix={String(suffix)} drawn /></dd>
-                      <dd className="gx-muted mt-2 text-xs">{note}</dd>
+                <div className="ant-ledger-grid">
+                  <div className="ant-ledger-lead">
+                    <div>
+                      <p className="gx-kicker">{t(salePhase === "refund" ? "metric.refundProgress" : "progress")}</p>
+                      <p className="ant-ledger-pct mt-4"><CountUp value={salePhase === "refund" ? refundPct : presalePct} digits={progressDigits} suffix="%" /></p>
                     </div>
-                  ))}
-                </dl>
-                <div className="mt-6">
-                  <div className="gx-mono gx-muted mb-2 flex justify-between text-xs"><span>{t(salePhase === "refund" ? "metric.refundProgress" : "progress")}</span><span className="gx-pri"><CountUp value={salePhase === "refund" ? refundPct : presalePct} digits={progressDigits} suffix="%" /></span></div>
-                  <div className="gx-track"><div className="gx-live-bar" style={{ width: `${salePhase === "refund" ? refundPct : presalePct}%` }} /></div>
+                    <div className="mt-6">
+                      <div className="gx-track"><div className="gx-live-bar" style={{ width: `${salePhase === "refund" ? refundPct : presalePct}%` }} /></div>
+                      <p className="gx-mono gx-muted mt-3 text-[11px]">{t(salePhase === "open" ? "pool.live" : salePhase === "refund" ? "pool.refund" : "pool.presale")}</p>
+                    </div>
+                  </div>
+                  <dl className="ant-ledger-table">
+                    {(salePhase === "refund" ? [
+                      [mintedLive, 0, "", t("metric.minted"), t("metric.mintedRefundNote")],
+                      [escrowBnb, 5, " BNB", t("metric.escrow"), t("metric.escrowNote")],
+                      [refundedCards, 0, "", t("metric.refunded"), t("metric.refundedNote")],
+                      [refundedBnb, 5, " BNB", t("metric.refundedBnb"), t("metric.refundedBnbNote")],
+                    ] : [
+                      [mintedLive, 0, "", t("metric.minted"), t("metric.mintedNote", undefined, { n: fmtInt(TOTAL_POOL_CARDS) })],
+                      [raisedBnb, raisedDigits, " BNB", t("metric.raised"), t("metric.raisedNote")],
+                      [live.minters, 0, "", t("metric.minters"), t("metric.mintersNote", undefined, { n: MAX_MINT })],
+                      [presaleLeft, 0, "", t("metric.left"), t("metric.leftNote", undefined, { n: fmtInt(PRESALE_CARDS) })],
+                    ]).map(([value, digits, suffix, label, note]) => (
+                      <div key={String(label)} className="ant-ledger-cell">
+                        <dt className="gx-muted text-xs">{label}</dt>
+                        <dd className="ant-ledger-num"><CountUp value={Number(value)} digits={Number(digits)} suffix={String(suffix)} /></dd>
+                        <dd className="gx-muted mt-2 text-xs">{note}</dd>
+                      </div>
+                    ))}
+                  </dl>
                 </div>
                 <div className="mt-10">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -1444,9 +1488,12 @@ export default function Component({ initialView = "home" }: { initialView?: View
                       [floorCards, t("pool.burnedCards"), t("unit.card")],
                       [fmtBnb(live.dividendFwd), t("pool.dividend"), "BNB"],
                       [fmtBnb(live.floorFwd), t("pool.floor"), "BNB"],
-                    ].map(([value, label, unit]) => (
+                    ].map(([value, label, unit], idx) => (
                       <div key={label}>
-                        <dt className="gx-muted text-xs">{label}</dt>
+                        <div className="flex items-center justify-between">
+                          <dt className="gx-muted text-xs">{label}</dt>
+                          <span className="gx-tile-no">0{idx + 1}</span>
+                        </div>
                         <dd className="gx-tile-value">{value}<span>{unit}</span></dd>
                       </div>
                     ))}
@@ -1457,77 +1504,87 @@ export default function Component({ initialView = "home" }: { initialView?: View
 
             <section className="gx-container gx-chapter">
               <div className={`${rise} gx-chapter-heading`}>
-                <p className="gx-kicker">{t("life.kicker")}</p>
-                <h2>{t("life.title")}</h2>
+                <div>
+                  <p className="gx-kicker">{t("life.kicker")}</p>
+                  <h2 className="mt-2">{t("life.title")}</h2>
+                </div>
                 <span className="gx-chapter-note">{t("life.note")}</span>
               </div>
-              <div className="mt-8">
-                <ol className="gx-phase-nav">
+              <div className="ant-story-grid">
+                <ol className="ant-story-list">
                   {[1, 2, 3, 4, 5].map((item) => (
                     <li key={item}>
-                      <button type="button" aria-pressed={phase === item - 1} className={`gx-phase-button ${phase === item - 1 ? "gx-phase-active" : ""}`} onClick={() => setPhase(item - 1)}>
-                        <span className="gx-mono text-xs">0{item}</span>
-                        <span className="whitespace-nowrap text-base font-semibold">{phases[item - 1]?.title}</span>
+                      <button type="button" aria-pressed={phase === item - 1} className={`ant-story-item ${phase === item - 1 ? "ant-story-item-active" : ""}`} onClick={() => setPhase(item - 1)}>
+                        <span className="flex items-center gap-4">
+                          <span className="gx-mono gx-pri text-xs">0{item}</span>
+                          <span className="text-base font-semibold">{phases[item - 1]?.title}</span>
+                        </span>
+                        <ArrowDownRight size={15} className={phase === item - 1 ? "gx-pri" : "gx-muted"} aria-hidden="true" />
                       </button>
                     </li>
                   ))}
                 </ol>
-                <div key={phase} className="gx-swap gx-phase-detail">
-                  <span className="gx-phase-number" aria-hidden="true"><Poster text={`0${phase + 1}`} em={1} /></span>
-                  <div>
-                    <p className="gx-mono gx-pri text-xs">0{phase + 1} / 05</p>
-                    <h3 className="mt-4 text-2xl font-bold">{phases[phase]?.title}</h3>
-                    <p className="gx-muted mt-4 max-w-lg text-base">{phases[phase]?.body}</p>
+                <div key={phase} className="gx-swap ant-story-card">
+                  <div className="ant-story-card-grid">
+                    <div>
+                      <p className="gx-kicker">STAGE 0{phase + 1} / 05</p>
+                      <h3 className="mt-3 text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{phases[phase]?.title}</h3>
+                      <p className="gx-muted mt-4 text-base leading-8">{phases[phase]?.body}</p>
+                    </div>
+                    <div className="ant-story-art"><GenerativeCard id={phase * 131071 + 19} kind={phase === 0 ? "presale" : "open"} className="h-full w-full" /></div>
                   </div>
-                  <div className="gx-phase-art"><GenerativeCard id={phase * 131071 + 19} kind={phase === 0 ? "presale" : "open"} className="h-full w-full" /></div>
                 </div>
               </div>
             </section>
 
-            <section className="gx-container gx-workspace">
-              <div className={`${rise} gx-chapter-heading lg:col-span-2`}>
-                <p className="gx-kicker">{t("calc.kicker")}</p>
-                <h2>{t("calc.title")}</h2>
+            <section className="gx-container pb-16">
+              <div className={`${rise} gx-chapter-heading`}>
+                <div>
+                  <p className="gx-kicker">{t("calc.kicker")}</p>
+                  <h2 className="mt-2">{t("calc.title")}</h2>
+                </div>
                 <span className="gx-chapter-note">{t("calc.note")}</span>
               </div>
-              <div className={`${rise} gx-mint-tool`}>
-                <p className="gx-kicker">A / MINT</p>
-                <h3 className="mt-2 text-3xl font-bold">{t("mint.title")}</h3>
-                <div className="gx-seg mt-5">
-                  {(["presale", "open"] as const).map((item) => (
-                    <button key={item} type="button" aria-pressed={mintPhase === item} onClick={() => setMintPhase(item)}>{t(item === "presale" ? "mint.presale" : "mint.open")}</button>
-                  ))}
+              <div className="ant-desk-shell">
+                <div className={`${rise} ant-desk-card`}>
+                  <p className="gx-kicker">A / MINT</p>
+                  <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("mint.title")}</h3>
+                  <div className="gx-seg mt-5">
+                    {(["presale", "open"] as const).map((item) => (
+                      <button key={item} type="button" aria-pressed={mintPhase === item} onClick={() => setMintPhase(item)}>{t(item === "presale" ? "mint.presale" : "mint.open")}</button>
+                    ))}
+                  </div>
+                  <div className="mt-6 flex items-end justify-between"><span className="gx-muted text-sm">{t("mint.count")}</span><span className="gx-display text-5xl">{count}</span></div>
+                  <input className="mt-3" type="range" min={1} max={MAX_MINT} value={count} aria-label={t("mint.count")} style={{ ["--fill" as string]: `${((count - 1) / (MAX_MINT - 1)) * 100}%` }} onChange={(event) => setCount(Number(event.target.value))} />
+                  <div className="mt-6 grid h-10 grid-cols-10 gap-1.5" aria-hidden="true">
+                    {Array.from({ length: MAX_MINT }, (_, index) => <div key={index} className={`gx-mint-mark ${index < count ? "gx-mint-mark-active" : ""}`} />)}
+                  </div>
+                  <dl className="gx-mono mt-6 grid grid-cols-2 gap-4 text-sm">
+                    <div><dt className="gx-muted">{t("mint.pay")}</dt><dd className="text-2xl font-medium">{quoteBnb.toFixed(5)} BNB</dd></div>
+                    {mintPhase === "presale" ? (
+                      <div><dt className="gx-muted">{t("mint.tokens")}</dt><dd className="gx-pri text-2xl font-medium">{fmtInt(quoteTokens)}</dd></div>
+                    ) : (
+                      <>
+                        <div><dt className="gx-muted">{t("mint.ops")}</dt><dd className="text-2xl font-medium">{(quoteBnb * 0.25).toFixed(5)}</dd></div>
+                        <div className="col-span-2"><dt className="gx-muted">{t("mint.swap")}</dt><dd className="gx-pri text-xl font-medium">{(quoteBnb * 0.75).toFixed(5)} BNB · {t("mint.swapNote")}</dd></div>
+                      </>
+                    )}
+                  </dl>
+                  {mintPhase === "open" && <p className="gx-muted mt-3 text-xs">{t("mint.openNote")}</p>}
                 </div>
-                <div className="mt-6 flex items-end justify-between"><span className="gx-muted">{t("mint.count")}</span><span className="gx-display text-5xl"><Poster text={String(count)} /></span></div>
-                <input className="mt-3" type="range" min={1} max={MAX_MINT} value={count} aria-label={t("mint.count")} style={{ ["--fill" as string]: `${((count - 1) / (MAX_MINT - 1)) * 100}%` }} onChange={(event) => setCount(Number(event.target.value))} />
-                <div className="mt-6 grid h-12 grid-cols-10 gap-1.5" aria-hidden="true">
-                  {Array.from({ length: MAX_MINT }, (_, index) => <div key={index} className={`gx-mint-mark ${index < count ? "gx-mint-mark-active" : ""}`} />)}
+                <div className={`${rise} ant-desk-card`}>
+                  <p className="gx-kicker">B / VESTING</p>
+                  <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("vest.title")}</h3>
+                  <p className="gx-muted mt-2 text-sm">{t("vest.example", undefined, { n: count, tokens: fmtInt(grant) })}</p>
+                  <div className="mt-8 flex h-40 items-end gap-1">
+                    {Array.from({ length: 40 }, (_, index) => {
+                      const on = index / 40 < releasedShare;
+                      return <div key={index} className={`gx-vest ${on ? "gx-vest-on" : "gx-vest-off"}`} style={{ height: `${20 + (index / 40) * 80}%`, transitionDelay: `${index * 8}ms` }} />;
+                    })}
+                  </div>
+                  <div className="mt-6 flex items-end justify-between"><span className="gx-muted text-sm">{t("vest.day", undefined, { n: day.toFixed(1) })}</span><span className="gx-display gx-pri text-5xl">{fmtInt(vested)}</span></div>
+                  <input className="mt-3" type="range" min={0} max={5} step={0.1} value={day} aria-label={t("vest.title")} style={{ ["--fill" as string]: `${releasedShare * 100}%` }} onChange={(event) => setDay(Number(event.target.value))} />
                 </div>
-                <dl className="gx-mono mt-6 grid grid-cols-2 gap-4 text-sm">
-                  <div><dt className="gx-muted">{t("mint.pay")}</dt><dd className="text-2xl">{quoteBnb.toFixed(5)} BNB</dd></div>
-                  {mintPhase === "presale" ? (
-                    <div><dt className="gx-muted">{t("mint.tokens")}</dt><dd className="gx-pri text-2xl">{fmtInt(quoteTokens)}</dd></div>
-                  ) : (
-                    <>
-                      <div><dt className="gx-muted">{t("mint.ops")}</dt><dd className="text-2xl">{(quoteBnb * 0.25).toFixed(5)}</dd></div>
-                      <div className="col-span-2"><dt className="gx-muted">{t("mint.swap")}</dt><dd className="gx-pri text-2xl">{(quoteBnb * 0.75).toFixed(5)} BNB · {t("mint.swapNote")}</dd></div>
-                    </>
-                  )}
-                </dl>
-                {mintPhase === "open" && <p className="gx-muted mt-3 text-xs">{t("mint.openNote")}</p>}
-              </div>
-              <div className={`${rise} gx-vesting-tool`}>
-                <p className="gx-kicker">B / VESTING</p>
-                <h3 className="mt-2 text-3xl font-bold">{t("vest.title")}</h3>
-                <p className="gx-muted mt-2">{t("vest.example", undefined, { n: count, tokens: fmtInt(grant) })}</p>
-                <div className="mt-8 flex h-40 items-end gap-1">
-                  {Array.from({ length: 40 }, (_, index) => {
-                    const on = index / 40 < releasedShare;
-                    return <div key={index} className={`gx-vest ${on ? "gx-vest-on" : "gx-vest-off"}`} style={{ height: `${20 + (index / 40) * 80}%`, transitionDelay: `${index * 8}ms` }} />;
-                  })}
-                </div>
-                <div className="mt-6 flex items-end justify-between"><span className="gx-muted">{t("vest.day", undefined, { n: day.toFixed(1) })}</span><span className="gx-display gx-pri text-5xl"><Poster text={fmtInt(vested)} /></span></div>
-                <input className="mt-3" type="range" min={0} max={5} step={0.1} value={day} aria-label={t("vest.title")} style={{ ["--fill" as string]: `${releasedShare * 100}%` }} onChange={(event) => setDay(Number(event.target.value))} />
               </div>
             </section>
             <section className="gx-container pb-8">{commandDeck(["wallet", "refund"])}</section>
@@ -1876,7 +1933,7 @@ function Shell({ rise, index, code, title, lead, seed, foot, children }: { rise:
           <span className="gx-page-index">{index}</span>
         </div>
       </section>
-      <div className="gx-container gx-exhibit-caption"><span>MINT.AI / {code}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
+      <div className="gx-container gx-exhibit-caption"><span>ANT.AI / {code}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
       <div className={`${rise} gx-container py-12`}>{children}</div>
       <footer className="gx-footer gx-mono gx-muted px-6 py-8 text-center text-xs">{foot}</footer>
     </main>

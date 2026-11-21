@@ -3,10 +3,10 @@ import MintAiApp from "@/vaults/mintai/Component";
 
 export const Route = createFileRoute("/market")({
   head: () => ({ meta: [
-    { title: "MINT.AI — 卡牌市场" },
-    { name: "description", content: "MINT.AI 卡牌卖单、买单、求购与交易记录。" },
-    { property: "og:title", content: "MINT.AI — 卡牌市场" },
-    { property: "og:description", content: "MINT.AI 卡牌卖单、买单、求购与交易记录。" },
+    { title: "ANT.AI — 卡牌市场" },
+    { name: "description", content: "ANT.AI 卡牌卖单、买单、求购与交易记录。" },
+    { property: "og:title", content: "ANT.AI — 卡牌市场" },
+    { property: "og:description", content: "ANT.AI 卡牌卖单、买单、求购与交易记录。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
