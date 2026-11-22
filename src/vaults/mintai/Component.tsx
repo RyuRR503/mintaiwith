@@ -30,7 +30,7 @@ const COMMANDS = [
   ["yield", "withdraw"],
 ] as const;
 const COMMAND_GROUPS = ["mint", "buy", "sell", "yield"] as const;
-const VIEWS = ["home", "market", "commands", "vault", "tokenomics", "ladder", "duel", "rules", "rarity"] as const;
+const VIEWS = ["home", "market", "commands", "vault", "tokenomics", "ladder", "duel", "rules", "rarity", "minting"] as const;
 const POOL_QUOTE = 3675n * 10n ** 16n;
 const POOL_TOKEN = 124_672_000n * 10n ** 18n;
 const LADDER_BUDGET = 58_611_119n * 10n ** 18n;
@@ -496,7 +496,7 @@ const LOOK = `
   .gx-rules { grid-template-columns: 220px minmax(0, 1fr); }
   .gx-toc { position: sticky; top: 12px; align-self: start; }
 }
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .gx-menu, .gx-fold { display: none; }
 }
 @media (max-width: 1023px) {
@@ -1019,6 +1019,7 @@ const VIEW_PATHS: Record<View, string> = {
   duel: "/duel",
   rules: "/rules",
   rarity: "/rarity",
+  minting: "/minting",
 };
 
 export default function Component({ initialView = "home" }: { initialView?: View }) {
@@ -1425,6 +1426,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
   const nav = [
     ["home", "nav.home"],
     ["rarity", "nav.rarity"],
+    ["minting", "nav.minting"],
     ["market", "nav.market"],
     ["commands", "nav.commands"],
     ["vault", "nav.vault"],
@@ -1442,6 +1444,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
     ladder: ["07", "LADDER", "ladder.title", "ladder.lead", 707],
     duel: ["08", "DUEL", "duel.title", "duel.lead", 808],
     rarity: ["09", "RARITY", "rarity.title", "rarity.lead", 909],
+    minting: ["10", "MINTING", "minting.title", "minting.lead", 1010],
   } as const;
   const page = view === "home" ? null : pageMeta[view];
 
@@ -1505,7 +1508,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
         <header className="gx-header">
           <div className="gx-container flex items-center justify-between gap-5 py-3">
             <button type="button" onClick={() => openView("home")} aria-label={t("brand")}><AntLogo size="md" /></button>
-            <nav className="hidden gap-4 lg:flex" aria-label={t("brand")}>
+            <nav className="hidden gap-3 xl:flex" aria-label={t("brand")}>
               {nav.map(([key, label]) => (
                 <button key={key} type="button" className={`ac-tab ${view === key ? "ac-tab-active" : ""}`} aria-pressed={view === key} onClick={() => openView(key)}>{t(label)}</button>
               ))}
@@ -1680,6 +1683,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
             seed={page[4]}
             foot={t("footer.risk")}
           >
+            {view === "minting" && <><EditionInner language={language} view="minting" /><EditionCalculator language={language} /></>}
             {view === "market" && <EditionInner language={language} view="market" />}
             {view === "commands" && <EditionInner language={language} view="commands" />}
             {view === "vault" && <EditionInner language={language} view="vault" />}

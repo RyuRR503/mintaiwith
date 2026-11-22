@@ -87,9 +87,9 @@ export function EditionCalculator({ language }: { language: Language }) {
   </section>;
 }
 
-export function EditionInner({ language, view }: { language: Language; view: "market" | "vault" | "commands" | "ladder" | "duel" }) {
+export function EditionInner({ language, view }: { language: Language; view: "market" | "vault" | "commands" | "ladder" | "duel" | "minting" }) {
   const zh = language === "zh";
-  const ids = view === "vault" ? [6, 7] : view === "ladder" ? [8] : view === "duel" ? [10] : view === "commands" ? [0, 1, 2] : [0, 4, 5];
+  const ids = view === "minting" ? [2, 1] : view === "vault" ? [6, 7] : view === "ladder" ? [8] : view === "duel" ? [10] : view === "commands" ? [0, 1, 2] : [0, 4, 5];
   return <>
     <EditionStatus language={language} />
     {view === "market" && <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "卡牌以 ANTB 挂单出售或发布求购。成交费为 1%，卖家收到扣费后的价款和该卡已累积的分红。市场暂未开放。" : "List cards or place bids in ANTB. The trading fee is 1%; sellers receive the net price plus accrued card dividends. The market is not open yet."}</p>}

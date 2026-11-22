@@ -28,3 +28,5 @@
 
 - Render brand lettering through AntWordmark from FagentLogo across navigation, card headers, masthead and transitions; live text prevents stale raster lettering after renames.
 - Keep new-edition source rules and calculations in antagent-edition; until its deployment is verified, show pending-state reference pages and never read or execute the retired deployment under new economics.
+
+- Keep mint ladder pricing and Agent ID discounts together on /minting, reusing edition rules and the shared calculator so explanations and estimates stay consistent.
