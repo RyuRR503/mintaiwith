@@ -1,12 +1,49 @@
 import { useState } from "react";
 import { formatEther } from "viem";
 import { Button } from "@/components/ui/button";
-import { ANTAGENT_EDITION as E, EDITION_RULES, antagentQuote } from "@/lib/fagent/antagent-edition";
+import { ANTAGENT_EDITION as E, EDITION_RULES, antagentPrice, antagentQuote } from "@/lib/fagent/antagent-edition";
 
 type Language = "zh" | "en";
 const nf = (value: number) => value.toLocaleString("en-US");
 export function EditionStatus({ language }: { language: Language }) {
   return <p className="gx-callout" role="status">{language === "zh" ? "ANTAGENT 尚未上线，铸造、交易与领取暂未开放。" : "ANTAGENT is not live yet. Minting, trading and claims are not open."}</p>;
+}
+
+export function MintPriceProgress({ language }: { language: Language }) {
+  const zh = language === "zh";
+  const [sold, setSold] = useState(0);
+  const price = antagentPrice(sold + 1);
+  const remaining = E.priceSpan - sold % E.priceSpan;
+  const capped = price >= E.capPrice;
+  return <section className="border-y border-border py-5" aria-label={zh ? "铸造价格进度" : "Mint price progress"}>
+    <dl className="grid grid-cols-2 gap-5">
+      <div><dt className="text-xs text-muted-foreground">{zh ? "当前铸造价" : "Current mint price"}</dt><dd className="mt-2 text-xl font-semibold">{zh ? "待开放" : "Not open"}</dd></div>
+      <div><dt className="text-xs text-muted-foreground">{zh ? "全站已铸付费卡" : "Paid cards minted"}</dt><dd className="mt-2 text-xl font-semibold">—</dd></div>
+    </dl>
+    <div className="mt-5 border-t border-border pt-5">
+      <label htmlFor="mint-progress-sold" className="text-sm">{zh ? "已铸数量（价格试算）" : "Minted count (price estimate)"}</label>
+      <input id="mint-progress-sold" className="gx-field mt-3" type="number" min={0} max={E.paidCards - 1} value={sold} onChange={event => setSold(Math.max(0, Math.min(E.paidCards - 1, Math.floor(Number(event.target.value) || 0))))} />
+      <p className="mt-4 text-xs text-muted-foreground">{zh ? "下一张原价（试算）" : "Next card full price (estimate)"}</p>
+      <p className="mt-2 break-words font-mono text-3xl text-primary">{formatEther(price)} <span className="text-sm">ANTB</span></p>
+      <p className="mt-3 text-sm leading-6 text-muted-foreground">{capped ? (zh ? "已达到 0.16 ANTB 上限，后续原价不再上涨。" : "The 0.16 ANTB cap has been reached; full price no longer increases.") : (zh ? `本档还可铸 ${nf(remaining)} 张，随后原价升至 ${formatEther(antagentPrice(sold + remaining + 1))} ANTB。` : `${nf(remaining)} cards remain at this price, then full price rises to ${formatEther(antagentPrice(sold + remaining + 1))} ANTB.`)}</p>
+      <p className="mt-3 text-xs text-muted-foreground">{zh ? "未上线 · 以上为价格试算，非实际铸造进度。" : "Not live · Estimates only, not actual mint progress."}</p>
+    </div>
+  </section>;
+}
+
+export function MintLadderDetails({ language }: { language: Language }) {
+  const zh = language === "zh";
+  const rows = [[1, 1000], [1001, 2000], [2001, 3000], [8001, 9000], [180001, E.paidCards]] as const;
+  return <section className="mt-8 border-t border-border pt-8">
+    <h2 className="text-2xl font-semibold">{zh ? "铸到哪一档，就按哪一档付款" : "Your mint position determines the price"}</h2>
+    <p className="mt-4 text-sm leading-8 text-muted-foreground">{zh ? "阶梯按全站累计付费铸造数量推进，不是按你个人买了多少张。每 1,000 张为一档，同档每张原价相同；下一档每张增加 0.0008 ANTB。团队卡不计入付费阶梯，开池后继续累积，不重新从起价计算。" : "The ladder follows total paid mints across all wallets, not your personal purchases. Each rung contains 1,000 cards at the same full price; the next adds 0.0008 ANTB per card. Team cards do not count. Pool launch does not reset the ladder."}</p>
+    <div className="mt-6 overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-border"><th className="py-3 pr-4">{zh ? "全站付费铸造顺序" : "Paid mint positions"}</th><th className="py-3">{zh ? "每张原价" : "Full price per card"}</th></tr></thead><tbody>{rows.map(([start, end]) => <tr key={start} className="border-b border-border"><td className="py-4 pr-4">{nf(start)}–{nf(end)}</td><td className="py-4 font-mono text-primary">{formatEther(antagentPrice(start))} ANTB</td></tr>)}</tbody></table></div>
+    <p className="mt-4 text-sm leading-7 text-muted-foreground">{zh ? "中间各档按相同规则递增。第 180,001 张起达到 0.16 ANTB 上限，后续原价保持不变。" : "Intermediate rungs follow the same increment. From paid mint 180,001, full price reaches 0.16 ANTB and stays capped."}</p>
+    <h3 className="mt-8 text-xl font-semibold">{zh ? "折扣在所在档位原价上计算" : "Discounts apply to each rung’s full price"}</h3>
+    <p className="mt-4 text-sm leading-8 text-muted-foreground">{zh ? "例如全站已铸 1,000 张，下一张原价为 0.0168 ANTB。持有 Agent ID 满 10 天付 0.01512 ANTB；满 20 天付 0.01428 ANTB；满 30 天付 0.01344 ANTB。只享受符合条件的最高一档折扣，不叠加；网络和揭晓服务费另付。" : "After 1,000 paid mints, the next card costs 0.0168 ANTB at full price. With an eligible Agent ID, pay 0.01512 after 10 days, 0.01428 after 20 days, or 0.01344 after 30 days. Only the highest eligible discount applies; discounts do not stack. Network and reveal fees are separate."}</p>
+    <h3 className="mt-8 text-xl font-semibold">{zh ? "一笔购买跨档，逐张计价" : "A batch crossing a rung is priced card by card"}</h3>
+    <p className="mt-4 text-sm leading-8 text-muted-foreground">{zh ? "例如已铸 999 张，你一次买 2 张：第 1,000 张按 0.016 ANTB，第 1,001 张按 0.0168 ANTB，原价合计 0.0328 ANTB；符合八折条件则合计 0.02624 ANTB。不是整笔都按较低档或较高档计算。" : "After 999 paid mints, buying two cards costs 0.016 ANTB for card 1,000 and 0.0168 ANTB for card 1,001: 0.0328 ANTB total at full price, or 0.02624 with the eligible 20% discount. The batch is not priced entirely at either rung."}</p>
+  </section>;
 }
 
 export function RarityReference({ language }: { language: Language }) {

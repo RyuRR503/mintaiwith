@@ -8,7 +8,7 @@ import { CopyButton } from "@/components/flap/CopyButton";
 import { AntWordmark } from "@/components/agent-cards/FagentLogo";
 import { AntMark } from "@/components/agent-cards/AntMark";
 import { ANTAGENT_EDITION, EDITION_COPY, EDITION_RULES } from "@/lib/fagent/antagent-edition";
-import { EditionStatus, EditionSummary, EditionCalculator, EditionInner, RarityReference, TokenReference } from "@/components/agent-cards/EditionReference";
+import { MintPriceProgress, MintLadderDetails, EditionStatus, EditionSummary, EditionCalculator, EditionInner, RarityReference, TokenReference } from "@/components/agent-cards/EditionReference";
 
 const TOTAL_POOL_CARDS = 777_777;
 const PRESALE_CARDS = 20_000;
@@ -1606,6 +1606,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     </div>
                     <p className="ant-fair-body">{t("hero.fair")}</p>
                   </div>
+                  <MintPriceProgress language={language} />
                   <dl className="ant-fair-facts">
                     <div className="ant-fair-fact">
                       <dt>{t("mint.presale")}</dt>
@@ -1683,7 +1684,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
             seed={page[4]}
             foot={t("footer.risk")}
           >
-            {view === "minting" && <><EditionInner language={language} view="minting" /><EditionCalculator language={language} /></>}
+            {view === "minting" && <><EditionInner language={language} view="minting" /><MintLadderDetails language={language} /><EditionCalculator language={language} /></>}
             {view === "market" && <EditionInner language={language} view="market" />}
             {view === "commands" && <EditionInner language={language} view="commands" />}
             {view === "vault" && <EditionInner language={language} view="vault" />}

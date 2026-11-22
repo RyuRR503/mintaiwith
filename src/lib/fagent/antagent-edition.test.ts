@@ -17,6 +17,8 @@ describe("ANTAGENT 2026-11-22 source rules", () => {
     expect([antagentPrice(1), antagentPrice(1000), antagentPrice(1001), antagentPrice(180001), antagentPrice(758032)]).toEqual([16000000000000000n, 16000000000000000n, 16800000000000000n, 160000000000000000n, 160000000000000000n]);
   });
   it("sums each card across rungs instead of using one batch price", () => { expect(antagentQuote(1000, 2)).toBe(32800000000000000n); });
+  it("discounts the next card after 1000 paid mints", () => { expect([9000, 8500, 8000].map(rate => antagentQuote(1001, 1, rate))).toEqual([15120000000000000n, 14280000000000000n, 13440000000000000n]); });
+  it("applies 20 percent off to a two-card batch crossing the first rung", () => { expect(antagentQuote(1000, 2, 8000)).toBe(26240000000000000n); });
   it("matches exact historical-proof block thresholds", () => { expect([ageDiscount(1919999), ageDiscount(1920000), ageDiscount(3840000), ageDiscount(5760000)]).toEqual([10000, 9000, 8500, 8000]); });
   it("applies the selected discount to each card", () => { expect(antagentQuote(1000, 2, 8500)).toBe(27880000000000000n); });
   it("accounts for changed card and token supply", () => {
