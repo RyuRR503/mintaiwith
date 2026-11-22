@@ -12,6 +12,7 @@ describe("ANTAGENT 2026-11-22 source rules", () => {
     expect(e.tiers.map(t => [t.count, t.weight])).toEqual([[453767, 2], [246612, 5], [58428, 14], [18970, 40]]);
     expect(e.tiers.reduce((n, t) => n + t.count, 0)).toBe(777777);
   });
+  it("expresses dividends relative to one Common card", () => { expect(e.tiers.map(t => t.weight / 2)).toEqual([1, 2.5, 7, 20]); });
   it("prices the 1000-card boundaries exactly and caps at 0.16 ANTB", () => {
     expect([antagentPrice(1), antagentPrice(1000), antagentPrice(1001), antagentPrice(180001), antagentPrice(758032)]).toEqual([16000000000000000n, 16000000000000000n, 16800000000000000n, 160000000000000000n, 160000000000000000n]);
   });

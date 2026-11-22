@@ -16,18 +16,18 @@ export function RarityReference({ language }: { language: Language }) {
       {E.tiers.map((tier, index) => <article key={tier.weight} className="rounded-lg border border-border bg-card p-6">
         <p className="gx-kicker">0{index + 1} / {tier.name[1]}</p>
         <h2 className="mt-4 text-2xl font-semibold">{tier.name[i]}</h2>
-        <p className="mt-7 font-mono text-5xl text-primary">{tier.weight}<span className="ml-2 text-sm text-muted-foreground">{i === 0 ? "权重" : "weight"}</span></p>
+        <p className="mt-7 font-mono text-5xl text-primary">{tier.weight / 2}<span className="ml-2 text-sm text-muted-foreground">{i === 0 ? "倍分红" : "× dividends"}</span></p>
         <dl className="mt-6 space-y-3 border-t border-border pt-5 text-sm">
           <div className="flex justify-between gap-2"><dt className="text-muted-foreground">{i === 0 ? "卡组数量" : "Deck count"}</dt><dd>{nf(tier.count)}</dd></div>
           <div className="flex justify-between gap-2"><dt className="text-muted-foreground">{i === 0 ? "初始占比" : "Initial share"}</dt><dd>{(tier.count / E.totalCards * 100).toFixed(2)}%</dd></div>
-          <div className="flex justify-between gap-2"><dt className="text-muted-foreground">{i === 0 ? "相对普通卡" : "vs. Common"}</dt><dd>{tier.weight / 2}×</dd></div>
+          <div className="flex justify-between gap-2"><dt className="text-muted-foreground">{i === 0 ? "分红基准" : "Dividend baseline"}</dt><dd>{i === 0 ? "普通卡 = 1 倍" : "Common = 1×"}</dd></div>
         </dl>
       </article>)}
     </div>
     <div className="mt-10 border-t border-border pt-8">
       <h2 className="text-2xl font-semibold">{i === 0 ? "先封存，后揭晓，再参与分红" : "Seal. Reveal. Share dividends."}</h2>
-      <p className="mt-4 max-w-3xl text-sm leading-8 text-muted-foreground">{i === 0 ? "未揭晓的卡牌权重为 0。Flap Trigger 在后续区块回调，等级从剩余卡组中抽取；初始占比不是每次抽卡的固定概率。退款会归还对应档位，普通烧卡不会补回库存。展示用编号与图案不等于真实等级。" : "Unrevealed cards have zero weight. Flap Trigger reveals a tier in a later block, drawing from the remaining deck. Initial shares are not fixed odds for every draw. Refunds restore tiers; ordinary burns do not refill the deck. Display numbers and artwork are not proof of rarity."}</p>
-      <p className="gx-callout mt-6">{i === 0 ? "例：只有一张普通卡和一张传奇卡参与，权重总和为 42。若可分红 42 ANTB，普通卡得 2 ANTB，传奇卡得 40 ANTB。真实分红以有效总权重和可分配金额为准，非固定收益；对决胜率不按此权重增加。" : "Example: one Common and one Legendary card have a combined weight of 42. With 42 ANTB to distribute, they receive 2 and 40 ANTB respectively. Actual payouts depend on eligible weight and available funds, not a fixed return. These weights do not increase duel odds."}</p>
+      <p className="mt-4 max-w-3xl text-sm leading-8 text-muted-foreground">{i === 0 ? "未揭晓的卡牌不参与分红。Flap Trigger 在后续区块回调，等级从剩余卡组中抽取；初始占比不是每次抽卡的固定概率。退款会归还对应档位，普通烧卡不会补回库存。展示用编号与图案不等于真实等级。" : "Unrevealed cards earn no dividends. Flap Trigger reveals a tier in a later block, drawing from the remaining deck. Initial shares are not fixed odds for every draw. Refunds restore tiers; ordinary burns do not refill the deck. Display numbers and artwork are not proof of rarity."}</p>
+      <p className="gx-callout mt-6">{i === 0 ? "普通卡为 1 倍，稀有卡 2.5 倍，史诗卡 7 倍，传奇卡 20 倍。例：只有一张普通卡和一张传奇卡参与，若可分红 21 ANTB，普通卡得 1 ANTB，传奇卡得 20 ANTB。实际金额取决于参与分红的卡牌和可分配资金，不是固定收益；分红倍数不提高对决胜率。" : "Common earns 1×, Rare 2.5×, Epic 7× and Legendary 20× the dividends of a Common card. Example: with only one Common and one Legendary sharing 21 ANTB, they receive 1 and 20 ANTB respectively. Actual payouts depend on eligible cards and available funds, not a fixed return. Dividend multipliers do not increase duel odds."}</p>
     </div>
   </>;
 }
@@ -35,7 +35,7 @@ export function RarityReference({ language }: { language: Language }) {
 export function EditionSummary({ language }: { language: Language }) {
   const zh = language === "zh";
   return <><EditionStatus language={language} /><dl className="mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
-    {[[zh ? "预售开池门槛" : "Presale launch threshold", "8,429", zh ? "张付费卡" : "paid cards"], [zh ? "开池配置" : "Pool allocation", "120", "ANTB"], [zh ? "卡牌上限" : "Card cap", "777,777", zh ? "张" : "cards"], [zh ? "稀有度权重" : "Rarity weights", "2 / 5 / 14 / 40", zh ? "四档" : "four tiers"]].map(([label, value, note]) => <div key={label} className="border-b border-border py-5"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-3 text-2xl font-semibold">{value}</dd><dd className="mt-2 text-xs text-primary">{note}</dd></div>)}
+    {[[zh ? "预售开池门槛" : "Presale launch threshold", "8,429", zh ? "张付费卡" : "paid cards"], [zh ? "开池配置" : "Pool allocation", "120", "ANTB"], [zh ? "卡牌上限" : "Card cap", "777,777", zh ? "张" : "cards"], [zh ? "分红倍数" : "Dividend multipliers", "1 / 2.5 / 7 / 20", zh ? "普通卡为 1 倍" : "Common = 1×"]].map(([label, value, note]) => <div key={label} className="border-b border-border py-5"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-3 text-2xl font-semibold">{value}</dd><dd className="mt-2 text-xs text-primary">{note}</dd></div>)}
   </dl></>;
 }
 
@@ -65,8 +65,8 @@ export function EditionCalculator({ language }: { language: Language }) {
   const total = antagentQuote(index, count, rate);
   return <section className="mt-8 grid gap-8 border-y border-border py-8 md:grid-cols-2">
     <div>
-      <label htmlFor="edition-index" className="block text-sm">{zh ? "起始付费卡序号" : "First paid-card index"}</label>
-      <input id="edition-index" type="number" min={1} max={E.paidCards - count + 1} value={index} className="gx-field mt-3" onChange={event => setIndex(Math.max(1, Math.min(E.paidCards - count + 1, Math.floor(Number(event.target.value) || 1))))} />
+      <label htmlFor="edition-index" className="block text-sm">{zh ? "全站已售出付费卡数量（试算）" : "Paid cards already sold (estimate)"}</label>
+      <input id="edition-index" type="number" min={0} max={E.paidCards - count} value={index - 1} className="gx-field mt-3" onChange={event => setIndex(Math.max(1, Math.min(E.paidCards - count + 1, Math.floor(Number(event.target.value) || 0) + 1)))} />
       <label htmlFor="edition-count" className="mt-5 block text-sm">{zh ? "本笔数量" : "Cards in this batch"}</label>
       <input id="edition-count" type="range" min={1} max={10} value={count} className="mt-4" onChange={event => { const n = Number(event.target.value); setCount(n); setIndex(current => Math.min(current, E.paidCards - n + 1)); }} />
       <p className="mt-3 font-mono text-primary">{count} / 10</p>
