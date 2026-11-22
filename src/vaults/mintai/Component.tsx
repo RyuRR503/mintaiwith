@@ -406,6 +406,7 @@ const LOOK = `
 .ant-sweep-brand .gx-logo-lock { gap: .32em; }
 @media (max-width: 479px) { .gx-header .gx-logo-lock { font-size: 16px; } .ant-sweep-brand { font-size: 28px; } }
 .ant-sweep-brand .gx-logo-mark { animation: ant-orbit-spin .52s var(--ease-cine) .06s both; }
+.ant-sweep-tag { position: absolute; left: 50%; top: 50%; transform: translate(-50%, 18px); font-family: var(--font-display); font-style: italic; font-size: clamp(13px, 1.5vw, 17px); letter-spacing: .03em; color: var(--primary); white-space: nowrap; opacity: 0; animation: ant-brand-in .4s var(--ease-cine) .12s forwards, ant-fade-out .18s ease .46s forwards; }
 .gx-app .gx-menu, .gx-app .gx-lang button { white-space: nowrap; }
 @media (max-width: 479px) { .gx-header .gx-container { gap: 10px; } .gx-header .gx-container > div { gap: 6px; } .gx-app .gx-x { width: 32px; height: 32px; } .gx-app .gx-menu { padding: 0 10px; } .gx-app .gx-lang button { padding-inline: 8px; } }
 @keyframes ant-line-draw { to { transform: scaleX(1); } }
@@ -1494,6 +1495,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
               <AntWordmark />
             </span>
           </span>
+          <span className="ant-sweep-tag">Many ants, one card, shared yield.</span>
         </div>
       )}
       <Grain />
