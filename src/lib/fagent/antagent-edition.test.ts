@@ -14,17 +14,22 @@ describe("ANTAGENT 2026-11-22 source rules", () => {
   });
   it("expresses dividends relative to one Common card", () => { expect(e.tiers.map(t => t.weight / 2)).toEqual([1, 2.5, 7, 20]); });
   it("prices the 1000-card boundaries exactly and caps at 0.16 ANTB", () => {
-    expect([antagentPrice(1), antagentPrice(1000), antagentPrice(1001), antagentPrice(180001), antagentPrice(758032)]).toEqual([16000000000000000n, 16000000000000000n, 16800000000000000n, 160000000000000000n, 160000000000000000n]);
+    expect([antagentPrice(1), antagentPrice(1000), antagentPrice(1001), antagentPrice(180001), antagentPrice(738889)]).toEqual([16000000000000000n, 16000000000000000n, 16800000000000000n, 160000000000000000n, 160000000000000000n]);
   });
   it("sums each card across rungs instead of using one batch price", () => { expect(antagentQuote(1000, 2)).toBe(32800000000000000n); });
   it("discounts the next card after 1000 paid mints", () => { expect([9000, 8500, 8000].map(rate => antagentQuote(1001, 1, rate))).toEqual([15120000000000000n, 14280000000000000n, 13440000000000000n]); });
   it("applies 20 percent off to a two-card batch crossing the first rung", () => { expect(antagentQuote(1000, 2, 8000)).toBe(26240000000000000n); });
   it("matches exact historical-proof block thresholds", () => { expect([ageDiscount(1919999), ageDiscount(1920000), ageDiscount(3840000), ageDiscount(5760000)]).toEqual([10000, 9000, 8500, 8000]); });
   it("applies the selected discount to each card", () => { expect(antagentQuote(1000, 2, 8500)).toBe(27880000000000000n); });
+  it("uses the selected contract team allocation and fully unlocks at sellout", () => {
+    expect([e.paidCards, e.teamCards]).toEqual([738889, 38888]);
+    expect(Math.floor(e.paidCards / 19)).toBe(38888);
+    expect(e.teamCards * e.cardGrant).toBe(328214720);
+  });
   it("accounts for changed card and token supply", () => {
     expect(e.paidCards + e.teamCards).toBe(777777);
     expect(e.poolTokens + (e.presaleCards + e.teamCards) * e.cardGrant + e.ladderTokens + e.burnedAtLaunch).toBe(777777777);
-    expect(e.burnedAtLaunch).toBe(446930459);
+    expect(e.burnedAtLaunch).toBe(285363539);
   });
   it("uses 2 percent tax and the 50/15/15/20 vault allocation", () => { expect([e.taxBps, e.dividendBps, e.floorBps, e.poolBps, e.opsBps]).toEqual([200, 5000, 1500, 1500, 2000]); });
 });

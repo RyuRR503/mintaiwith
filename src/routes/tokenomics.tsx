@@ -4,7 +4,7 @@ import MintAiApp from "@/vaults/mintai/Component";
 export const Route = createFileRoute("/tokenomics")({
   head: () => ({ meta: [
     { title: "ANTAGENT — 代币经济" },
-    { name: "description", content: "ANTAGENT 总量 777,777,777 枚：63,300,000 枚进 ANTB 池，446,930,459 枚开池销毁。" },
+    { name: "description", content: "ANTAGENT 总量 777,777,777 枚：63,300,000 枚进 ANTB 池，285,363,539 枚开池销毁。" },
     { property: "og:title", content: "ANTAGENT — 代币经济" },
     { property: "og:description", content: "ANTB 底池、8,429 张预售配置、团队配置、阶梯储备与开池销毁。" },
     { property: "og:type", content: "website" },
