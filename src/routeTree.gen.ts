@@ -14,6 +14,7 @@ import { Route as CommandsRouteImport } from './routes/commands'
 import { Route as DuelRouteImport } from './routes/duel'
 import { Route as LadderRouteImport } from './routes/ladder'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as MintingRouteImport } from './routes/minting'
 import { Route as RarityRouteImport } from './routes/rarity'
 import { Route as RulesRouteImport } from './routes/rules'
 import { Route as TokenomicsRouteImport } from './routes/tokenomics'
@@ -43,6 +44,11 @@ const LadderRoute = LadderRouteImport.update({
 const MarketRoute = MarketRouteImport.update({
   id: '/market',
   path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MintingRoute = MintingRouteImport.update({
+  id: '/minting',
+  path: '/minting',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RarityRoute = RarityRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/duel': typeof DuelRoute
   '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
+  '/minting': typeof MintingRoute
   '/rarity': typeof RarityRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/duel': typeof DuelRoute
   '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
+  '/minting': typeof MintingRoute
   '/rarity': typeof RarityRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/duel': typeof DuelRoute
   '/ladder': typeof LadderRoute
   '/market': typeof MarketRoute
+  '/minting': typeof MintingRoute
   '/rarity': typeof RarityRoute
   '/rules': typeof RulesRoute
   '/tokenomics': typeof TokenomicsRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/ladder'
     | '/market'
+    | '/minting'
     | '/rarity'
     | '/rules'
     | '/tokenomics'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/ladder'
     | '/market'
+    | '/minting'
     | '/rarity'
     | '/rules'
     | '/tokenomics'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/ladder'
     | '/market'
+    | '/minting'
     | '/rarity'
     | '/rules'
     | '/tokenomics'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   DuelRoute: typeof DuelRoute
   LadderRoute: typeof LadderRoute
   MarketRoute: typeof MarketRoute
+  MintingRoute: typeof MintingRoute
   RarityRoute: typeof RarityRoute
   RulesRoute: typeof RulesRoute
   TokenomicsRoute: typeof TokenomicsRoute
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/market'
       fullPath: '/market'
       preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minting': {
+      id: '/minting'
+      path: '/minting'
+      fullPath: '/minting'
+      preLoaderRoute: typeof MintingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/rarity': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   DuelRoute: DuelRoute,
   LadderRoute: LadderRoute,
   MarketRoute: MarketRoute,
+  MintingRoute: MintingRoute,
   RarityRoute: RarityRoute,
   RulesRoute: RulesRoute,
   TokenomicsRoute: TokenomicsRoute,
