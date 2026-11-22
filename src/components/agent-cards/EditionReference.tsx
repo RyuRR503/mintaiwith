@@ -133,7 +133,11 @@ export function TokenReference({ language }: { language: Language }) {
         <span className="ml-auto shrink-0 text-right"><span className="block font-mono text-sm text-foreground">{index === 2 ? `${Number(teamShare.toFixed(1))}%` : nf(amount)}</span><span className="mt-1 block text-xs text-muted-foreground">{index === 2 ? (zh ? "占全部卡牌" : "of all cards") : `${(amount / E.totalTokens * 100).toFixed(1)}%`}</span></span>
       </Button>)}</div>
     </div>
-    <p className="gx-callout mt-6">{zh ? "虚线一段是团队卡代币，锁在合约里，随付费铸造逐张解锁。" : "The dashed segment represents team-card tokens, locked in the contract and unlocked card by card as paid mints progress."}</p>
+    <div className="gx-callout mt-6">
+      <h2 className="text-base font-semibold">{zh ? "团队卡随铸造逐张解锁，不是一次拿走" : "Team cards unlock with paid mints, not all at once"}</h2>
+      <p className="mt-3 text-sm leading-7">{zh ? "团队卡占全部卡牌的 5%。每铸出 19 张付费卡，才解锁 1 张团队卡；没有新的铸造，就没有新的解锁，对应代币继续锁在合约里。团队卡开池后才能领取，代币按规则分期释放。" : "Team cards represent 5% of all cards. Every 19 paid mints unlock one team card. Without more paid mints, no further slots unlock and their tokens remain locked. Team cards can only be claimed after pool launch, with tokens released in stages."}</p>
+      <p className="mt-2 text-sm leading-7">{zh ? "团队卡同样需要揭晓稀有度，按相同的等级倍数参与分红，没有额外的分红加成。虚线部分表示团队卡对应的代币配置。" : "Team cards reveal their rarity and share dividends using the same tier multipliers, with no extra team dividend bonus. The dashed segment represents their token allocation."}</p>
+    </div>
     <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "120 ANTB 与 63,300,000 枚项目代币进入主池，LP 销毁；未分配的 285,363,539 枚代币在同笔开池交易中转入黑洞地址。阶梯认购收入以 ANTB 流向持卡分红，详见规则页。" : "120 ANTB and 63,300,000 project tokens enter the pool, and LP is burned. The unallocated 285,363,539 tokens go to the dead address in the same launch transaction. Ladder subscription proceeds fund ANTB card dividends; see the rules for details."}</p>
   </>;
 }
