@@ -1591,11 +1591,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                         <Shuffle size={14} />
                       </button>
                     </div>
-                    <div className="ant-stage-specs" aria-hidden="true">
-                      <span className="ant-spec-pill">ORBITS <strong>{4 + (cardId % 4)}</strong></span>
-                      <span className="ant-spec-pill">RAYS <strong>{12 + (cardId % 8)}</strong></span>
-                      <span className="ant-spec-pill">{language === "zh" ? "展示艺术 · 非链上等级" : "DISPLAY ART · NOT A TIER"}</span>
-                    </div>
+
                   </div>
                 </div>
 

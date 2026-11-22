@@ -6,7 +6,7 @@ import { ANTAGENT_EDITION as E, EDITION_RULES, antagentQuote } from "@/lib/fagen
 type Language = "zh" | "en";
 const nf = (value: number) => value.toLocaleString("en-US");
 export function EditionStatus({ language }: { language: Language }) {
-  return <p className="gx-callout" role="status">{language === "zh" ? "ANTAGENT 尚未上线，铸造、交易与领取暂未开放；页面展示规则与试算信息。" : "ANTAGENT is not live yet. Minting, trading and claims are unavailable; displayed figures describe rules and estimates."}</p>;
+  return <p className="gx-callout" role="status">{language === "zh" ? "ANTAGENT 尚未上线，铸造、交易与领取暂未开放。" : "ANTAGENT is not live yet. Minting, trading and claims are not open."}</p>;
 }
 
 export function RarityReference({ language }: { language: Language }) {
@@ -26,7 +26,7 @@ export function RarityReference({ language }: { language: Language }) {
     </div>
     <div className="mt-10 border-t border-border pt-8">
       <h2 className="text-2xl font-semibold">{i === 0 ? "先封存，后揭晓，再参与分红" : "Seal. Reveal. Share dividends."}</h2>
-      <p className="mt-4 max-w-3xl text-sm leading-8 text-muted-foreground">{i === 0 ? "未揭晓的卡牌不参与分红。Flap Trigger 在后续区块回调，等级从剩余卡组中抽取；初始占比不是每次抽卡的固定概率。退款会归还对应档位，普通烧卡不会补回库存。展示用编号与图案不等于真实等级。" : "Unrevealed cards earn no dividends. Flap Trigger reveals a tier in a later block, drawing from the remaining deck. Initial shares are not fixed odds for every draw. Refunds restore tiers; ordinary burns do not refill the deck. Display numbers and artwork are not proof of rarity."}</p>
+      <p className="mt-4 max-w-3xl text-sm leading-8 text-muted-foreground">{i === 0 ? "未揭晓的卡牌不参与分红。等级从剩余卡组中随机抽取，抽取概率随剩余数量变化。预售退款会归还该卡对应的等级名额，其他销毁不补回名额。" : "Unrevealed cards earn no dividends. Tiers are drawn randomly from the remaining deck, so odds change with available counts. Presale refunds restore the card's tier slot; other burns do not refill slots."}</p>
       <p className="gx-callout mt-6">{i === 0 ? "普通卡为 1 倍，稀有卡 2.5 倍，史诗卡 7 倍，传奇卡 20 倍。例：只有一张普通卡和一张传奇卡参与，若可分红 21 ANTB，普通卡得 1 ANTB，传奇卡得 20 ANTB。实际金额取决于参与分红的卡牌和可分配资金，不是固定收益；分红倍数不提高对决胜率。" : "Common earns 1×, Rare 2.5×, Epic 7× and Legendary 20× the dividends of a Common card. Example: with only one Common and one Legendary sharing 21 ANTB, they receive 1 and 20 ANTB respectively. Actual payouts depend on eligible cards and available funds, not a fixed return. Dividend multipliers do not increase duel odds."}</p>
     </div>
   </>;
@@ -34,7 +34,7 @@ export function RarityReference({ language }: { language: Language }) {
 
 export function EditionSummary({ language }: { language: Language }) {
   const zh = language === "zh";
-  return <><EditionStatus language={language} /><dl className="mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
+  return <><dl className="mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
     {[[zh ? "预售开池门槛" : "Presale launch threshold", "8,429", zh ? "张付费卡" : "paid cards"], [zh ? "开池配置" : "Pool allocation", "120", "ANTB"], [zh ? "卡牌上限" : "Card cap", "777,777", zh ? "张" : "cards"], [zh ? "分红倍数" : "Dividend multipliers", "1 / 2.5 / 7 / 20", zh ? "普通卡为 1 倍" : "Common = 1×"]].map(([label, value, note]) => <div key={label} className="border-b border-border py-5"><dt className="text-xs text-muted-foreground">{label}</dt><dd className="mt-3 text-2xl font-semibold">{value}</dd><dd className="mt-2 text-xs text-primary">{note}</dd></div>)}
   </dl></>;
 }
@@ -70,7 +70,7 @@ export function EditionCalculator({ language }: { language: Language }) {
       <label htmlFor="edition-count" className="mt-5 block text-sm">{zh ? "本笔数量" : "Cards in this batch"}</label>
       <input id="edition-count" type="range" min={1} max={10} value={count} className="mt-4" onChange={event => { const n = Number(event.target.value); setCount(n); setIndex(current => Math.min(current, E.paidCards - n + 1)); }} />
       <p className="mt-3 font-mono text-primary">{count} / 10</p>
-      <label htmlFor="edition-discount" className="mt-5 block text-sm">{zh ? "历史证明折扣（试算）" : "Proof discount (estimate)"}</label>
+      <label htmlFor="edition-discount" className="mt-5 block text-sm">{zh ? "Agent ID 持有折扣（试算）" : "Agent ID holding discount (estimate)"}</label>
       <select id="edition-discount" value={rate} onChange={event => setRate(Number(event.target.value))} className="gx-field mt-3">
         <option value={10000}>{zh ? "原价 / 无有效证明" : "Full price / no eligible proof"}</option>
         <option value={9000}>{zh ? "约满 10 天 · 九折" : "About 10 days · 90%"}</option>
@@ -79,9 +79,9 @@ export function EditionCalculator({ language }: { language: Language }) {
       </select>
     </div>
     <div className="flex flex-col justify-center">
-      <p className="gx-kicker">ANTB / {zh ? "合约阶梯试算" : "LADDER ESTIMATE"}</p>
+      <p className="gx-kicker">ANTB / {zh ? "铸造费用试算" : "LADDER ESTIMATE"}</p>
       <p className="mt-5 break-words text-4xl font-semibold text-primary">{formatEther(total)} <span className="text-base">ANTB</span></p>
-      <p className="mt-5 text-sm leading-7 text-muted-foreground">{zh ? "逐张按阶梯原价与选定折扣计算，不含 Gas 和每张卡的 BNB Trigger 费。折扣实际可用性需当前 Agent ID 持仓和有效历史证明；实际费用以交易确认时为准。" : "Each card is priced at its ladder rung and selected discount. Excludes gas and per-card BNB Trigger fees. Real eligibility requires a current Agent ID and valid historical proof. Actual costs are determined when a transaction is confirmed."}</p>
+      <p className="mt-5 text-sm leading-7 text-muted-foreground">{zh ? "预计铸造费用按购买数量和所选折扣计算，不含网络手续费与卡牌揭晓服务费。享受折扣需当前持有 Agent ID，并通过历史持有验证；实际费用以交易确认时为准。" : "Estimated mint costs follow the batch size and selected discount, excluding network and card-reveal fees. Discounts require a current Agent ID and verified holding history. Actual costs are determined at transaction confirmation."}</p>
       <Button variant="outline" className="mt-6 self-start" disabled>{zh ? "铸造待上线" : "Minting not open"}</Button>
     </div>
   </section>;
