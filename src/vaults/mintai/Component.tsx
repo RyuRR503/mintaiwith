@@ -202,7 +202,8 @@ const LOOK = `
 .ant-hero { position: relative; padding-block: 36px 56px; --hp: 0; }
 .ant-masthead { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); gap: 36px; align-items: end; padding-bottom: 32px; border-bottom: 1px solid color-mix(in oklab, var(--foreground) 16%, transparent); }
 .ant-hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); font: 500 11px/1 var(--font-mono); letter-spacing: .1em; color: var(--muted-foreground); }
-.ant-hero-headline { margin-top: 18px; font-family: var(--font-display); font-size: clamp(2.2rem, 3.9vw, 3.65rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.026em; color: var(--foreground); }
+.ant-hero-tagline { margin-top: 16px; font-family: var(--font-display); font-style: italic; font-size: 15px; letter-spacing: .02em; color: var(--primary); }
+.ant-hero-headline { margin-top: 10px; font-family: var(--font-display); font-size: clamp(2.2rem, 3.9vw, 3.65rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.026em; color: var(--foreground); }
 .ant-hero-headline em { display: block; font-style: italic; font-weight: 500; color: var(--primary); }
 .ant-masthead-side { display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; padding-left: 28px; border-left: 1px solid var(--border); }
 .ant-masthead-brand { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
@@ -1538,6 +1539,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     <span className="gx-live-dot" />
                     <span>{t("hero.kicker")}</span>
                   </span>
+                  <p className="ant-hero-tagline">{t("hero.tagline")}</p>
                   <h1 className="ant-hero-headline">
                     <span className="ant-mask"><span>{t("hero.line1")}</span></span>
                     <em className="ant-mask"><span className="ant-ink">{t("hero.line2")}<svg viewBox="0 0 400 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14 C 80 4, 160 18, 240 9 S 360 6, 396 11" /></svg></span></em>
