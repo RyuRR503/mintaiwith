@@ -79,6 +79,7 @@ export function EditionSummary({ language }: { language: Language }) {
 
 export function TokenReference({ language }: { language: Language }) {
   const zh = language === "zh";
+  const [active, setActive] = useState<number | null>(null);
   const allocations = [
     [zh ? "开池流动性" : "Opening liquidity", E.poolTokens],
     [zh ? "预售卡配置" : "Presale grants", E.presaleCards * E.cardGrant],
@@ -86,10 +87,38 @@ export function TokenReference({ language }: { language: Language }) {
     [zh ? "阶梯认购储备" : "Ladder reserve", E.ladderTokens],
     [zh ? "开池销毁" : "Burned at launch", E.burnedAtLaunch],
   ] as const;
+  const circumference = 2 * Math.PI * 80;
+  let cursor = 0;
+  const arcs = allocations.map(([label, amount], index) => {
+    const length = amount / E.totalTokens * circumference;
+    const start = cursor;
+    cursor += length;
+    return { label, amount, index, length, start };
+  });
+  const selected = active === null ? undefined : arcs[active];
   return <><EditionStatus language={language} />
-    <p className="mt-10 text-sm text-muted-foreground">{zh ? "固定总量" : "Fixed supply"}</p>
-    <h2 className="mt-3 break-words font-mono text-4xl text-primary">777,777,777</h2>
-    <dl className="mt-8 divide-y divide-border">{allocations.map(([label, amount]) => <div key={label} className="grid grid-cols-2 items-center gap-4 py-6 sm:grid-cols-3"><dt>{label}</dt><dd className="text-right font-mono">{nf(amount)}</dd><dd className="col-span-2 text-right text-sm text-muted-foreground sm:col-span-1">{(amount / E.totalTokens * 100).toFixed(2)}%</dd></div>)}</dl>
+    <div className="edition-token-layout mt-10">
+      <div className="edition-token-ring" onMouseLeave={() => setActive(null)}>
+        <svg viewBox="0 0 200 200" className="edition-token-svg" role="img" aria-label={zh ? "代币分配环形图" : "Token allocation donut chart"}>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" strokeWidth="22" />
+          {arcs.map(({ label, index, length, start }) => <g key={label} className={`edition-token-slice edition-token-slice-${index}`} data-active={active === index} data-dimmed={active !== null && active !== index} onMouseEnter={() => setActive(index)}>
+            <title>{label}: {nf(allocations[index]?.[1] ?? 0)}</title>
+            {index === 2 ? Array.from({ length: 26 }, (_, mark) => <circle key={mark} cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${length / 26 * .55} ${circumference - length / 26 * .55}`} strokeDashoffset={-(start + mark * length / 26)} />) : <circle cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${Math.max(0, length - 2)} ${circumference - length + 2}`} strokeDashoffset={-start} />}
+          </g>)}
+        </svg>
+        <div className="edition-token-center" aria-live="polite">
+          <p className="text-sm text-muted-foreground">{selected?.label ?? (zh ? "固定总量" : "Fixed supply")}</p>
+          <p className="mt-3 font-mono text-2xl font-semibold text-foreground">{nf(selected?.amount ?? E.totalTokens)}</p>
+          <p className="mt-3 text-sm text-primary">{selected ? `${(selected.amount / E.totalTokens * 100).toFixed(2)}%` : "ANTAGENT"}</p>
+          {active === 2 && <p className="mt-2 text-xs text-muted-foreground">{zh ? "锁仓中" : "Locked"}</p>}
+        </div>
+      </div>
+      <div className="divide-y divide-border">{allocations.map(([label, amount], index) => <Button key={label} variant="ghost" className="edition-token-row" aria-pressed={active === index} onMouseEnter={() => setActive(index)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(index)} onBlur={() => setActive(null)} onClick={() => setActive(index)}>
+        <span className={`edition-token-key edition-token-slice-${index}`} aria-hidden="true" />
+        <span className="min-w-0 text-left"><span className="block font-medium">{label}{index === 2 && <span className="ml-2 text-xs text-muted-foreground">{zh ? "锁仓中" : "Locked"}</span>}</span><span className="mt-2 block font-mono text-xs text-muted-foreground">{nf(amount)}</span></span>
+        <span className="ml-auto font-mono text-lg text-primary">{(amount / E.totalTokens * 100).toFixed(2)}%</span>
+      </Button>)}</div>
+    </div>
     <p className="gx-callout mt-6">{zh ? "团队卡 19,745 张，约占卡牌总量 2.54%；团队代币配置 166,647,800 枚，约占代币总量 21.43%。配置先锁定，每 19 张付费卡解锁 1 张团队卡，领取与释放遵循规则。" : "19,745 team cards are about 2.54% of NFT supply. Their 166,647,800-token allocation is about 21.43% of token supply. Slots unlock one per 19 paid cards; claiming and vesting follow the rules."}</p>
     <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "120 ANTB 与 63,300,000 枚项目代币进入主池，LP 销毁；未分配的 446,930,459 枚代币在同笔开池交易中转入黑洞地址。阶梯认购收入以 ANTB 流向持卡分红，详见规则页。" : "120 ANTB and 63,300,000 project tokens enter the pool, and LP is burned. The unallocated 446,930,459 tokens go to the dead address in the same launch transaction. Ladder subscription proceeds fund ANTB card dividends; see the rules for details."}</p>
   </>;

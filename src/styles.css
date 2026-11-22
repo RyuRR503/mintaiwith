@@ -469,6 +469,23 @@ a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: rotate(45deg); }
 .gx-callout { border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; background: color-mix(in oklab, var(--primary) 12%, transparent); padding: 12px 16px; font-size: .875rem; font-weight: 500; line-height: 1.75rem; }
 @media (prefers-reduced-motion: reduce) { .gx-flow-line::before, .gx-flow-line span { animation: none; } }
 .gx-donut { width: 100%; transform: rotate(-90deg); filter: drop-shadow(0 0 30px color-mix(in oklab, var(--primary) 35%, transparent)); }
+.edition-token-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 48px; }
+.edition-token-ring { position: relative; width: 100%; max-width: 420px; aspect-ratio: 1; margin-inline: auto; }
+.edition-token-svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.edition-token-center { position: absolute; inset: 24%; display: flex; flex-direction: column; justify-content: center; text-align: center; pointer-events: none; }
+.edition-token-slice-0 { --allocation-color: var(--primary); }
+.edition-token-slice-1 { --allocation-color: var(--gold); }
+.edition-token-slice-2 { --allocation-color: var(--rare); }
+.edition-token-slice-3 { --allocation-color: var(--common); }
+.edition-token-slice-4 { --allocation-color: var(--foreground); }
+.edition-token-slice circle { stroke: var(--allocation-color); transition: stroke-width .3s var(--ease-cine), opacity .3s; }
+.edition-token-slice[data-active="true"] circle { stroke-width: 28; }
+.edition-token-slice[data-dimmed="true"] circle { opacity: .35; }
+.edition-token-key { width: 10px; height: 10px; flex-shrink: 0; border-radius: 50%; background: var(--allocation-color); }
+.edition-token-row { width: 100%; height: auto; min-height: 82px; padding: 16px 8px; display: flex; gap: 14px; border-radius: 0; white-space: normal; }
+.edition-token-row[aria-pressed="true"] { background: var(--accent); }
+@media (max-width: 700px) { .edition-token-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; } .edition-token-ring { max-width: 340px; } }
+@media (prefers-reduced-motion: reduce) { .edition-token-slice circle { transition: none; } }
 .gx-alloc { display: flex; width: 100%; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); transition: border-color .3s, transform .3s; }
 .gx-alloc-active, .gx-alloc:hover { border-color: var(--primary); transform: translateX(6px); }
 
