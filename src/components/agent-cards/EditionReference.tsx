@@ -73,9 +73,9 @@ export function EditionCalculator({ language }: { language: Language }) {
       <label htmlFor="edition-discount" className="mt-5 block text-sm">{zh ? "Agent ID 持有折扣（试算）" : "Agent ID holding discount (estimate)"}</label>
       <select id="edition-discount" value={rate} onChange={event => setRate(Number(event.target.value))} className="gx-field mt-3">
         <option value={10000}>{zh ? "原价 / 无有效证明" : "Full price / no eligible proof"}</option>
-        <option value={9000}>{zh ? "约满 10 天 · 九折" : "About 10 days · 90%"}</option>
-        <option value={8500}>{zh ? "约满 20 天 · 八五折" : "About 20 days · 85%"}</option>
-        <option value={8000}>{zh ? "约满 30 天 · 八折" : "About 30 days · 80%"}</option>
+        <option value={9000}>{zh ? "满 10 天 · 九折" : "10 days · 10% off"}</option>
+        <option value={8500}>{zh ? "满 20 天 · 八五折" : "20 days · 15% off"}</option>
+        <option value={8000}>{zh ? "满 30 天 · 八折" : "30 days · 20% off"}</option>
       </select>
     </div>
     <div className="flex flex-col justify-center">
