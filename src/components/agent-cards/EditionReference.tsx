@@ -136,6 +136,7 @@ export function TokenReference({ language }: { language: Language }) {
     <div className="gx-callout mt-6">
       <h2 className="text-base font-semibold">{zh ? "团队卡随铸造逐张解锁，不是一次拿走" : "Team cards unlock with paid mints, not all at once"}</h2>
       <p className="mt-3 text-sm leading-7">{zh ? "团队卡只占全部卡牌的 5%，而且不能自己放出来：大家每铸出 19 张付费卡，才解锁 1 张团队卡。没人铸造，团队卡就一张也解锁不了，对应的代币一直锁在合约里，相当于锁仓。团队卡和普通卡同权，没有额外权益。" : "Team cards represent only 5% of all cards and cannot be released independently: every 19 paid mints unlock one team card. Without paid mints, no team cards unlock, and their tokens remain locked in the contract. Team cards have the same rights as ordinary cards, with no extra benefits."}</p>
+      <p className="mt-3 text-sm leading-7">{zh ? "团队卡铸造时也需支付稀有度揭晓服务费，与普通卡使用同一套随机抽取规则，不能指定等级。" : "Team-card minting also requires the rarity-reveal service fee. Team and ordinary cards use the same random draw rules; a tier cannot be chosen."}</p>
     </div>
     <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "120 ANTB 与 63,300,000 枚项目代币进入主池，LP 销毁；未分配的 285,363,539 枚代币在同笔开池交易中转入黑洞地址。阶梯认购收入以 ANTB 流向持卡分红，详见规则页。" : "120 ANTB and 63,300,000 project tokens enter the pool, and LP is burned. The unallocated 285,363,539 tokens go to the dead address in the same launch transaction. Ladder subscription proceeds fund ANTB card dividends; see the rules for details."}</p>
   </>;
