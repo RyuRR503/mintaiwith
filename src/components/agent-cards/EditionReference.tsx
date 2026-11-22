@@ -79,27 +79,27 @@ export function EditionSummary({ language }: { language: Language }) {
 
 export function TokenReference({ language }: { language: Language }) {
   const zh = language === "zh";
-  const [active, setActive] = useState<number | null>(2);
+  const [active, setActive] = useState<number | null>(4);
   const allocations = [
     [zh ? "开池流动性" : "Opening liquidity", E.poolTokens],
     [zh ? "预售卡发放" : "Presale grants", E.presaleCards * E.cardGrant],
-    [zh ? "团队卡" : "Team cards", E.teamCards * E.cardGrant],
     [zh ? "阶梯认购储备" : "Ladder reserve", E.ladderTokens],
     [zh ? "开池销毁" : "Burned at launch", E.burnedAtLaunch],
+    [zh ? "团队卡" : "Team cards", E.teamCards * E.cardGrant],
   ] as const;
   const teamShare = E.teamCards / E.totalCards * 100;
   const descriptions = zh ? [
     "与 120 ANTB 一起进池，LP 销毁。",
     "8,429 张 × 8,440 枚，代币分 5 天释放。",
-    "每铸出 19 张付费卡，解锁 1 张团队卡；未达到条件就继续锁仓。",
     "达到价格门槛后开放认购，收入分给持卡人。",
     "开池时转入黑洞地址。",
+    "每铸出 19 张付费卡，解锁 1 张团队卡；未达到条件就继续锁仓。",
   ] : [
     "Paired with 120 ANTB; LP is burned.",
     "8,429 cards × 8,440 tokens, released over five days.",
-    "One team card unlocks per 19 paid mints. Otherwise it stays locked.",
     "Subscriptions open at price thresholds; proceeds fund card dividends.",
     "Sent to the dead address at pool launch.",
+    "One team card unlocks per 19 paid mints. Otherwise it stays locked.",
   ];
   const circumference = 2 * Math.PI * 80;
   let cursor = 0;
@@ -116,21 +116,21 @@ export function TokenReference({ language }: { language: Language }) {
         <svg viewBox="0 0 200 200" className="edition-token-svg" role="img" aria-label={zh ? "代币分配环形图" : "Token allocation donut chart"}>
           <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" strokeWidth="22" />
           {arcs.map(({ label, index, length, start }) => <g key={label} className={`edition-token-slice edition-token-slice-${index}`} data-active={active === index} data-dimmed={active !== null && active !== index} onMouseEnter={() => setActive(index)}>
-            <title>{label}: {index === 2 ? `${Number(teamShare.toFixed(1))}% ${zh ? "占全部卡牌" : "of all cards"}` : nf(allocations[index]?.[1] ?? 0)}</title>
-            {index === 2 ? Array.from({ length: 26 }, (_, mark) => <circle key={mark} cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${length / 26 * .55} ${circumference - length / 26 * .55}`} strokeDashoffset={-(start + mark * length / 26)} />) : <circle cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${Math.max(0, length - 2)} ${circumference - length + 2}`} strokeDashoffset={-start} />}
+            <title>{label}: {index === 4 ? `${Number(teamShare.toFixed(1))}% ${zh ? "占全部卡牌" : "of all cards"}` : nf(allocations[index]?.[1] ?? 0)}</title>
+            {index === 4 ? Array.from({ length: 26 }, (_, mark) => <circle key={mark} cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${length / 26 * .55} ${circumference - length / 26 * .55}`} strokeDashoffset={-(start + mark * length / 26)} />) : <circle cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${Math.max(0, length - 2)} ${circumference - length + 2}`} strokeDashoffset={-start} />}
           </g>)}
         </svg>
         <div className="edition-token-center" aria-live="polite">
           <p className="text-sm text-muted-foreground">{selected?.label ?? (zh ? "固定总量" : "Fixed supply")}</p>
-          <p className="mt-3 font-mono text-2xl font-semibold text-foreground">{active === 2 ? `${Number(teamShare.toFixed(1))}%` : nf(selected?.amount ?? E.totalTokens)}</p>
-          <p className="mt-3 text-sm text-primary">{active === 2 ? (zh ? "占全部卡牌" : "of all cards") : selected ? `${(selected.amount / E.totalTokens * 100).toFixed(1)}%` : "ANTAGENT"}</p>
-          {active === 2 && <p className="mt-2 text-xs text-muted-foreground">{zh ? "代币锁在合约里" : "Tokens locked in the contract"}</p>}
+          <p className="mt-3 font-mono text-2xl font-semibold text-foreground">{active === 4 ? `${Number(teamShare.toFixed(1))}%` : nf(selected?.amount ?? E.totalTokens)}</p>
+          <p className="mt-3 text-sm text-primary">{active === 4 ? (zh ? "占全部卡牌" : "of all cards") : selected ? `${(selected.amount / E.totalTokens * 100).toFixed(1)}%` : "ANTAGENT"}</p>
+          {active === 4 && <p className="mt-2 text-xs text-muted-foreground">{zh ? "代币锁在合约里" : "Tokens locked in the contract"}</p>}
         </div>
       </div>
       <div className="divide-y divide-border">{allocations.map(([label, amount], index) => <Button key={label} variant="ghost" className="edition-token-row" aria-pressed={active === index} onMouseEnter={() => setActive(index)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(index)} onBlur={() => setActive(null)} onClick={() => setActive(index)}>
         <span className={`edition-token-key edition-token-slice-${index}`} aria-hidden="true" />
-        <span className="min-w-0 flex-1 text-left"><span className="block font-medium">{label}{index === 2 && <span className="ml-2 text-xs text-muted-foreground">{zh ? "锁仓中" : "Locked"}</span>}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">{descriptions[index]}</span></span>
-        <span className="ml-auto shrink-0 text-right"><span className="block font-mono text-sm text-foreground">{index === 2 ? `${Number(teamShare.toFixed(1))}%` : nf(amount)}</span><span className="mt-1 block text-xs text-muted-foreground">{index === 2 ? (zh ? "占全部卡牌" : "of all cards") : `${(amount / E.totalTokens * 100).toFixed(1)}%`}</span></span>
+        <span className="min-w-0 flex-1 text-left"><span className="block font-medium">{label}{index === 4 && <span className="ml-2 text-xs text-muted-foreground">{zh ? "锁仓中" : "Locked"}</span>}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">{descriptions[index]}</span></span>
+        <span className="ml-auto shrink-0 text-right"><span className="block font-mono text-sm text-foreground">{index === 4 ? `${Number(teamShare.toFixed(1))}%` : nf(amount)}</span><span className="mt-1 block text-xs text-muted-foreground">{index === 4 ? (zh ? "占全部卡牌" : "of all cards") : `${(amount / E.totalTokens * 100).toFixed(1)}%`}</span></span>
       </Button>)}</div>
     </div>
     <div className="gx-callout mt-6">
