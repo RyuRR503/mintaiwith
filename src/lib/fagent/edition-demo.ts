@@ -16,12 +16,12 @@ export const EDITION_DEMO = {
     dividendLiability: "9.66",
     streamRemaining: "6.80",
   },
-  sellOrders: Array.from({ length: 24 }, (_, i) => ({
-    id: 128 + i * 397, tier: i % 4, price: (0.018 + i * 0.004).toFixed(3),
+  sellOrders: Array.from({ length: 96 }, (_, i) => ({
+    id: 128 + i * 397, tier: i % 4, price: (0.018 + Math.floor(i / 4) * 0.004 + (i % 4) * 0.02).toFixed(3),
     dividend: (0.0021 + i * 0.0003).toFixed(4),
   })),
   buyOrders: Array.from({ length: 24 }, (_, i) => ({
-    id: i + 1, tier: i % 4, price: (0.112 - i * 0.004).toFixed(3), quantity: 1 + i % 5,
+    id: i + 1, price: (0.112 - i * 0.004).toFixed(3), quantity: 1 + i % 5,
   })),
   cards: [
     { id: 128, tier: 0, price: "0.018", dividend: "0.0021", wins: 0 },
@@ -38,9 +38,9 @@ export const EDITION_DEMO = {
 } as const;
 
 /** Display-only order book, best price first, with a separate limit for each side. */
-export function previewOrderBook() {
+export function previewOrderBook(tier?: number) {
   return {
-    sells: [...EDITION_DEMO.sellOrders].sort((a, b) => Number(a.price) - Number(b.price)).slice(0, 20),
+    sells: EDITION_DEMO.sellOrders.filter(item => tier === undefined || item.tier === tier).sort((a, b) => Number(a.price) - Number(b.price)).slice(0, 20),
     buys: [...EDITION_DEMO.buyOrders].sort((a, b) => Number(b.price) - Number(a.price)).slice(0, 20),
   };
 }

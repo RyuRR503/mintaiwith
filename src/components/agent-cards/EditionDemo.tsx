@@ -46,24 +46,30 @@ export function EditionDemo({ language, view }: { language: Language; view: "mar
   const zh = language === "zh";
   const [filter, setFilter] = useState(-1);
   const [selected, setSelected] = useState<number | null>(null);
+  const [marketTier, setMarketTier] = useState(0);
   const card = D.cards.find(item => item.id === selected);
-  const orders = previewOrderBook();
+  const orders = previewOrderBook(marketTier);
   return <section className="mt-8 border-y border-border py-8" aria-label={zh ? "演示数据" : "Demo data"}>
     <p className="mb-6 text-xs text-primary">{zh ? "演示数据 · 非真实链上记录" : "Demo data · Not on-chain records"}</p>
-    {view === "market" && <div className="grid gap-10 lg:grid-cols-2">
+    {view === "market" && <>
+      <div className="mb-6 flex flex-wrap gap-2" role="tablist" aria-label={zh ? "挂单稀有度" : "Order rarity"}>
+        {E.tiers.map((tier, i) => <Button key={tier.weight} role="tab" aria-selected={marketTier === i} variant={marketTier === i ? "default" : "outline"} onClick={() => setMarketTier(i)}>{tier.name[zh ? 0 : 1]} · {tier.weight / 2}×</Button>)}
+      </div>
+      <div className="grid gap-10 lg:grid-cols-2">
       <section aria-label={zh ? "卖单" : "Sell orders"}>
-        <div className="mb-4 flex items-baseline justify-between"><h3 className="text-xl">{zh ? "卖单" : "Sell orders"}</h3><span className="text-xs text-muted-foreground">{zh ? "价格从低到高 · 前 20 条" : "Lowest first · Top 20"}</span></div>
+        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2"><h3 className="text-xl">{E.tiers[marketTier]?.name[zh ? 0 : 1]} · {zh ? "卖单" : "Sell orders"}</h3><span className="text-xs text-muted-foreground">{zh ? "价格从低到高 · 前 20 条" : "Lowest first · Top 20"}</span></div>
         <table className="w-full text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "卡牌" : "Card"}</th><th className="font-normal">{zh ? "稀有度" : "Rarity"}</th><th className="text-right font-normal">{zh ? "价格" : "Price"}<span className="block">ANTB</span></th><th className="text-right font-normal">{zh ? "累积分红" : "Dividends"}<span className="block">ANTB</span></th></tr></thead>
           <tbody>{orders.sells.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-xs">#{String(item.id).padStart(6, "0")}</td><td className="text-xs">{E.tiers[item.tier]?.name[zh ? 0 : 1]}</td><td className="text-right font-mono text-primary">{item.price}</td><td className="text-right font-mono text-xs text-muted-foreground">{item.dividend}</td></tr>)}</tbody>
         </table>
       </section>
       <section aria-label={zh ? "买单" : "Buy orders"}>
         <div className="mb-4 flex items-baseline justify-between"><h3 className="text-xl">{zh ? "买单" : "Buy orders"}</h3><span className="text-xs text-muted-foreground">{zh ? "价格从高到低 · 前 20 条" : "Highest first · Top 20"}</span></div>
+        <p className="mb-3 text-xs leading-6 text-muted-foreground">{zh ? "买单不限定稀有度，四档卡牌均可成交。" : "Bids accept any revealed rarity; the same bids apply to all four tiers."}</p>
         <table className="w-full text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "订单" : "Order"}</th><th className="font-normal">{zh ? "稀有度" : "Rarity"}</th><th className="text-right font-normal">{zh ? "数量" : "Quantity"}</th><th className="text-right font-normal">{zh ? "出价" : "Bid"}<span className="block">ANTB</span></th></tr></thead>
-          <tbody>{orders.buys.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-xs">#{String(item.id).padStart(3, "0")}</td><td className="text-xs">{E.tiers[item.tier]?.name[zh ? 0 : 1]}</td><td className="text-right font-mono">{item.quantity}</td><td className="text-right font-mono text-primary">{item.price}</td></tr>)}</tbody>
+          <tbody>{orders.buys.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-xs">#{String(item.id).padStart(3, "0")}</td><td className="text-xs">{zh ? "不限" : "Any"}</td><td className="text-right font-mono">{item.quantity}</td><td className="text-right font-mono text-primary">{item.price}</td></tr>)}</tbody>
         </table>
       </section>
-    </div>}
+    </div></>}
     {(view === "rarity" || view === "duel") && <>
       <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label={zh ? "稀有度筛选" : "Rarity filter"}>
         <Button size="sm" variant={filter === -1 ? "default" : "outline"} onClick={() => setFilter(-1)}>{zh ? "全部" : "All"}</Button>

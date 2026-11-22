@@ -6,7 +6,20 @@ describe("market preview order limits", () => {
     const { sells } = previewOrderBook();
     expect(sells).toHaveLength(20);
     expect(sells[0]?.price).toBe("0.018");
-    expect(sells[19]?.price).toBe("0.094");
+    expect(sells[19]?.price).toBe("0.062");
+  });
+  for (const tier of [0, 1, 2, 3]) {
+    it(`shows 20 sell orders exclusively for rarity ${tier}`, () => {
+      const { sells } = previewOrderBook(tier);
+      expect(sells).toHaveLength(20);
+      expect(sells.every(order => order.tier === tier)).toBe(true);
+      expect(sells[0]?.price).toBe((0.018 + tier * 0.02).toFixed(3));
+    });
+  }
+  it("keeps all 20 universal bids identical across rarities", () => {
+    for (const tier of [0, 1, 2, 3]) {
+      expect(previewOrderBook(tier).buys).toEqual(previewOrderBook().buys);
+    }
   });
   it("shows only the first 20 buy orders", () => {
     const { buys } = previewOrderBook();
