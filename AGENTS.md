@@ -33,3 +33,4 @@
 - Render edition token allocations from edition constants in an interactive donut with a dashed locked-team segment; never reuse retired allocation amounts in the new reference page.
 - Keep requested preview fixtures in edition-demo and presentation components only, labeled as demo; never feed fixtures into chain readers, deployment state or executable wallet commands.
 - Market preview uses a price-sorted order book capped independently at 20 sells and 20 buys; list rows replace card-detail browsing for a compact market view.
+- Vault ledger metrics distinguish totalTaxRevenue, totalDividendForwarded, totalFloorForwarded, totalFloorBurned, totalDividendPaid, dividendLiability and both remaining dividend streams; token burns combine launch burn, totalMintBurned and totalForfeitBurned rather than implying one aggregate getter.

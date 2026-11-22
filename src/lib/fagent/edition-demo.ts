@@ -7,6 +7,15 @@ export const EDITION_DEMO = {
   floor: "3.72",
   liquidity: "1.46",
   operations: "9.94",
+  vault: {
+    taxRevenue: "49.72",
+    dividendForwarded: "24.86",
+    floorForwarded: "7.458",
+    floorBurnedCards: 128,
+    dividendPaid: "18.40",
+    dividendLiability: "9.66",
+    streamRemaining: "6.80",
+  },
   sellOrders: Array.from({ length: 24 }, (_, i) => ({
     id: 128 + i * 397, tier: i % 4, price: (0.018 + i * 0.004).toFixed(3),
     dividend: (0.0021 + i * 0.0003).toFixed(4),
