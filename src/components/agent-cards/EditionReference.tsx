@@ -20,6 +20,7 @@ export function MintPriceProgress({ language }: { language: Language }) {
       <div><dt className="text-xs text-muted-foreground">{zh ? "当前铸造价" : "Current mint price"}</dt><dd className="mt-2 text-xl font-semibold">{zh ? "待开放" : "Not open"}</dd></div>
       <div><dt className="text-xs text-muted-foreground">{zh ? "全站已铸付费卡" : "Paid cards minted"}</dt><dd className="mt-2 text-xl font-semibold">—</dd></div>
     </dl>
+    <p className="mt-5 text-sm leading-7">{zh ? "每地址铸造额度：开池前最多 10 张，开池后累计最多 20 张。开池前已铸满 10 张，开池后还可补 10 张；每笔最多 10 张。" : "Per-wallet mint quota: up to 10 before launch, 20 total afterward. Minted 10 before launch? You can mint 10 more afterward. Maximum 10 per transaction."}</p>
     <div className="mt-5 border-t border-border pt-5">
       <label htmlFor="mint-progress-sold" className="text-sm">{zh ? "已铸数量（价格试算）" : "Minted count (price estimate)"}</label>
       <input id="mint-progress-sold" className="gx-field mt-3" type="number" min={0} max={E.paidCards - 1} value={sold} onChange={event => setSold(Math.max(0, Math.min(E.paidCards - 1, Math.floor(Number(event.target.value) || 0))))} />
