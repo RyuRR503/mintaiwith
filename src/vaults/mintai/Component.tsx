@@ -7,6 +7,8 @@ import { useFlapSdk } from "@/lib/flap-sdk";
 import { CopyButton } from "@/components/flap/CopyButton";
 import { AntWordmark } from "@/components/agent-cards/FagentLogo";
 import { AntMark } from "@/components/agent-cards/AntMark";
+import { ANTAGENT_EDITION, EDITION_COPY, EDITION_RULES } from "@/lib/fagent/antagent-edition";
+import { EditionStatus, EditionSummary, EditionCalculator, EditionInner, RarityReference, TokenReference } from "@/components/agent-cards/EditionReference";
 
 const TOTAL_POOL_CARDS = 777_777;
 const PRESALE_CARDS = 20_000;
@@ -28,7 +30,7 @@ const COMMANDS = [
   ["yield", "withdraw"],
 ] as const;
 const COMMAND_GROUPS = ["mint", "buy", "sell", "yield"] as const;
-const VIEWS = ["home", "market", "commands", "vault", "tokenomics", "ladder", "duel", "rules"] as const;
+const VIEWS = ["home", "market", "commands", "vault", "tokenomics", "ladder", "duel", "rules", "rarity"] as const;
 const POOL_QUOTE = 3675n * 10n ** 16n;
 const POOL_TOKEN = 124_672_000n * 10n ** 18n;
 const LADDER_BUDGET = 58_611_119n * 10n ** 18n;
@@ -1016,6 +1018,7 @@ const VIEW_PATHS: Record<View, string> = {
   ladder: "/ladder",
   duel: "/duel",
   rules: "/rules",
+  rarity: "/rarity",
 };
 
 export default function Component({ initialView = "home" }: { initialView?: View }) {
@@ -1026,6 +1029,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
   const [emptyRoomId, setEmptyRoomId] = useState<number | null>(null);
   const [chainTick, setChainTick] = useState(0);
   useEffect(() => {
+    if (!ANTAGENT_EDITION.deploymentConfirmed) return;
     let stop = false;
     async function load() {
       const next: Live = { ...EMPTY_LIVE };
@@ -1111,7 +1115,12 @@ export default function Component({ initialView = "home" }: { initialView?: View
   const hostT = sdk.i18n.t;
   const [language, setLanguage] = useState<"zh" | "en">("zh");
   const [menuOpen, setMenuOpen] = useState(false);
-  const t = (key: string, fallback?: string, params?: Record<string, string | number>) => hostT(`l.${language}.${key}`, fallback, params);
+  const t = (key: string, fallback?: string, params?: Record<string, string | number>) => {
+    let copy = EDITION_COPY[key]?.[language === "zh" ? 0 : 1];
+    if (copy === undefined) return hostT(`l.${language}.${key}`, fallback, params);
+    for (const [name, value] of Object.entries(params ?? {})) copy = copy.replaceAll(`{${name}}`, String(value));
+    return copy;
+  };
   const [view, setView] = useState<View>(initialView);
   useEffect(() => {
     setView(initialView);
@@ -1232,19 +1241,10 @@ export default function Component({ initialView = "home" }: { initialView?: View
       </div>
     </section>
   );
-  const rules = [
-    { title: t("rules.1.title"), body: t("rules.1.body") },
-    { title: t("rules.2.title"), body: t("rules.2.body") },
-    { title: t("rules.3.title"), body: t("rules.3.body") },
-    { title: t("rules.4.title"), body: t("rules.4.body") },
-    { title: t("rules.5.title"), body: t("rules.5.body") },
-    { title: t("rules.6.title"), body: t("rules.6.body") },
-    { title: t("rules.7.title"), body: t("rules.7.body") },
-    { title: t("rules.8.title"), body: t("rules.8.body") },
-    { title: t("rules.9.title"), body: t("rules.9.body") },
-    { title: t("rules.10.title"), body: t("rules.10.body") },
-    { title: t("rules.11.title"), body: t("rules.11.body") },
-  ];
+  const rules = EDITION_RULES.map(entry => {
+    const [title, body] = language === "zh" ? entry.zh : entry.en;
+    return { title, body };
+  });
   const duelRules = [
     { title: t("duel.1.title"), body: t("duel.1.body") },
     { title: t("duel.2.title"), body: t("duel.2.body") },
@@ -1424,6 +1424,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
   };
   const nav = [
     ["home", "nav.home"],
+    ["rarity", "nav.rarity"],
     ["market", "nav.market"],
     ["commands", "nav.commands"],
     ["vault", "nav.vault"],
@@ -1440,6 +1441,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
     tokenomics: ["06", "TOKENOMICS", "token.title", "token.lead", 606],
     ladder: ["07", "LADDER", "ladder.title", "ladder.lead", 707],
     duel: ["08", "DUEL", "duel.title", "duel.lead", 808],
+    rarity: ["09", "RARITY", "rarity.title", "rarity.lead", 909],
   } as const;
   const page = view === "home" ? null : pageMeta[view];
 
@@ -1592,7 +1594,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     <div className="ant-stage-specs" aria-hidden="true">
                       <span className="ant-spec-pill">ORBITS <strong>{4 + (cardId % 4)}</strong></span>
                       <span className="ant-spec-pill">RAYS <strong>{12 + (cardId % 8)}</strong></span>
-                      <span className="ant-spec-pill">TIER <strong>{kind.toUpperCase()}</strong></span>
+                      <span className="ant-spec-pill">{language === "zh" ? "展示艺术 · 非链上等级" : "DISPLAY ART · NOT A TIER"}</span>
                     </div>
                   </div>
                 </div>
@@ -1608,11 +1610,11 @@ export default function Component({ initialView = "home" }: { initialView?: View
                   <dl className="ant-fair-facts">
                     <div className="ant-fair-fact">
                       <dt>{t("mint.presale")}</dt>
-                      <dd>0.00245 BNB</dd>
+                      <dd>0.016 ANTB</dd>
                     </div>
                     <div className="ant-fair-fact">
                       <dt>{t("mint.open")}</dt>
-                      <dd>0.0049 BNB</dd>
+                      <dd>≤ 0.16 ANTB</dd>
                     </div>
                     <div className="ant-fair-fact">
                       <dt>{t("vest.title")}</dt>
@@ -1620,72 +1622,13 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     </div>
                   </dl>
                   <div className="ant-console-cmd">
-                    {commandCard(salePhase === "refund" ? "refund" : "mint")}
+                    <EditionStatus language={language} />
                   </div>
                 </div>
               </div>
             </section>
 
-            <section className="gx-band">
-              <div className="gx-container py-12">
-                <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-                  <p className="gx-mono gx-pri flex items-center gap-2 text-xs"><span className="gx-live-dot" />{t(!live.cards ? "cards.pending" : salePhase === "open" ? "demo.launched" : salePhase === "refund" ? "demo.refund" : "demo.presale")}</p>
-                  {!live.launched && live.presaleDeadline > 0 && (
-                    <p className="gx-mono text-xs">{t("metric.deadline")}<span className="gx-pri ml-2">{fmtDeadline(live.presaleDeadline, language)} UTC+8</span>{salePhase === "refund" ? <span className="gx-pri ml-2">{t("metric.deadlinePassed")}</span> : null}</p>
-                  )}
-                </div>
-                <div className="ant-ledger-shell">
-                  <div className="ant-ledger-top">
-                    <div className="ant-ledger-hero">
-                      <div>
-                        <p className="gx-kicker">{t(salePhase === "refund" ? "metric.refundProgress" : "progress")}</p>
-                        <p className="ant-ledger-pct mt-4"><CountUp value={salePhase === "refund" ? refundPct : presalePct} digits={progressDigits} suffix="%" /></p>
-                      </div>
-                      <div className="mt-6">
-                        <div className="gx-track"><div className="gx-live-bar" style={{ width: `${salePhase === "refund" ? refundPct : presalePct}%` }} /></div>
-                        <div className="ant-ruler-ticks" aria-hidden="true"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
-                        <p className="gx-mono gx-muted mt-3 text-[11px]">{t(salePhase === "open" ? "pool.live" : salePhase === "refund" ? "pool.refund" : "pool.presale")}</p>
-                      </div>
-                    </div>
-                    <dl className="ant-ledger-cols">
-                      {(salePhase === "refund" ? [
-                        [mintedLive, 0, "", t("metric.minted"), t("metric.mintedRefundNote")],
-                        [escrowBnb, 5, " BNB", t("metric.escrow"), t("metric.escrowNote")],
-                        [refundedCards, 0, "", t("metric.refunded"), t("metric.refundedNote")],
-                        [refundedBnb, 5, " BNB", t("metric.refundedBnb"), t("metric.refundedBnbNote")],
-                      ] : [
-                        [mintedLive, 0, "", t("metric.minted"), t("metric.mintedNote", undefined, { n: fmtInt(TOTAL_POOL_CARDS) })],
-                        [raisedBnb, raisedDigits, " BNB", t("metric.raised"), t("metric.raisedNote")],
-                        [live.minters, 0, "", t("metric.minters"), t("metric.mintersNote", undefined, { n: MAX_MINT })],
-                        [presaleLeft, 0, "", t("metric.left"), t("metric.leftNote", undefined, { n: fmtInt(PRESALE_CARDS) })],
-                      ]).map(([value, digits, suffix, label, note]) => (
-                        <div key={String(label)} className="ant-ledger-cell">
-                          <dt className="gx-muted text-xs">{label}</dt>
-                          <dd className="ant-ledger-num"><CountUp value={Number(value)} digits={Number(digits)} suffix={String(suffix)} /></dd>
-                          <dd className="gx-muted mt-2 text-xs">{note}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                  <dl className="ant-ledger-foot">
-                    {[
-                      [fmtBnb(tokenBurned, 0), t("pool.burnedTokens"), t("unit.token")],
-                      [floorCards, t("pool.burnedCards"), t("unit.card")],
-                      [fmtBnb(live.dividendFwd), t("pool.dividend"), "BNB"],
-                      [fmtBnb(live.floorFwd), t("pool.floor"), "BNB"],
-                    ].map(([value, label, unit], idx) => (
-                      <div key={label} className="ant-ledger-metric">
-                        <div className="flex items-center justify-between">
-                          <dt className="gx-muted text-xs">{label}</dt>
-                          <span className="gx-tile-no">0{idx + 1}</span>
-                        </div>
-                        <dd className="ant-ledger-metric-val">{value}<span>{unit}</span></dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              </div>
-            </section>
+            <section className="gx-band"><div className="gx-container py-10"><EditionSummary language={language} /></div></section>
 
             <section className="gx-container gx-chapter">
               <div className={`${rise} gx-chapter-heading`}>
@@ -1724,96 +1667,8 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <span className="gx-chapter-note">{t("calc.note")}</span>
               </div>
-              <div className={`${rise} ant-calc-shell`}>
-                <div className="ant-calc-left">
-                  <div>
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="gx-kicker">A / MINT</p>
-                        <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("mint.title")}</h3>
-                      </div>
-                      <div className="gx-seg">
-                        {(["presale", "open"] as const).map((item) => (
-                          <button key={item} type="button" aria-pressed={mintPhase === item} onClick={() => setMintPhase(item)}>{t(item === "presale" ? "mint.presale" : "mint.open")}</button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mt-7 flex flex-wrap items-end justify-between gap-4">
-                      <div>
-                        <span className="gx-muted block text-xs">{t("mint.count")}</span>
-                        <div className="ant-quick-counts mt-2" role="group" aria-label={t("mint.count")}>
-                          {[1, 2, 3, 5, 10].map((n) => (
-                            <button key={n} type="button" aria-pressed={count === n} onClick={() => setCount(n)}>×{n}</button>
-                          ))}
-                        </div>
-                      </div>
-                      <span className="gx-display text-5xl">{count}</span>
-                    </div>
-                    <input className="mt-4" type="range" min={1} max={MAX_MINT} value={count} aria-label={t("mint.count")} style={{ ["--fill" as string]: `${((count - 1) / (MAX_MINT - 1)) * 100}%` }} onChange={(event) => setCount(Number(event.target.value))} />
-                    <div className="mt-5 grid h-8 grid-cols-10 gap-1.5" aria-hidden="true">
-                      {Array.from({ length: MAX_MINT }, (_, index) => <div key={index} className={`gx-mint-mark ${index < count ? "gx-mint-mark-active" : ""}`} />)}
-                    </div>
-                  </div>
-                  <div className="mt-7 border-t border-[var(--border)] pt-6">
-                    <dl className="gx-mono grid grid-cols-2 gap-4 text-sm">
-                      <div><dt className="gx-muted">{t("mint.pay")}</dt><dd className="mt-1 text-2xl font-medium">{quoteBnb.toFixed(5)} BNB</dd></div>
-                      {mintPhase === "presale" ? (
-                        <div><dt className="gx-muted">{t("mint.tokens")}</dt><dd className="gx-pri mt-1 text-2xl font-medium">{fmtInt(quoteTokens)}</dd></div>
-                      ) : (
-                        <>
-                          <div><dt className="gx-muted">{t("mint.ops")}</dt><dd className="mt-1 text-2xl font-medium">{(quoteBnb * 0.25).toFixed(5)}</dd></div>
-                          <div className="col-span-2"><dt className="gx-muted">{t("mint.swap")}</dt><dd className="gx-pri mt-1 text-xl font-medium">{(quoteBnb * 0.75).toFixed(5)} BNB · {t("mint.swapNote")}</dd></div>
-                        </>
-                      )}
-                    </dl>
-                    {mintPhase === "open" && <p className="gx-muted mt-3 text-xs">{t("mint.openNote")}</p>}
-                  </div>
-                </div>
-                <div className="ant-calc-right">
-                  <div>
-                    <p className="gx-kicker">B / VESTING</p>
-                    <h3 className="mt-2 text-2xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>{t("vest.title")}</h3>
-                    <p className="gx-muted mt-2 text-sm">{t("vest.example", undefined, { n: count, tokens: fmtInt(grant) })}</p>
-                    <div className="ant-curve-box">
-                      <svg viewBox="0 0 360 132" className="w-full" aria-hidden="true">
-                        <defs>
-                          <linearGradient id="antVestFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={FLOW} stopOpacity="0.28" />
-                            <stop offset="100%" stopColor={FLOW} stopOpacity="0.02" />
-                          </linearGradient>
-                        </defs>
-                        {[24, 56, 88, 114].map((y) => (
-                          <line key={y} x1="16" y1={y} x2="344" y2={y} stroke="currentColor" strokeOpacity="0.08" strokeDasharray="3 4" />
-                        ))}
-                        <line x1="16" y1="96" x2="344" y2="18" stroke="currentColor" strokeOpacity="0.16" strokeWidth="1.5" />
-                        <polygon points={`16,114 16,96 ${16 + (day / 5) * 328},${96 - (day / 5) * 78} ${16 + (day / 5) * 328},114`} fill="url(#antVestFill)" />
-                        <line x1="16" y1="96" x2={16 + (day / 5) * 328} y2={96 - (day / 5) * 78} stroke={FLOW} strokeWidth="2.6" strokeLinecap="round" />
-                        {[0, 1, 2, 3, 4, 5].map((d) => {
-                          const x = 16 + (d / 5) * 328;
-                          const y = 96 - (d / 5) * 78;
-                          const reached = day >= d - 0.01;
-                          return (
-                            <g key={d}>
-                              <circle cx={x} cy={y} r={reached ? 4 : 3} fill={reached ? FLOW : PAPER} stroke={FLOW} strokeWidth="1.5" />
-                              <text x={x} y="128" textAnchor="middle" fontSize="9" fill="currentColor" fillOpacity="0.5" fontFamily="IBM Plex Mono, monospace">D{d}</text>
-                            </g>
-                          );
-                        })}
-                        <circle cx={16 + (day / 5) * 328} cy={96 - (day / 5) * 78} r="6.5" fill={FLOW} fillOpacity="0.22" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="mt-6">
-                    <div className="flex items-end justify-between">
-                      <span className="gx-muted text-sm">{t("vest.day", undefined, { n: day.toFixed(1) })}</span>
-                      <span className="gx-display gx-pri text-5xl">{fmtInt(vested)}</span>
-                    </div>
-                    <input className="mt-3" type="range" min={0} max={5} step={0.1} value={day} aria-label={t("vest.title")} style={{ ["--fill" as string]: `${releasedShare * 100}%` }} onChange={(event) => setDay(Number(event.target.value))} />
-                  </div>
-                </div>
-              </div>
+              <EditionCalculator language={language} />
             </section>
-            <section className="gx-container pb-8">{commandDeck(["wallet", "refund"])}</section>
             <footer className="gx-footer gx-mono gx-muted px-6 py-8 text-center text-xs">{t("footer.risk")}</footer>
           </main>
         )}
@@ -1829,187 +1684,12 @@ export default function Component({ initialView = "home" }: { initialView?: View
             seed={page[4]}
             foot={t("footer.risk")}
           >
-            {view === "market" && (
-              <>
-                <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-                  <div className="gx-segment" role="tablist" aria-label={t("market.title")}>
-                    <button type="button" aria-pressed={marketTab === "book"} onClick={() => setMarketTab("book")}>{t("market.tab.book")}</button>
-                    <button type="button" aria-pressed={marketTab === "mine"} onClick={() => setMarketTab("mine")}>{t("market.tab.mine")}</button>
-                  </div>
-                  <p className="gx-mono gx-pri text-xs">{book.symbol}</p>
-                </div>
-                {marketTab === "book" && (
-                  <>
-                    <div className="mb-6 flex justify-end">
-                      <div className="gx-segment" role="group" aria-label={t("market.title")}>
-                        <button type="button" aria-pressed={bookSide === "ask"} onClick={() => setBookSide("ask")}>{t("market.sideAsk")}</button>
-                        <button type="button" aria-pressed={bookSide === "bid"} onClick={() => setBookSide("bid")}>{t("market.sideBid")}</button>
-                      </div>
-                    </div>
-                    <dl className="gx-tiles">
-                      {[
-                        [t("market.low"), rankedAsks[0] ? fmtBnb(rankedAsks[0].price, 6) : "—"],
-                        [t("market.high"), rankedBids[0] ? fmtBnb(rankedBids[0].price, 6) : "—"],
-                        [t("market.volume"), fmtBnb(book.fees * 100n)],
-                        [t("market.escrow"), fmtBnb(bookEscrow)],
-                      ].map(([label, value], index) => (
-                        <div key={label}>
-                          <span className="gx-tile-no">0{index + 1}</span>
-                          <dt className="gx-muted mt-3 text-xs">{label}</dt>
-                          <dd className="gx-tile-value">{value}<span>BNB</span></dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p className="gx-muted mt-3 text-xs">{t("market.volumeNote")}</p>
-                    <div className="gx-market mt-8">
-                      <Book
-                        title={t(bookSide === "ask" ? "market.asks" : "market.bids")}
-                        hint={t(bookSide === "ask" ? "market.askHint" : "market.bidHint", undefined, { n: bookSide === "ask" ? book.asks.length : book.bids.length })}
-                        columns={[t("market.col.price"), t("market.col.qty"), t("market.col.total"), t("market.col.orders")]}
-                        empty={t("market.empty")}
-                        rows={(bookSide === "ask" ? askLevels : bidLevels).map((level, index) => [index === 0 ? `${fmtBnb(level.price, 6)}  ${t(bookSide === "ask" ? "market.bestAsk" : "market.bestBid")}` : fmtBnb(level.price, 6), String(level.count), String(level.total), String(level.orders)])}
-                      />
-                      <aside className="gx-panel h-fit p-5">
-                        <h2 className="text-lg font-bold">{t(bookSide === "ask" ? "market.quickBuy" : "market.quickSell")}</h2>
-                        <p className="gx-muted mt-2 text-xs">{t(bookSide === "ask" ? "market.quickBuyNote" : "market.quickSellNote")}</p>
-                        <p className="gx-mono gx-pri mt-6 break-all text-3xl">{bookSide === "ask" ? (shownAsks.length ? fmtBnb(shownAsks.reduce((sum, ask) => sum + ask.price, 0n), 4) : "—") : (rankedBids[0] ? fmtBnb(rankedBids[0].price, 6) : "—")}<span className="gx-muted ml-2 text-sm">BNB</span></p>
-                        <dl className="mt-5 space-y-3 text-sm">
-                          <div className="flex justify-between gap-3"><dt className="gx-muted">{t("market.cards")}</dt><dd>{bookSide === "ask" ? shownAsks.length : rankedBids[0]?.remaining ?? 0}</dd></div>
-                          <div className="flex justify-between gap-3"><dt className="gx-muted">{t("market.fee")}</dt><dd>1%</dd></div>
-                        </dl>
-                      </aside>
-                    </div>
-                  </>
-                )}
-                {marketTab === "mine" && (
-                  <section className="space-y-4">
-                    <label className="gx-muted block text-xs" htmlFor="bidder">{t("market.bidAddress")}</label>
-                    <input id="bidder" className="gx-field" value={bidder} placeholder={t("market.bidPlaceholder")} aria-label={t("market.bidAddress")} onChange={(event) => setBidder(event.target.value.trim())} />
-                    {!isAddress(bidder) && <p className="gx-muted text-sm">{t("market.bidNeed")}</p>}
-                    {isAddress(bidder) && book.bids.filter((bid) => bid.bidder.toLowerCase() === bidder.toLowerCase()).map((bid) => (
-                      <div key={bid.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] py-4 text-sm">
-                        <span>{t("market.myBid", undefined, { id: bid.id, price: fmtBnb(bid.price, 6), n: bid.remaining })}</span>
-                        <CopyButton value={fillCommand(t(commandStyle === "short" ? "cmd.cancel.short" : "cmd.cancel.text"), "cancel")} label={t("cmd.cancel.title")} />
-                      </div>
-                    ))}
-                    {isAddress(bidder) && book.bids.every((bid) => bid.bidder.toLowerCase() !== bidder.toLowerCase()) && <p className="gx-muted text-sm">{t("market.bidEmpty")}</p>}
-                  </section>
-                )}
-                {commandDeck(["buy", "bid", "cancel", "list", "sell", "unlist"])}
-              </>
-            )}
-            {view === "commands" && (
-              <>
-                <div className="gx-panel mb-10 p-6">
-                  <p className="gx-muted text-sm">{t("commands.note")}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <div className="gx-segment" role="group" aria-label={t("commands.title")}>
-                      <button type="button" aria-pressed={commandStyle === "text"} onClick={() => setCommandStyle("text")}>{t("commands.styleGeneral")}</button>
-                      <button type="button" aria-pressed={commandStyle === "short"} onClick={() => setCommandStyle("short")}>{t("commands.styleBinance")}</button>
-                    </div>
-                    <p className="gx-muted text-xs">{t(commandStyle === "short" ? "commands.styleNoteBinance" : "commands.styleNoteGeneral")}</p>
-                  </div>
-                </div>
-                {COMMAND_GROUPS.map((group) => (
-                  <section key={group} className="gx-cmd-group">
-                    <p className="gx-cmd-label">{groupLabel[group]}</p>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {COMMANDS.filter((item) => item[0] === group).map(([, id]) => commandCard(id))}
-                    </div>
-                  </section>
-                ))}
-              </>
-            )}
-            {view === "vault" && (
-              <>
-                <div className="gx-bento">
-                  {[
-                    [t("vault.tax"), fmtBnb(live.tax), "BNB"],
-                    [t("vault.dividend"), fmtBnb(live.dividendFwd), "BNB"],
-                    [t("vault.floorIn"), fmtBnb(live.floorFwd), "BNB"],
-                    [t("vault.burned"), floorCards, t("vault.burnedUnit")],
-                    [t("vault.tokenBurned"), fmtBnb(tokenBurned), t("vault.tokenUnit")],
-                    [t("vault.paid"), fmtBnb(live.dividendPaid), "BNB"],
-                    [t("vault.liability"), fmtBnb(live.liability), "BNB"],
-                    [t("vault.stream"), fmtBnb(live.stream + live.sideStream), "BNB"],
-                  ].map(([label, value, unit], index) => (
-                    <div key={label} className={`gx-panel p-6 ${index === 0 ? "gx-tile-hero" : ""}`}>
-                      <span className="gx-tile-no">0{index + 1}</span>
-                      <p className="gx-muted mt-3 text-xs">{label}</p>
-                      <p className="gx-tile-value">{value}<span>{unit}</span></p>
-                    </div>
-                  ))}
-                </div>
-                <div className="gx-flow-line" aria-hidden="true">
-                  <span>{t("vault.flowTax")}</span>
-                  <span>{t("vault.flowVault")}</span>
-                  <span>{t("vault.flowDiv")}</span>
-                  <span>{t("vault.flowHolder")}</span>
-                </div>
-                <div className="mt-14">
-                  <section className="gx-panel p-7">
-                    <p className="gx-kicker">MY CARDS</p>
-                    <h3 className="mt-3 text-2xl font-bold">{t("vault.manageTitle")}</h3>
-                    <p className="gx-muted mt-4 text-sm leading-7">{t("vault.manageBody")}</p>
-                    <div className="mt-6"><CopyButton value={fillCommand(t(commandStyle === "short" ? "cmd.claim.short" : "cmd.claim.text"), "claim")} label={t("commands.copy")} /></div>
-                  </section>
-                </div>
-                {commandDeck(["claim", "redeem", "withdraw"])}
-              </>
-            )}
-            {view === "duel" && (
-              <>
-                <section className="gx-panel mb-8 p-6">
-                  <p className="gx-kicker">ROOMS</p>
-                  <h2 className="mt-3 text-2xl font-bold">{t("duel.roomsTitle")}</h2>
-                  <ul className="mt-6 space-y-3">
-                    {rooms.map((room) => (
-                      <li key={room.id} className="grid grid-cols-2 gap-4 border-b border-white/10 pb-4 sm:grid-cols-4">
-                        <div><p className="gx-muted text-xs">{t("duel.colRoom")}</p><p className="gx-mono gx-pri mt-1">{String(room.id).padStart(2, "0")}</p></div>
-                        <div><p className="gx-muted text-xs">{t("duel.colCard")}</p><p className="gx-mono mt-1">#{room.card}</p></div>
-                        <div><p className="gx-muted text-xs">{t("duel.colDeposit")}</p><p className="gx-mono mt-1">{fmtBnb(room.deposit, 6)} BNB</p></div>
-                        <div><p className="gx-muted text-xs">{t("duel.colWaiting")}</p><p className="gx-mono gx-pri mt-1">{`${room.player.slice(0, 6)}...${room.player.slice(-4)}`}</p></div>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-6 space-y-3">
-                    {t("duel.depositNote").split("\n").filter(Boolean).map((line) => (
-                      <p key={line} className="gx-muted text-sm leading-7">{line}</p>
-                    ))}
-                  </div>
-                  <p className="gx-muted mt-4 text-sm leading-7">{t("duel.roomsOffline")}</p>
-                </section>
-                <article className="gx-term mb-8">
-                  <h3 className="text-lg font-bold">{t("duel.cmdTitle")}</h3>
-                  <code className="gx-term-fn">{"> "}{duelTarget ? `enter(${duelTarget.roomId}, tokenId)` : t("duel.cmdFn")}</code>
-                  <p className="gx-muted mt-2 text-xs leading-6">{t("duel.cmdDesc")}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <div className="gx-segment" role="group" aria-label={t("duel.cmdTitle")}>
-                      <button type="button" aria-pressed={commandStyle === "text"} onClick={() => setCommandStyle("text")}>{t("commands.styleGeneral")}</button>
-                      <button type="button" aria-pressed={commandStyle === "short"} onClick={() => setCommandStyle("short")}>{t("commands.styleBinance")}</button>
-                    </div>
-                    <p className="gx-muted text-xs">{t(commandStyle === "short" ? "commands.styleNoteBinance" : "commands.styleNoteGeneral")}</p>
-                  </div>
-                  <div className="mt-4"><CopyButton value={fillCommand(t(commandStyle === "short" ? "duel.cmdShort" : "duel.cmdText"), "duel")} label={t("commands.copy")} /></div>
-                </article>
-                <div className="space-y-5">
-                {duelRules.map((item, index) => (
-                  <section key={item.title} className="gx-rule">
-                    <span className="gx-rule-no" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-                    <p className="gx-mono gx-pri text-xs">{String(index + 1).padStart(2, "0")}</p>
-                    <h2 className="mt-2 text-2xl font-bold">{item.title}</h2>
-                    <div className="mt-4 space-y-3">
-                      {item.body.split("\n").filter(Boolean).map((line) => (
-                        <p key={line} className="gx-muted text-sm leading-7">{line}</p>
-                      ))}
-                    </div>
-                  </section>
-                ))}
-                </div>
-              </>
-            )}
+            {view === "market" && <EditionInner language={language} view="market" />}
+            {view === "commands" && <EditionInner language={language} view="commands" />}
+            {view === "vault" && <EditionInner language={language} view="vault" />}
+            {view === "duel" && <EditionInner language={language} view="duel" />}
             {view === "rules" && (
-              <div className="gx-rules">
+              <div><EditionStatus language={language} /><div className="gx-rules mt-8">
                 <nav className="gx-toc" aria-label={t("rules.toc")}>
                   {rules.map((_, index) => index + 1).map((item) => (
                     <button key={item} type="button" onClick={() => {
@@ -2036,109 +1716,11 @@ export default function Component({ initialView = "home" }: { initialView?: View
                     </section>
                   ))}
                 </div>
-              </div>
+              </div></div>
             )}
-            {view === "ladder" && (
-              <>
-                <div className="max-w-2xl space-y-4">
-                  {t("ladder.explain").split("\n").filter(Boolean).map((line) => (
-                    <p key={line} className="text-base leading-8">{line}</p>
-                  ))}
-                </div>
-                <div className="gx-rungs mt-10">
-                  {LADDER_SIZE.map((size, index) => {
-                    const status = ladderStatus(index);
-                    const left = size - (ladderLive.sold[index] ?? 0n);
-                    return (
-                      <button key={index} type="button" className="gx-rung" aria-pressed={ladderRung === index} onClick={() => setLadderRung(index)}>
-                        <p className="gx-mono gx-pri text-xs">{t("ladder.band", undefined, { n: index + 1 })} · {t(index === 0 ? "ladder.multiple.1" : index === 1 ? "ladder.multiple.2" : "ladder.multiple.3")}</p>
-                        <p className={`mt-4 text-lg font-semibold ${status === "ladder.open" ? "gx-pri" : ""}`}>{t(status)}</p>
-                        <dl className="mt-5 space-y-3 text-sm">
-                          <div className="flex justify-between gap-3"><dt className="gx-muted">{t("ladder.price")}</dt><dd className="gx-mono">{priceText(ladderPrice(index))} BNB</dd></div>
-                          <div className="flex justify-between gap-3"><dt className="gx-muted">{t("ladder.left")}</dt><dd className="gx-mono">{fmtBnb(left > 0n ? left : 0n, 4)}</dd></div>
-                          <div className="flex justify-between gap-3"><dt className="gx-muted">{t("ladder.size")}</dt><dd className="gx-mono">{fmtBnb(size, 4)}</dd></div>
-                        </dl>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="gx-muted mt-4 text-sm">{ladderLive.twap === null ? t("ladder.twapWait") : `${t("ladder.twap")} ${priceText(ladderLive.twap)} BNB`}</p>
-                <section className="gx-panel mt-8 max-w-xl p-6">
-                  <label className="gx-muted text-xs" htmlFor="ladder-qty">{t("ladder.amount")}</label>
-                  <input id="ladder-qty" className="gx-field mt-3" inputMode="numeric" value={ladderQty} aria-label={t("ladder.amount")} onChange={(event) => setLadderQty(event.target.value.replace(/[^\d]/g, ""))} />
-                  <dl className="mt-6 space-y-3 text-sm">
-                    <div className="flex justify-between gap-3"><dt className="gx-muted">{t("ladder.cost")}</dt><dd className="gx-mono">{priceText(ladderPay)} BNB</dd></div>
-                    <div className="flex justify-between gap-3"><dt className="gx-muted">{t("ladder.recipient")}</dt><dd className="gx-mono break-all">{sdk.wallet.address ?? "—"}</dd></div>
-                  </dl>
-                  <button type="button" className="gx-btn gx-btn-lg gx-btn-solid mt-6" disabled={ladderBuying || (sdk.wallet.isConnected && !sdk.wallet.isWrongNetwork && (!ladderOpen || ladderAmount === 0n || ladderAmount > ladderLeft))} onClick={() => void buyLadder()}>
-                    {ladderBuying ? t("ladder.pending") : !sdk.wallet.isConnected ? t("ladder.connect") : sdk.wallet.isWrongNetwork ? t("ladder.switch") : t("ladder.buy")}
-                  </button>
-                  {!ladderOpen && <p className="gx-muted mt-4 text-sm">{t(ladderStatus(ladderRung) === "ladder.offline" ? "ladder.unlaunched" : ladderStatus(ladderRung))}</p>}
-                </section>
-                <article className="gx-term mt-8">
-                  <h3 className="text-lg font-bold">{t("ladder.cmdTitle")}</h3>
-                  <code className="gx-term-fn">{"> "}{t("ladder.cmdFn")}</code>
-                  <p className="gx-muted mt-2 text-xs leading-6">{t("ladder.cmdDesc")}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <div className="gx-segment" role="group" aria-label={t("ladder.cmdTitle")}>
-                      <button type="button" aria-pressed={commandStyle === "text"} onClick={() => setCommandStyle("text")}>{t("commands.styleGeneral")}</button>
-                      <button type="button" aria-pressed={commandStyle === "short"} onClick={() => setCommandStyle("short")}>{t("commands.styleBinance")}</button>
-                    </div>
-                    <p className="gx-muted text-xs">{t(commandStyle === "short" ? "commands.styleNoteBinance" : "commands.styleNoteGeneral")}</p>
-                  </div>
-                  <div className="mt-4"><CopyButton value={fillCommand(t(commandStyle === "short" ? "ladder.cmdShort" : "ladder.cmdText"), "ladder")} label={t("commands.copy")} /></div>
-                </article>
-              </>
-            )}
-            {view === "tokenomics" && (
-              <>
-                <div className="gx-token-layout">
-                  <div className="gx-donut-wrap">
-                    <Donut active={slice} lockLabel={t("token.lockArc")} label={t("token.donutLabel")} />
-                    {(() => {
-                      const activeSlice = SLICES[slice] ?? SLICES[0];
-                      return (
-                        <div key={slice} className="gx-swap gx-donut-center">
-                          <p className="gx-mono gx-pri text-4xl font-bold">{activeSlice.key === "team" ? "5%" : `${((activeSlice.amount / 777_777_777) * 100).toFixed(1)}%`}</p>
-                          {activeSlice.key === "team" && <p className="gx-muted text-xs">{t("token.ofCards")}</p>}
-                          {activeSlice.key === "team" && <p className="gx-chip gx-chip-pri mx-auto mt-2">{t("token.inContract")}</p>}
-                          <p className="mt-1 text-sm">{allocCopy[activeSlice.key].name}</p>
-                        </div>
-                      );
-                    })()}
-                    <p className="gx-muted mt-3 text-center text-xs">{t("token.dashNote")}</p>
-                  </div>
-                  <ul className="space-y-2">
-                    {SLICES.map((item, index) => (
-                      <li key={item.key}>
-                        <button type="button" className={`gx-alloc ${slice === index ? "gx-alloc-active" : ""}`} onMouseEnter={() => setSlice(index)} onFocus={() => setSlice(index)} onClick={() => setSlice(index)}>
-                          <span className="gx-dot" style={{ opacity: SLICE_ALPHA[index] }} />
-                          <span className="min-w-0 flex-1">
-                            <span className="flex flex-wrap items-center gap-2 font-medium">{allocCopy[item.key].name}{item.key === "team" && <span className="gx-chip gx-chip-pri">{t("token.locked")}</span>}</span>
-                            <span className="gx-muted block text-xs">{allocCopy[item.key].note}</span>
-                          </span>
-                          {item.key === "team" ? <span className="gx-mono text-right text-sm">5%<span className="gx-muted block text-xs">{t("token.ofCards")}</span></span> : <span className="gx-mono text-right text-sm">{fmtInt(item.amount)}<span className="gx-muted block text-xs">{((item.amount / 777_777_777) * 100).toFixed(1)}%</span></span>}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="gx-callout mt-10">
-                  <p className="font-bold">{t("token.calloutTitle")}</p>
-                  <p className="gx-muted mt-2 text-sm leading-7">{t("token.calloutBody")}</p>
-                </div>
-                <h2 className="mb-6 mt-16 text-2xl font-bold">{t("token.flowsTitle")}</h2>
-                <div className="grid gap-5 md:grid-cols-3">
-                  {flows.map(({ icon: Icon, title, body }) => (
-                    <section key={title} className="gx-panel p-6">
-                      <Icon className="gx-pri" size={24} aria-hidden="true" />
-                      <h3 className="mt-4 text-xl font-bold">{title}</h3>
-                      <p className="gx-muted mt-4 text-sm leading-7">{body}</p>
-                    </section>
-                  ))}
-                </div>
-              </>
-            )}
+            {view === "ladder" && <EditionInner language={language} view="ladder" />}
+            {view === "tokenomics" && <TokenReference language={language} />}
+            {view === "rarity" && <><EditionStatus language={language} /><div className="mt-8"><RarityReference language={language} /></div></>}
           </Shell>
         )}
       </div>

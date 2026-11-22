@@ -1,4 +1,5 @@
 # Standalone FAGENT
+- [x] 核对 2026-11-22 ANTAGENT 合约，新增稀有度导航与四档权重介绍，同步 ANTB 底池、身份折扣、阶梯价格、供应、税收、转卡释放与对决；按用户确认的未部署状态隔离旧数据和指令，51 项测试通过，桌面/手机导航与折扣试算验证通过。
 - [x] Produce approximately 10-second MINT.AI English motion-graphics film; confirm final MP4 exists and inspect card/end frames; report audio-listening and continuous-motion review limits.
 - [x] Respond to the user's stalled-video concern and retrieve the completed film without restarting production.
 - [x] Deliver three new 1500×500 MINT.AI covers (lacquer gesture, satin impression, ink loop) after rejection of the previous directions; verify dimensions and inspect each image; website unchanged.

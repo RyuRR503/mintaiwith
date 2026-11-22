@@ -27,3 +27,4 @@
 - Inner pages (market, commands, vault, rules) render inside the shared SiteShell Genesis frame so every page matches the homepage and no legacy FAGENT layout remains.
 
 - Render brand lettering through AntWordmark from FagentLogo across navigation, card headers, masthead and transitions; live text prevents stale raster lettering after renames.
+- Keep new-edition source rules and calculations in antagent-edition; until its deployment is verified, show pending-state reference pages and never read or execute the retired deployment under new economics.

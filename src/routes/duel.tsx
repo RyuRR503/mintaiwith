@@ -4,9 +4,9 @@ import MintAiApp from "@/vaults/mintai/Component";
 export const Route = createFileRoute("/duel")({
   head: () => ({ meta: [
     { title: "ANTAGENT — NFT 对决" },
-    { name: "description", content: "ANTAGENT NFT 对决房间与链上规则，支持通过 Binance Agent Wallet 参与。" },
+    { name: "description", content: "ANTAGENT 夺卡对决规则：第六胜销毁赢来的卡，BNB 服务费独立支付；新版未开放。" },
     { property: "og:title", content: "ANTAGENT — NFT 对决" },
-    { property: "og:description", content: "ANTAGENT NFT 对决房间与链上规则，支持通过 Binance Agent Wallet 参与。" },
+    { property: "og:description", content: "胜场随卡、无输家补偿，了解 NFT 对决与超时退款规则。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),

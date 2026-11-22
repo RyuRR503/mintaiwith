@@ -3,10 +3,10 @@ import MintAiApp from "@/vaults/mintai/Component";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "ANTAGENT — Anthropic 底池 AI 卡牌" },
-    { name: "description", content: "ANTAGENT 开池版：20,000 张预售、开池买币、5 天线性释放、地板基金自动收卡。每张卡都是独一无二的代码艺术。" },
-    { property: "og:title", content: "ANTAGENT — Anthropic 底池 AI 卡牌" },
-    { property: "og:description", content: "777,777 张卡，每张一幅由编号生成的代码艺术。" },
+    { title: "ANTAGENT — ANTB 底池与稀有度卡牌" },
+    { name: "description", content: "ANTAGENT 新版：ANTB 底池、8,429 张预售、四档稀有度与加权分红。尚未部署，了解最新合约规则。" },
+    { property: "og:title", content: "ANTAGENT — ANTB 底池与稀有度卡牌" },
+    { property: "og:description", content: "777,777 张卡，ANTB 底池、阶梯铸造与四档分红权重。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),

@@ -4,9 +4,9 @@ import MintAiApp from "@/vaults/mintai/Component";
 export const Route = createFileRoute("/tokenomics")({
   head: () => ({ meta: [
     { title: "ANTAGENT — 代币经济" },
-    { name: "description", content: "ANTAGENT 代币总量 777,777,777 枚的分配，以及分红、销毁、进池的去向。" },
+    { name: "description", content: "ANTAGENT 总量 777,777,777 枚：63,300,000 枚进 ANTB 池，446,930,459 枚开池销毁。" },
     { property: "og:title", content: "ANTAGENT — 代币经济" },
-    { property: "og:description", content: "总量固定，分配透明：开池流动性、预售发放、阶梯卖单、开池销毁、团队卡。" },
+    { property: "og:description", content: "新版 ANTB 底池、8,429 张预售配置、团队配置、阶梯储备与开池销毁。" },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
   ] }),
