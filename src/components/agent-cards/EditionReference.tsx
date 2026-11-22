@@ -175,8 +175,7 @@ export function EditionInner({ language, view }: { language: Language; view: "ma
   const zh = language === "zh";
   const ids = view === "minting" ? [2, 1] : view === "vault" ? [6, 7] : view === "ladder" ? [8] : view === "duel" ? [10] : view === "commands" ? [0, 1, 2] : [0, 4, 5];
   return <>
-    <EditionStatus language={language} />
-    <EditionDemo language={language} view={view} />
+    {view !== "commands" && <><EditionStatus language={language} /><EditionDemo language={language} view={view} /></>}
     {view === "market" && <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "卡牌以 ANTB 挂单出售或发布求购。成交费为 1%，卖家收到扣费后的价款和该卡已累积的分红。市场暂未开放。" : "List cards or place bids in ANTB. The trading fee is 1%; sellers receive the net price plus accrued card dividends. The market is not open yet."}</p>}
     {view === "commands" && <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "通过 Binance Agent Wallet 确认每笔铸造、交易与领取。网站不代签或自动提交交易。请准备 ANTB 付款，以及支付网络和服务费用的 BNB；操作暂未开放。" : "Confirm each mint, trade and claim through Binance Agent Wallet. The website never signs or automatically submits transactions. Prepare ANTB for payments and BNB for network and service fees. Operations are not open yet."}</p>}
     <div className="mt-8 space-y-8">{ids.map(id => {
