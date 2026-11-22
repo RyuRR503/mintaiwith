@@ -474,13 +474,13 @@ a:hover .gx-logo-mark, button:hover .gx-logo-mark { transform: rotate(45deg); }
 .edition-token-svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
 .edition-token-center { position: absolute; inset: 24%; display: flex; flex-direction: column; justify-content: center; text-align: center; pointer-events: none; }
 .edition-token-slice-0 { --allocation-color: var(--primary); }
-.edition-token-slice-1 { --allocation-color: var(--gold); }
-.edition-token-slice-2 { --allocation-color: var(--rare); }
-.edition-token-slice-3 { --allocation-color: var(--common); }
-.edition-token-slice-4 { --allocation-color: var(--foreground); }
+.edition-token-slice-1 { --allocation-color: color-mix(in oklab, var(--primary) 82%, var(--background)); }
+.edition-token-slice-2 { --allocation-color: color-mix(in oklab, var(--primary) 48%, var(--background)); }
+.edition-token-slice-3 { --allocation-color: color-mix(in oklab, var(--primary) 70%, var(--background)); }
+.edition-token-slice-4 { --allocation-color: color-mix(in oklab, var(--primary) 60%, var(--background)); }
 .edition-token-slice circle { stroke: var(--allocation-color); transition: stroke-width .3s var(--ease-cine), opacity .3s; }
 .edition-token-slice[data-active="true"] circle { stroke-width: 28; }
-.edition-token-slice[data-dimmed="true"] circle { opacity: .35; }
+.edition-token-slice[data-dimmed="true"] circle { opacity: .8; }
 .edition-token-key { width: 10px; height: 10px; flex-shrink: 0; border-radius: 50%; background: var(--allocation-color); }
 .edition-token-row { width: 100%; height: auto; min-height: 82px; padding: 16px 8px; display: flex; gap: 14px; border-radius: 0; white-space: normal; }
 .edition-token-row[aria-pressed="true"] { background: var(--accent); }
