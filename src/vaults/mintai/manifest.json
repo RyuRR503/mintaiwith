@@ -4,10 +4,10 @@
   "appModel": "standalone",
   "slug": "mintai",
   "artifactId": "vaultui_mintai_01M6KD4RY73D7SWK1N5YZAKBZ7",
-  "name": "ANT.AI",
+  "name": "ANTAGENT",
   "displayTitle": {
-    "en": "ANT.AI",
-    "zh": "ANT.AI 开池版"
+    "en": "ANTAGENT",
+    "zh": "ANTAGENT 开池版"
   },
   "match": {
     "bindings": []

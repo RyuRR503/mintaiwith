@@ -4,11 +4,11 @@ import showreelAsset from "@/assets/mint-ai-showreel.mp4.asset.json";
 export const Route = createFileRoute("/video")({
   head: () => ({
     meta: [
-      { title: "ANT.AI — Video" },
-      { name: "description", content: "ANT.AI video." },
+      { title: "ANTAGENT — Video" },
+      { name: "description", content: "ANTAGENT video." },
       { name: "robots", content: "noindex, nofollow" },
-      { property: "og:title", content: "ANT.AI — Video" },
-      { property: "og:description", content: "ANT.AI video." },
+      { property: "og:title", content: "ANTAGENT — Video" },
+      { property: "og:description", content: "ANTAGENT video." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

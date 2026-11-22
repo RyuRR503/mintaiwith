@@ -1,5 +1,5 @@
 /**
- * ANT.AI front mark: an atom orbit — three terracotta ellipses crossing
+ * ANTAGENT front mark: an atom orbit — three terracotta ellipses crossing
  * around a four-point spark — that sits in front of the wordmark.
  * Colour comes from `currentColor`, so call sites can tint it with a token.
  */

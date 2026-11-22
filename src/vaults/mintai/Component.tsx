@@ -5,7 +5,7 @@ import { ArrowDownRight, Droplets, Flame, Gift, Shuffle } from "lucide-react";
 import { encodeFunctionData, formatEther, isAddress, parseAbi, parseUnits } from "viem";
 import { useFlapSdk } from "@/lib/flap-sdk";
 import { CopyButton } from "@/components/flap/CopyButton";
-import wordmark from "@/assets/logos/ant-ai-wordmark.png";
+import { AntWordmark } from "@/components/agent-cards/FagentLogo";
 import { AntMark } from "@/components/agent-cards/AntMark";
 
 const TOTAL_POOL_CARDS = 777_777;
@@ -146,9 +146,9 @@ function paintPoster(ctx: CanvasRenderingContext2D, text: string, x: number, y: 
 function AntLogo({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
   const textClass = size === "sm" ? "text-sm" : size === "lg" ? "text-3xl" : "text-xl";
   return (
-    <span className={`gx-logo-lock ${textClass}`} role="img" aria-label="ANT.AI">
+    <span className={`gx-logo-lock ${textClass}`} role="img" aria-label="ANTAGENT">
       <AntMark />
-      <img src={wordmark} alt="" className="gx-logo" draggable={false} />
+      <AntWordmark />
     </span>
   );
 }
@@ -194,7 +194,7 @@ const LOOK = `
 .gx-footer { border-top: 1px solid var(--border); background: var(--background); }
 .gx-container { width: min(1160px, calc(100% - 72px)); margin-inline: auto; }
 
-/* ANT.AI wordmark artwork is rendered by .gx-logo in the global stylesheet. */
+/* ANTAGENT wordmark artwork is rendered by .gx-logo in the global stylesheet. */
 
 .gx-kicker { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--primary); }
 
@@ -205,7 +205,7 @@ const LOOK = `
 .ant-hero-headline { margin-top: 18px; font-family: var(--font-display); font-size: clamp(2.2rem, 3.9vw, 3.65rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.026em; color: var(--foreground); }
 .ant-hero-headline em { display: block; font-style: italic; font-weight: 500; color: var(--primary); }
 .ant-masthead-side { display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; padding-left: 28px; border-left: 1px solid var(--border); }
-.ant-masthead-brand { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ant-masthead-brand { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
 .ant-masthead-word { font-family: var(--font-display); font-size: 1.85rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
 .ant-masthead-word .gx-logo-lock { gap: .26em; }
 .ant-hero-sub { font-size: 14px; line-height: 1.7; color: var(--muted-foreground); }
@@ -391,7 +391,7 @@ const LOOK = `
 @media (min-width: 760px) { .gx-token-layout { grid-template-columns: minmax(220px, 42%) minmax(0, 1fr); } }
 .gx-reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 100%; background: var(--primary); transform: scaleX(0); transform-origin: left; }
 
-/* ANT.AI route sweep — a single ink line draws, then tears open into the next page */
+/* ANTAGENT route sweep — a single ink line draws, then tears open into the next page */
 .ant-sweep { position: absolute; inset: 0; z-index: 70; pointer-events: none; overflow: hidden; animation: ant-sweep-gone 0s linear 1.22s forwards; }
 .ant-sweep-panel { position: absolute; left: 0; right: 0; height: 50.2%; background: var(--background); }
 .ant-sweep-panel::after { content: ""; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 70%, transparent) 20%, var(--primary) 50%, color-mix(in oklab, var(--primary) 70%, transparent) 80%, transparent); opacity: 0; animation: ant-seam-on .01s linear .5s forwards, ant-seam-off .5s ease .82s forwards; }
@@ -403,6 +403,7 @@ const LOOK = `
 .ant-sweep-spark { position: absolute; top: 50%; left: 50%; width: 120px; height: 3px; margin: -1.5px 0 0 -60px; border-radius: 3px; background: radial-gradient(ellipse at center, var(--card) 0%, var(--primary) 40%, transparent 72%); filter: blur(.5px); animation: ant-spark .48s cubic-bezier(0.65, 0, 0.35, 1) forwards; }
 .ant-sweep-brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, calc(-100% - 20px)); font-size: clamp(28px, 4.2vw, 48px); white-space: nowrap; opacity: 0; animation: ant-brand-in .4s var(--ease-cine) .06s forwards, ant-fade-out .18s ease .46s forwards; }
 .ant-sweep-brand .gx-logo-lock { gap: .32em; }
+@media (max-width: 479px) { .gx-header .gx-logo-lock { font-size: 16px; } .ant-sweep-brand { font-size: 28px; } }
 .ant-sweep-brand .gx-logo-mark { animation: ant-orbit-spin .52s var(--ease-cine) .06s both; }
 .gx-app .gx-menu, .gx-app .gx-lang button { white-space: nowrap; }
 @media (max-width: 479px) { .gx-header .gx-container { gap: 10px; } .gx-header .gx-container > div { gap: 6px; } .gx-app .gx-x { width: 32px; height: 32px; } .gx-app .gx-menu { padding: 0 10px; } .gx-app .gx-lang button { padding-inline: 8px; } }
@@ -554,7 +555,7 @@ function fmtBnb(value: bigint, digits = 4) {
 }
 
 const BOOK_SAMPLE = {
-  symbol: "ANT.AI",
+  symbol: "ANTAGENT",
   asks: [] as Ask[],
   bids: [] as Bid[],
   fees: 0n,
@@ -852,7 +853,7 @@ function GenerativeCard({ id, kind = "open", className }: { id: number; kind?: K
       ref={ref}
       className={className}
       role="img"
-      aria-label={`ANT.AI #${id}`}
+      aria-label={`ANTAGENT #${id}`}
       onPointerMove={(event) => {
         const r = event.currentTarget.getBoundingClientRect();
         pointer.current = { x: (event.clientX - r.left) / r.width, y: (event.clientY - r.top) / r.height, active: true };
@@ -1489,7 +1490,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
           <span className="ant-sweep-brand">
             <span className="gx-logo-lock">
               <AntMark />
-              <img src={wordmark} alt="" className="gx-logo" draggable={false} />
+              <AntWordmark />
             </span>
           </span>
         </div>
@@ -1499,7 +1500,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
         <header className="gx-header">
           <div className="gx-container flex items-center justify-between gap-5 py-3">
             <button type="button" onClick={() => openView("home")} aria-label={t("brand")}><AntLogo size="md" /></button>
-            <nav className="hidden gap-6 lg:flex" aria-label={t("brand")}>
+            <nav className="hidden gap-4 lg:flex" aria-label={t("brand")}>
               {nav.map(([key, label]) => (
                 <button key={key} type="button" className={`ac-tab ${view === key ? "ac-tab-active" : ""}`} aria-pressed={view === key} onClick={() => openView(key)}>{t(label)}</button>
               ))}
@@ -1544,7 +1545,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
                 </div>
                 <div className="ant-masthead-side">
                   <div className="ant-masthead-brand">
-                    <span className="ant-masthead-word"><span className="gx-logo-lock"><AntMark /><img src={wordmark} alt="ANT.AI" className="gx-logo" draggable={false} /></span></span>
+                    <span className="ant-masthead-word"><span className="gx-logo-lock"><AntMark /><AntWordmark /></span></span>
                     <span className="gx-mono gx-muted text-[11px]">BNB CHAIN · 1 / 777,777</span>
                   </div>
                   <p className="ant-hero-sub">{t("hero.sub")}</p>
@@ -2155,7 +2156,7 @@ function Shell({ rise, index, code, title, lead, seed, foot, children }: { rise:
           <span className="gx-page-index">{index}</span>
         </div>
       </section>
-      <div className="gx-container gx-exhibit-caption"><span>ANT.AI / {code}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
+      <div className="gx-container gx-exhibit-caption"><span>ANTAGENT / {code}</span><ArrowDownRight className="gx-pri" size={16} aria-hidden="true" /></div>
       <div className={`${rise} ant-stagger-3 gx-container py-12`}>{children}</div>
       <footer className="gx-footer gx-mono gx-muted px-6 py-8 text-center text-xs">{foot}</footer>
     </main>

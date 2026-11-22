@@ -23,7 +23,7 @@ export function SiteShell({ index, code, title, lead, seed, aside, children }: {
     <main className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="gx-container flex items-center justify-between gap-5 py-3">
-          <Link to="/" aria-label={t("ANT.AI 首页")}><FagentLogo className="text-xl" /></Link>
+          <Link to="/" aria-label={t("ANTAGENT 首页")}><FagentLogo className="text-xl" /></Link>
           <CardNavigation compact className="hidden gap-7 md:flex" />
           <LanguageSwitch />
         </div>
@@ -43,7 +43,7 @@ export function SiteShell({ index, code, title, lead, seed, aside, children }: {
           <span className="gx-page-index">{index}</span>
         </div>
       </section>
-      <div className="gx-container gx-exhibit-caption"><span>ANT.AI / {code}</span><ArrowDownRight className="size-4 text-primary" aria-hidden="true" /></div>
+      <div className="gx-container gx-exhibit-caption"><span>ANTAGENT / {code}</span><ArrowDownRight className="size-4 text-primary" aria-hidden="true" /></div>
 
       <div data-reveal className="gx-rise gx-container py-12">{children}</div>
 

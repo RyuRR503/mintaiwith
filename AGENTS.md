@@ -25,3 +25,5 @@
 - Preserve generated Cloud integration files but leave them unused by the standalone preview; platform-managed configuration must not be hand-edited.
 - Agent commands come in two formats: general (full, verified-source) and Binance Wallet (short, explicit signature, no ABI lookup) in src/lib/fagent/binance.ts; Binance's built-in AI cannot resolve the proxy ABI.
 - Inner pages (market, commands, vault, rules) render inside the shared SiteShell Genesis frame so every page matches the homepage and no legacy FAGENT layout remains.
+
+- Render brand lettering through AntWordmark from FagentLogo across navigation, card headers, masthead and transitions; live text prevents stale raster lettering after renames.
