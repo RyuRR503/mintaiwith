@@ -58,15 +58,15 @@ export function EditionDemo({ language, view }: { language: Language; view: "mar
       <div className="grid gap-10 lg:grid-cols-2">
       <section aria-label={zh ? "卖单" : "Sell orders"}>
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2"><h3 className="text-xl">{E.tiers[marketTier]?.name[zh ? 0 : 1]} · {zh ? "卖单" : "Sell orders"}</h3><span className="text-xs text-muted-foreground">{zh ? "价格从低到高 · 前 20 条" : "Lowest first · Top 20"}</span></div>
-        <table className="w-full text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "卡牌" : "Card"}</th><th className="font-normal">{zh ? "稀有度" : "Rarity"}</th><th className="text-right font-normal">{zh ? "价格" : "Price"}<span className="block">ANTB</span></th><th className="text-right font-normal">{zh ? "累积分红" : "Dividends"}<span className="block">ANTB</span></th></tr></thead>
-          <tbody>{orders.sells.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-xs">#{String(item.id).padStart(6, "0")}</td><td className="text-xs">{E.tiers[item.tier]?.name[zh ? 0 : 1]}</td><td className="text-right font-mono text-primary">{item.price}</td><td className="text-right font-mono text-xs text-muted-foreground">{item.dividend}</td></tr>)}</tbody>
+        <table className="w-full table-fixed text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "出价（ANTB）" : "Price (ANTB)"}</th><th className="text-right font-normal">{zh ? "数量（张）" : "Quantity (cards)"}</th></tr></thead>
+          <tbody>{orders.sells.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-primary">{item.price}</td><td className="text-right font-mono">1</td></tr>)}</tbody>
         </table>
       </section>
       <section aria-label={zh ? "买单" : "Buy orders"}>
         <div className="mb-4 flex items-baseline justify-between"><h3 className="text-xl">{zh ? "买单" : "Buy orders"}</h3><span className="text-xs text-muted-foreground">{zh ? "价格从高到低 · 前 20 条" : "Highest first · Top 20"}</span></div>
         <p className="mb-3 text-xs leading-6 text-muted-foreground">{zh ? "买单不限定稀有度，四档卡牌均可成交。" : "Bids accept any revealed rarity; the same bids apply to all four tiers."}</p>
-        <table className="w-full text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "订单" : "Order"}</th><th className="font-normal">{zh ? "稀有度" : "Rarity"}</th><th className="text-right font-normal">{zh ? "数量" : "Quantity"}</th><th className="text-right font-normal">{zh ? "出价" : "Bid"}<span className="block">ANTB</span></th></tr></thead>
-          <tbody>{orders.buys.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-xs">#{String(item.id).padStart(3, "0")}</td><td className="text-xs">{zh ? "不限" : "Any"}</td><td className="text-right font-mono">{item.quantity}</td><td className="text-right font-mono text-primary">{item.price}</td></tr>)}</tbody>
+        <table className="w-full table-fixed text-left text-sm"><thead className="text-xs text-muted-foreground"><tr><th className="py-3 font-normal">{zh ? "出价（ANTB）" : "Price (ANTB)"}</th><th className="text-right font-normal">{zh ? "数量（张）" : "Quantity (cards)"}</th></tr></thead>
+          <tbody>{orders.buys.map(item => <tr key={item.id} className="border-t border-border"><td className="py-3 font-mono text-primary">{item.price}</td><td className="text-right font-mono">{item.quantity}</td></tr>)}</tbody>
         </table>
       </section>
     </div></>}
