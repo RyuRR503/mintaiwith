@@ -116,13 +116,13 @@ export function TokenReference({ language }: { language: Language }) {
         <svg viewBox="0 0 200 200" className="edition-token-svg" role="img" aria-label={zh ? "代币分配环形图" : "Token allocation donut chart"}>
           <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" strokeWidth="22" />
           {arcs.map(({ label, index, length, start }) => <g key={label} className={`edition-token-slice edition-token-slice-${index}`} data-active={active === index} data-dimmed={active !== null && active !== index} onMouseEnter={() => setActive(index)}>
-            <title>{label}: {index === 2 ? `${zh ? "约" : "≈"} ${Number(teamShare.toFixed(1))}% ${zh ? "占全部卡牌" : "of all cards"}` : nf(allocations[index]?.[1] ?? 0)}</title>
+            <title>{label}: {index === 2 ? `${Number(teamShare.toFixed(1))}% ${zh ? "占全部卡牌" : "of all cards"}` : nf(allocations[index]?.[1] ?? 0)}</title>
             {index === 2 ? Array.from({ length: 26 }, (_, mark) => <circle key={mark} cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${length / 26 * .55} ${circumference - length / 26 * .55}`} strokeDashoffset={-(start + mark * length / 26)} />) : <circle cx="100" cy="100" r="80" fill="none" strokeWidth="22" strokeDasharray={`${Math.max(0, length - 2)} ${circumference - length + 2}`} strokeDashoffset={-start} />}
           </g>)}
         </svg>
         <div className="edition-token-center" aria-live="polite">
           <p className="text-sm text-muted-foreground">{selected?.label ?? (zh ? "固定总量" : "Fixed supply")}</p>
-          <p className="mt-3 font-mono text-2xl font-semibold text-foreground">{active === 2 ? `${zh ? "约" : "≈"} ${Number(teamShare.toFixed(1))}%` : nf(selected?.amount ?? E.totalTokens)}</p>
+          <p className="mt-3 font-mono text-2xl font-semibold text-foreground">{active === 2 ? `${Number(teamShare.toFixed(1))}%` : nf(selected?.amount ?? E.totalTokens)}</p>
           <p className="mt-3 text-sm text-primary">{active === 2 ? (zh ? "占全部卡牌" : "of all cards") : selected ? `${(selected.amount / E.totalTokens * 100).toFixed(1)}%` : "ANTAGENT"}</p>
           {active === 2 && <p className="mt-2 text-xs text-muted-foreground">{zh ? "代币锁在合约里" : "Tokens locked in the contract"}</p>}
         </div>
@@ -130,7 +130,7 @@ export function TokenReference({ language }: { language: Language }) {
       <div className="divide-y divide-border">{allocations.map(([label, amount], index) => <Button key={label} variant="ghost" className="edition-token-row" aria-pressed={active === index} onMouseEnter={() => setActive(index)} onMouseLeave={() => setActive(null)} onFocus={() => setActive(index)} onBlur={() => setActive(null)} onClick={() => setActive(index)}>
         <span className={`edition-token-key edition-token-slice-${index}`} aria-hidden="true" />
         <span className="min-w-0 flex-1 text-left"><span className="block font-medium">{label}{index === 2 && <span className="ml-2 text-xs text-muted-foreground">{zh ? "锁仓中" : "Locked"}</span>}</span><span className="mt-2 block text-xs leading-5 text-muted-foreground">{descriptions[index]}</span></span>
-        <span className="ml-auto shrink-0 text-right"><span className="block font-mono text-sm text-foreground">{index === 2 ? `${zh ? "约" : "≈"} ${Number(teamShare.toFixed(1))}%` : nf(amount)}</span><span className="mt-1 block text-xs text-muted-foreground">{index === 2 ? (zh ? "占全部卡牌" : "of all cards") : `${(amount / E.totalTokens * 100).toFixed(1)}%`}</span></span>
+        <span className="ml-auto shrink-0 text-right"><span className="block font-mono text-sm text-foreground">{index === 2 ? `${Number(teamShare.toFixed(1))}%` : nf(amount)}</span><span className="mt-1 block text-xs text-muted-foreground">{index === 2 ? (zh ? "占全部卡牌" : "of all cards") : `${(amount / E.totalTokens * 100).toFixed(1)}%`}</span></span>
       </Button>)}</div>
     </div>
     <p className="gx-callout mt-6">{zh ? "虚线一段是团队卡代币，锁在合约里，随付费铸造逐张解锁。" : "The dashed segment represents team-card tokens, locked in the contract and unlocked card by card as paid mints progress."}</p>
