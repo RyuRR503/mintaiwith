@@ -13,7 +13,7 @@ export function EditionStatus({ language }: { language: Language }) {
 
 export function MintPriceProgress({ language }: { language: Language }) {
   const zh = language === "zh";
-  const [sold, setSold] = useState<number>(D.paidMinted);
+  const sold = D.paidMinted;
   const price = antagentPrice(sold + 1);
   const remaining = E.priceSpan - sold % E.priceSpan;
   const capped = price >= E.capPrice;
@@ -24,12 +24,10 @@ export function MintPriceProgress({ language }: { language: Language }) {
     </dl>
     <p className="mt-5 text-sm leading-7">{zh ? "每地址铸造额度：开池前最多 10 张，开池后累计最多 20 张。开池前已铸满 10 张，开池后还可补 10 张；每笔最多 10 张。" : "Per-wallet mint quota: up to 10 before launch, 20 total afterward. Minted 10 before launch? You can mint 10 more afterward. Maximum 10 per transaction."}</p>
     <div className="mt-5 border-t border-border pt-5">
-      <label htmlFor="mint-progress-sold" className="text-sm">{zh ? "已铸数量（价格试算）" : "Minted count (price estimate)"}</label>
-      <input id="mint-progress-sold" className="gx-field mt-3" type="number" min={0} max={E.paidCards - 1} value={sold} onChange={event => setSold(Math.max(0, Math.min(E.paidCards - 1, Math.floor(Number(event.target.value) || 0))))} />
-      <p className="mt-4 text-xs text-muted-foreground">{zh ? "下一张原价（试算）" : "Next card full price (estimate)"}</p>
+      <p className="mt-4 text-xs text-muted-foreground">{zh ? "下一张原价（演示）" : "Next card full price (demo)"}</p>
       <p className="mt-2 break-words font-mono text-3xl text-primary">{formatEther(price)} <span className="text-sm">ANTB</span></p>
       <p className="mt-3 text-sm leading-6 text-muted-foreground">{capped ? (zh ? "已达到 0.16 ANTB 上限，后续原价不再上涨。" : "The 0.16 ANTB cap has been reached; full price no longer increases.") : (zh ? `本档还可铸 ${nf(remaining)} 张，随后原价升至 ${formatEther(antagentPrice(sold + remaining + 1))} ANTB。` : `${nf(remaining)} cards remain at this price, then full price rises to ${formatEther(antagentPrice(sold + remaining + 1))} ANTB.`)}</p>
-      <p className="mt-3 text-xs text-muted-foreground">{zh ? "未上线 · 以上为价格试算，非实际铸造进度。" : "Not live · Estimates only, not actual mint progress."}</p>
+      <p className="mt-3 text-xs text-muted-foreground">{zh ? "演示进度 · 尚未上线，非真实销售数据。" : "Demo progress · Not live; not actual sales data."}</p>
     </div>
   </section>;
 }
@@ -146,18 +144,17 @@ export function TokenReference({ language }: { language: Language }) {
 
 export function EditionCalculator({ language }: { language: Language }) {
   const zh = language === "zh";
-  const [index, setIndex] = useState(1);
+  const index = D.paidMinted + 1;
   const [count, setCount] = useState(1);
   const [rate, setRate] = useState(10000);
   const total = antagentQuote(index, count, rate);
   return <section className="mt-8 grid gap-8 border-y border-border py-8 md:grid-cols-2">
     <div>
-      <label htmlFor="edition-index" className="block text-sm">{zh ? "全站已售出付费卡数量（试算）" : "Paid cards already sold (estimate)"}</label>
-      <input id="edition-index" type="number" min={0} max={E.paidCards - count} value={index - 1} className="gx-field mt-3" onChange={event => setIndex(Math.max(1, Math.min(E.paidCards - count + 1, Math.floor(Number(event.target.value) || 0) + 1)))} />
+      <dl><dt className="text-sm text-muted-foreground">{zh ? "全站已售出付费卡（演示）" : "Paid cards sold (demo)"}</dt><dd className="mt-3 font-mono text-2xl">{nf(D.paidMinted)}</dd><dt className="mt-5 text-sm text-muted-foreground">{zh ? "当前每张原价（演示）" : "Current full price (demo)"}</dt><dd className="mt-3 font-mono text-xl text-primary">{formatEther(antagentPrice(index))} ANTB</dd></dl>
       <label htmlFor="edition-count" className="mt-5 block text-sm">{zh ? "本笔数量" : "Cards in this batch"}</label>
-      <input id="edition-count" type="range" min={1} max={10} value={count} className="mt-4" onChange={event => { const n = Number(event.target.value); setCount(n); setIndex(current => Math.min(current, E.paidCards - n + 1)); }} />
+      <input id="edition-count" type="range" min={1} max={10} value={count} className="mt-4" onChange={event => setCount(Number(event.target.value))} />
       <p className="mt-3 font-mono text-primary">{count} / 10</p>
-      <label htmlFor="edition-discount" className="mt-5 block text-sm">{zh ? "Agent ID 持有折扣（试算）" : "Agent ID holding discount (estimate)"}</label>
+      <label htmlFor="edition-discount" className="mt-5 block text-sm">{zh ? "Agent ID 持有折扣" : "Agent ID holding discount"}</label>
       <select id="edition-discount" value={rate} onChange={event => setRate(Number(event.target.value))} className="gx-field mt-3">
         <option value={10000}>{zh ? "原价 / 无有效证明" : "Full price / no eligible proof"}</option>
         <option value={9000}>{zh ? "满 10 天 · 九折" : "10 days · 10% off"}</option>
@@ -166,7 +163,7 @@ export function EditionCalculator({ language }: { language: Language }) {
       </select>
     </div>
     <div className="flex flex-col justify-center">
-      <p className="gx-kicker">ANTB / {zh ? "铸造费用试算" : "LADDER ESTIMATE"}</p>
+      <p className="gx-kicker">ANTB / {zh ? "预计铸造费用（演示）" : "MINT TOTAL · DEMO"}</p>
       <p className="mt-5 break-words text-4xl font-semibold text-primary">{formatEther(total)} <span className="text-base">ANTB</span></p>
       <p className="mt-5 text-sm leading-7 text-muted-foreground">{zh ? "预计铸造费用按购买数量和所选折扣计算，不含网络手续费与卡牌揭晓服务费。享受折扣需当前持有 Agent ID，并通过历史持有验证；实际费用以交易确认时为准。" : "Estimated mint costs follow the batch size and selected discount, excluding network and card-reveal fees. Discounts require a current Agent ID and verified holding history. Actual costs are determined at transaction confirmation."}</p>
       <Button variant="outline" className="mt-6 self-start" disabled>{zh ? "铸造待上线" : "Minting not open"}</Button>
