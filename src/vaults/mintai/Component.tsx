@@ -9,6 +9,7 @@ import { AntWordmark } from "@/components/agent-cards/FagentLogo";
 import { AntMark } from "@/components/agent-cards/AntMark";
 import { ANTAGENT_EDITION, EDITION_COPY, EDITION_RULES } from "@/lib/fagent/antagent-edition";
 import { MintPriceProgress, MintLadderDetails, EditionStatus, EditionSummary, EditionCalculator, EditionInner, RarityReference, TokenReference } from "@/components/agent-cards/EditionReference";
+import { DemoTotals, EditionDemo } from "@/components/agent-cards/EditionDemo";
 
 const TOTAL_POOL_CARDS = 777_777;
 const PRESALE_CARDS = 20_000;
@@ -1628,7 +1629,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
               </div>
             </section>
 
-            <section className="gx-band"><div className="gx-container py-10"><EditionSummary language={language} /></div></section>
+            <section className="gx-band"><div className="gx-container py-10"><DemoTotals language={language} /><EditionSummary language={language} /></div></section>
 
             <section className="gx-container gx-chapter">
               <div className={`${rise} gx-chapter-heading`}>
@@ -1721,7 +1722,7 @@ export default function Component({ initialView = "home" }: { initialView?: View
             )}
             {view === "ladder" && <EditionInner language={language} view="ladder" />}
             {view === "tokenomics" && <TokenReference language={language} />}
-            {view === "rarity" && <><EditionStatus language={language} /><div className="mt-8"><RarityReference language={language} /></div></>}
+            {view === "rarity" && <><EditionStatus language={language} /><div className="mt-8"><RarityReference language={language} /><EditionDemo language={language} view="rarity" /></div></>}
           </Shell>
         )}
       </div>

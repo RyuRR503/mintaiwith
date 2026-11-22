@@ -2,23 +2,25 @@ import { useState } from "react";
 import { formatEther } from "viem";
 import { Button } from "@/components/ui/button";
 import { ANTAGENT_EDITION as E, EDITION_RULES, antagentPrice, antagentQuote } from "@/lib/fagent/antagent-edition";
+import { EDITION_DEMO as D } from "@/lib/fagent/edition-demo";
+import { EditionDemo } from "./EditionDemo";
 
 type Language = "zh" | "en";
 const nf = (value: number) => value.toLocaleString("en-US");
 export function EditionStatus({ language }: { language: Language }) {
-  return <p className="gx-callout" role="status">{language === "zh" ? "ANTAGENT 尚未上线，铸造、交易与领取暂未开放。" : "ANTAGENT is not live yet. Minting, trading and claims are not open."}</p>;
+  return <p className="gx-callout" role="status">{language === "zh" ? "演示预览 · 数值与记录为演示数据，非真实链上结果。ANTAGENT 尚未上线，真实交易暂未开放。" : "Demo preview · Figures and records are mock data, not on-chain results. ANTAGENT is not live; real transactions are not open."}</p>;
 }
 
 export function MintPriceProgress({ language }: { language: Language }) {
   const zh = language === "zh";
-  const [sold, setSold] = useState(0);
+  const [sold, setSold] = useState<number>(D.paidMinted);
   const price = antagentPrice(sold + 1);
   const remaining = E.priceSpan - sold % E.priceSpan;
   const capped = price >= E.capPrice;
   return <section className="border-y border-border py-5" aria-label={zh ? "铸造价格进度" : "Mint price progress"}>
     <dl className="grid grid-cols-2 gap-5">
-      <div><dt className="text-xs text-muted-foreground">{zh ? "当前铸造价" : "Current mint price"}</dt><dd className="mt-2 text-xl font-semibold">{zh ? "待开放" : "Not open"}</dd></div>
-      <div><dt className="text-xs text-muted-foreground">{zh ? "全站已铸付费卡" : "Paid cards minted"}</dt><dd className="mt-2 text-xl font-semibold">—</dd></div>
+      <div><dt className="text-xs text-muted-foreground">{zh ? "当前铸造价（演示）" : "Current mint price (demo)"}</dt><dd className="mt-2 text-xl font-semibold">{formatEther(antagentPrice(D.paidMinted + 1))} ANTB</dd></div>
+      <div><dt className="text-xs text-muted-foreground">{zh ? "全站已铸付费卡（演示）" : "Paid cards minted (demo)"}</dt><dd className="mt-2 text-xl font-semibold">{nf(D.paidMinted)}</dd></div>
     </dl>
     <p className="mt-5 text-sm leading-7">{zh ? "每地址铸造额度：开池前最多 10 张，开池后累计最多 20 张。开池前已铸满 10 张，开池后还可补 10 张；每笔最多 10 张。" : "Per-wallet mint quota: up to 10 before launch, 20 total afterward. Minted 10 before launch? You can mint 10 more afterward. Maximum 10 per transaction."}</p>
     <div className="mt-5 border-t border-border pt-5">
@@ -177,6 +179,7 @@ export function EditionInner({ language, view }: { language: Language; view: "ma
   const ids = view === "minting" ? [2, 1] : view === "vault" ? [6, 7] : view === "ladder" ? [8] : view === "duel" ? [10] : view === "commands" ? [0, 1, 2] : [0, 4, 5];
   return <>
     <EditionStatus language={language} />
+    <EditionDemo language={language} view={view} />
     {view === "market" && <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "卡牌以 ANTB 挂单出售或发布求购。成交费为 1%，卖家收到扣费后的价款和该卡已累积的分红。市场暂未开放。" : "List cards or place bids in ANTB. The trading fee is 1%; sellers receive the net price plus accrued card dividends. The market is not open yet."}</p>}
     {view === "commands" && <p className="mt-6 text-sm leading-8 text-muted-foreground">{zh ? "通过 Binance Agent Wallet 确认每笔铸造、交易与领取。网站不代签或自动提交交易。请准备 ANTB 付款，以及支付网络和服务费用的 BNB；操作暂未开放。" : "Confirm each mint, trade and claim through Binance Agent Wallet. The website never signs or automatically submits transactions. Prepare ANTB for payments and BNB for network and service fees. Operations are not open yet."}</p>}
     <div className="mt-8 space-y-8">{ids.map(id => {
